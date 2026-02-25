@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Department {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  programs  Program[]
+}
+
+model Program {
+  id           String    @id @default(uuid())
+  name         String
+  duration     Int
+  degreeType   String
+  totalCredits Int
+  departmentId String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  semesters    Semester[]
+
+  @@unique([departmentId, name])
+  @@index([departmentId])
+}
+
+model Semester {
+  id         String   @id @default(uuid())
+  name       String
+  order      Int
+  programId  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  program    Program  @relation(fields: [programId], references: [id], onDelete: Cascade)
+  subjects   Subject[]
+
+  @@unique([programId, order])
+  @@index([programId])
+}
+
+model Subject {
+  id          String        @id @default(uuid())
+  code        String        @unique
+  name        String
+  credits     Int
+  lectureHours Int
+  labHours    Int
+  semesterId  String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  semester    Semester      @relation(fields: [semesterId], references: [id], onDelete: Cascade)
+  prerequisitesAsSubject Prerequisite[] @relation("SubjectPrerequisites")
+  prerequisitesAsDepends Prerequisite[] @relation("DependsOnPrerequisites")
+}
+
+model Prerequisite {
+  id          String   @id @default(uuid())
+  subjectId   String
+  dependsOnId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  subject     Subject  @relation("SubjectPrerequisites", fields: [subjectId], references: [id], onDelete: Cascade)
+  dependsOn   Subject  @relation("DependsOnPrerequisites", fields: [dependsOnId], references: [id], onDelete: Cascade)
+
+  @@unique([subjectId, dependsOnId])
+  @@index([subjectId])
+  @@index([dependsOnId])
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?   // hashed; used for credentials signup
+  role          String    @default("User")
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
