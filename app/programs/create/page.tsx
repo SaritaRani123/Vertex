@@ -144,12 +144,22 @@ export default function CreateProgramPage() {
                 <FieldLabel>Department</FieldLabel>
                 <Select
                   value={departmentId}
-                  onValueChange={setDepartmentId}
+                  onValueChange={(value) => {
+                    if (value !== null) setDepartmentId(value);
+                  }}
                   required
                   disabled={departmentsLoading}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder={departmentsLoading ? "Loading…" : "Select department"} />
+                    <SelectValue placeholder={departmentsLoading ? "Loading…" : "Select department"}>
+                      {departmentId && !departmentsLoading ? (
+                        departments.find((d) => String(d.id) === departmentId) ? (
+                          <>{departments.find((d) => String(d.id) === departmentId)?.name}</>
+                        ) : (
+                          "Select department"
+                        )
+                      ) : null}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {departments.map((dept) => (
@@ -162,7 +172,9 @@ export default function CreateProgramPage() {
               </Field>
               <Field>
                 <FieldLabel>Status</FieldLabel>
-                <Select value={status} onValueChange={(v: "ACTIVE" | "INACTIVE") => setStatus(v)}>
+                <Select value={status} onValueChange={(v) => {
+                  if (v === "ACTIVE" || v === "INACTIVE") setStatus(v);
+                }}>
                   <SelectTrigger className="w-full">
                     <SelectValue />
                   </SelectTrigger>

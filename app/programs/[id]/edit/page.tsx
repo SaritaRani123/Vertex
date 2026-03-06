@@ -187,9 +187,21 @@ export default function EditProgramPage() {
               </Field>
               <Field>
                 <FieldLabel>Department</FieldLabel>
-                <Select value={departmentId} onValueChange={setDepartmentId} required>
+                <Select value={departmentId} onValueChange={(value) => {
+                  if (value !== null) setDepartmentId(value);
+                }} required>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select department" />
+                    <SelectValue placeholder="Select department">
+                      {departmentId ? (
+                        departments.find((d) => String(d.id) === departmentId) ? (
+                          <>{departments.find((d) => String(d.id) === departmentId)?.name}</>
+                        ) : (
+                          "Select department"
+                        )
+                      ) : (
+                        "Select department"
+                      )}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {departments.map((dept) => (
@@ -202,7 +214,9 @@ export default function EditProgramPage() {
               </Field>
               <Field>
                 <FieldLabel>Status</FieldLabel>
-                <Select value={status} onValueChange={(v: "ACTIVE" | "INACTIVE") => setStatus(v)}>
+                <Select value={status} onValueChange={(v) => {
+                  if (v === "ACTIVE" || v === "INACTIVE") setStatus(v);
+                }}>
                   <SelectTrigger className="w-full">
                     <SelectValue />
                   </SelectTrigger>

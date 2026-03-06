@@ -12,7 +12,7 @@ export function AppSidebar() {
   return (
     <aside className="flex h-full w-56 flex-col border-r bg-muted/30">
       <div className="flex h-14 items-center border-b px-4">
-        <span className="font-semibold">College Scheduling</span>
+        <span className="font-semibold">Programs Scheduling</span>
       </div>
       <nav className="flex-1 space-y-1 p-2">
         {navItems.map((item) => {

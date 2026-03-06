@@ -13,13 +13,25 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { Plus } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+import { Plus, Trash2 } from "lucide-react";
 import type { ProgramListItem } from "@/lib/api-types";
 
 export default function ProgramsPage() {
   const [programs, setPrograms] = useState<ProgramListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     async function fetchPrograms() {
@@ -36,6 +48,23 @@ export default function ProgramsPage() {
     }
     fetchPrograms();
   }, []);
+
+  const handleDelete = async () => {
+    if (deleteId === null) return;
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/programs/${deleteId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to delete program");
+      setPrograms(programs.filter((p) => p.id !== deleteId));
+      setDeleteId(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to delete program");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -96,10 +125,31 @@ export default function ProgramsPage() {
                           {prog.status}
                         </Badge>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="flex items-center gap-2">
                         <Button variant="outline" size="sm" asChild>
                           <Link href={`/programs/${prog.id}/edit`}>Edit</Link>
                         </Button>
+                        <Button variant="outline" size="sm" onClick={() => setDeleteId(prog.id)}>
+                          <Trash2 className="size-4" />
+                        </Button>
+                        <AlertDialog open={deleteId === prog.id} onOpenChange={(open) => {
+                          if (!open) setDeleteId(null);
+                        }}>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete Program?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. Are you sure you want to delete {prog.name}?
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
+                                {isDeleting ? "Deleting..." : "Delete"}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </TableCell>
                     </TableRow>
                   ))

@@ -12,13 +12,25 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { Plus } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+import { Plus, Trash2 } from "lucide-react";
 import type { DepartmentResponse } from "@/lib/api-types";
 
 export default function DepartmentsPage() {
   const [departments, setDepartments] = useState<DepartmentResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     async function fetchDepartments() {
@@ -35,6 +47,23 @@ export default function DepartmentsPage() {
     }
     fetchDepartments();
   }, []);
+
+  const handleDelete = async () => {
+    if (deleteId === null) return;
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/departments/${deleteId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Failed to delete department");
+      setDepartments(departments.filter((d) => d.id !== deleteId));
+      setDeleteId(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to delete department");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -85,10 +114,31 @@ export default function DepartmentsPage() {
                     <TableRow key={dept.id}>
                       <TableCell className="font-medium">{dept.code}</TableCell>
                       <TableCell>{dept.name}</TableCell>
-                      <TableCell>
+                      <TableCell className="flex items-center gap-2">
                         <Button variant="outline" size="sm" asChild>
                           <Link href={`/departments/${dept.id}/edit`}>Edit</Link>
                         </Button>
+                        <Button variant="outline" size="sm" onClick={() => setDeleteId(dept.id)}>
+                          <Trash2 className="size-4" />
+                        </Button>
+                        <AlertDialog open={deleteId === dept.id} onOpenChange={(open) => {
+                          if (!open) setDeleteId(null);
+                        }}>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete Department?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                This action cannot be undone. Are you sure you want to delete {dept.name}?
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
+                                {isDeleting ? "Deleting..." : "Delete"}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </TableCell>
                     </TableRow>
                   ))

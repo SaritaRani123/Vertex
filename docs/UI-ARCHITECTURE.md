@@ -34,10 +34,11 @@
 | Item | Description |
 |------|-------------|
 | **Layout** | Full-width page, header + table section |
-| **Sections** | Page header (title + Add button), table with departments |
-| **Components** | `Card`, `CardHeader`, `CardContent`, `Button`, `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, `Badge` |
-| **Client/Server** | **Server Component** — fetches departments from API on server |
-| **Data fetch** | `fetch('/api/departments')` or `prisma.departments.findMany()` in Server Component |
+| **Sections** | Page header (title + Add button), table with departments and actions |
+| **Components** | `Card`, `CardHeader`, `CardContent`, `Button`, `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, `Badge`, `AlertDialog`, `AlertDialogContent`, `AlertDialogHeader`, `AlertDialogTitle`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogCancel`, `AlertDialogAction` |
+| **Client/Server** | **"use client"** — fetches departments from API, manages delete state and confirmations |
+| **Data fetch** | `fetch('/api/departments')` on component mount |
+| **Interactions** | Each department row has Edit and Delete buttons. Delete button opens confirmation dialog. On confirm, sends `DELETE /api/departments/{id}` and removes from list on success. |
 
 ---
 
@@ -57,11 +58,12 @@
 
 | Item | Description |
 |------|-------------|
-| **Layout** | Full-width page, header + filter + table |
-| **Sections** | Page header, department filter dropdown, table |
-| **Components** | `Card`, `CardHeader`, `CardContent`, `Button`, `Select`, `SelectTrigger`, `SelectContent`, `SelectItem`, `Table`, `Badge` |
-| **Client/Server** | **Server Component** (list) + **"use client"** (filter) — filter is client, table data server-fetched |
-| **Data** | Server: `prisma.programs.findMany({ include: { department: true } })`; filter passes `?department=id` |
+| **Layout** | Full-width page, header + table |
+| **Sections** | Page header (title + Add button), table with programs and actions |
+| **Components** | `Card`, `CardHeader`, `CardContent`, `Button`, `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`, `Badge`, `AlertDialog`, `AlertDialogContent`, `AlertDialogHeader`, `AlertDialogTitle`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogCancel`, `AlertDialogAction` |
+| **Client/Server** | **"use client"** — fetches programs from API, manages delete state and confirmations |
+| **Data fetch** | `fetch('/api/programs')` on component mount |
+| **Interactions** | Each program row shows code, name, department, duration, and status badge. Actions column contains Edit and Delete buttons. Delete button opens confirmation dialog. On confirm, sends `DELETE /api/programs/{id}` and removes from list on success. |
 
 ---
 
@@ -81,13 +83,18 @@
 
 | Component | Use | Client/Server |
 |-----------|-----|---------------|
-| `Button` | Actions, navigation | use client (shadcn) |
+| `Button` | Actions, navigation, delete triggers | use client (shadcn) |
 | `Card` | Container for sections | Server |
 | `Input` | Text fields | use client (shadcn) |
 | `Label` | Form labels | use client (shadcn) |
 | `Table` | Data display | Server |
 | `Select` | Dropdowns (filter, department) | use client (shadcn) |
 | `Badge` | Status (ACTIVE/INACTIVE) | Server |
+| `AlertDialog` | Confirmation dialogs for delete operations | use client (shadcn) |
+| `AlertDialogContent` | Modal dialog container | use client (shadcn) |
+| `AlertDialogTrigger` | Dialog trigger control | use client (shadcn) |
+| `AlertDialogCancel` | Cancel button in dialog | use client (shadcn) |
+| `AlertDialogAction` | Confirm action button in dialog | use client (shadcn) |
 
 ---
 
@@ -95,11 +102,20 @@
 
 ```
 User visits page
-    → Server Component fetches from Prisma (or API)
-    → Renders HTML with data
-    → Client components (forms, filters) hydrate
-    → On submit: fetch(POST /api/...) → API → Prisma → DB
-    → Redirect or refetch
+    → Client Component fetches from API
+    → Renders data in tables
+    
+Form/Action submission (Create/Update/Delete)
+    → User clicks button or confirms dialog
+    → fetch(POST|PUT|DELETE /api/...) → API → Prisma → DB
+    → On success: update UI state or refetch
+    → On error: show error message
+    
+Delete operations:
+    → User clicks Delete button
+    → AlertDialog confirms action
+    → On confirm: fetch(DELETE /api/{resource}/{id})
+    → Remove item from list state on success
 ```
 
 ---

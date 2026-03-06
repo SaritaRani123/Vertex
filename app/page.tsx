@@ -9,7 +9,7 @@ export default function DashboardPage() {
       <div>
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <p className="text-muted-foreground">
-          College Scheduling System — Programs Module
+          Programs Scheduling System
         </p>
       </div>
 
