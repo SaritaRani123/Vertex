@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AppSidebar } from "@/components/app-sidebar";
 import { Geist, Geist_Mono, Figtree } from "next/font/google";
 import "./globals.css";
 
@@ -27,9 +28,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={figtree.variable}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
       >
-        {children}
+        <div className="flex h-screen">
+          <AppSidebar />
+          <main className="flex-1 overflow-auto p-6">{children}</main>
+        </div>
       </body>
     </html>
   );
