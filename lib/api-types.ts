@@ -45,8 +45,12 @@ export interface ProgramResponse {
   updated_at: string;
 }
 
+export interface ProgramListItem extends ProgramResponse {
+  department_name: string;
+}
+
 export interface ProgramListResponse {
-  data: ProgramResponse[];
+  data: ProgramListItem[];
 }
 
 // ============== Error response (for 400 validation) ==============

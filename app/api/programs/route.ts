@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/db";
 import { json, fromZodError, internalError, validationError } from "@/lib/api-utils";
-import type { ProgramResponse, ProgramListResponse, ProgramStatus } from "@/lib/api-types";
+import type { ProgramResponse, ProgramListResponse, ProgramListItem, ProgramStatus } from "@/lib/api-types";
 import { safeValidateProgramCreate } from "@/lib/validations/programs";
 
 function toProgramResponse(row: {
@@ -26,6 +26,23 @@ function toProgramResponse(row: {
   };
 }
 
+function toProgramListItem(row: {
+  id: number;
+  name: string;
+  code: string;
+  duration_years: number;
+  status: string;
+  department_id: number;
+  created_at: Date;
+  updated_at: Date;
+  department: { name: string };
+}): ProgramListItem {
+  return {
+    ...toProgramResponse(row),
+    department_name: row.department.name,
+  };
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -34,10 +51,10 @@ export async function GET(request: NextRequest) {
     const list = await prisma.programs.findMany({
       where: departmentId != null && !Number.isNaN(departmentId) ? { department_id: departmentId } : undefined,
       orderBy: [{ department: { name: "asc" } }, { name: "asc" }],
-      include: { department: false },
+      include: { department: { select: { name: true } } },
     });
     const data: ProgramListResponse = {
-      data: list.map(toProgramResponse),
+      data: list.map(toProgramListItem),
     };
     return json(data);
   } catch {

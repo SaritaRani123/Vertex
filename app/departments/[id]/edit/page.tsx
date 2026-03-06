@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,26 +13,52 @@ import {
 import { Input } from "@/components/ui/input";
 import { ArrowLeft } from "lucide-react";
 
-export default function CreateDepartmentPage() {
+export default function EditDepartmentPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params?.id as string | undefined;
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!id) return;
+    async function fetchDepartment() {
+      try {
+        const res = await fetch(`/api/departments/${id}`);
+        if (!res.ok) {
+          if (res.status === 404) setError("Department not found");
+          else setError("Failed to load department");
+          return;
+        }
+        const data = await res.json();
+        setName(data.name ?? "");
+        setCode(data.code ?? "");
+      } catch {
+        setError("Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchDepartment();
+  }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!id) return;
     setError(null);
     setIsSubmitting(true);
     try {
-      const res = await fetch("/api/departments", {
-        method: "POST",
+      const res = await fetch(`/api/departments/${id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name.trim(), code: code.trim().toUpperCase() }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(data?.error ?? "Failed to create department");
+        setError(data?.error ?? "Failed to update department");
         return;
       }
       router.push("/departments");
@@ -43,6 +69,25 @@ export default function CreateDepartmentPage() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-2xl space-y-6">
+        <p className="text-muted-foreground">Loading…</p>
+      </div>
+    );
+  }
+
+  if (error && !name && !code) {
+    return (
+      <div className="mx-auto max-w-2xl space-y-6">
+        <p className="text-destructive">{error}</p>
+        <Button variant="outline" asChild>
+          <Link href="/departments">Back to Departments</Link>
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div className="flex items-center gap-2">
@@ -52,9 +97,9 @@ export default function CreateDepartmentPage() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Create Department</h1>
+          <h1 className="text-2xl font-bold">Edit Department</h1>
           <p className="text-muted-foreground">
-            Add a new department to the system
+            Update department details
           </p>
         </div>
       </div>
@@ -93,7 +138,7 @@ export default function CreateDepartmentPage() {
             </FieldGroup>
             <div className="flex gap-2">
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Creating…" : "Create Department"}
+                {isSubmitting ? "Saving…" : "Save changes"}
               </Button>
               <Button type="button" variant="outline" asChild>
                 <Link href="/departments">Cancel</Link>

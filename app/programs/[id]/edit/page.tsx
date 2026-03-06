@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,20 +19,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
-import type { DepartmentResponse } from "@/lib/api-types";
+import type { DepartmentResponse, ProgramResponse } from "@/lib/api-types";
 
-export default function CreateProgramPage() {
+export default function EditProgramPage() {
   const router = useRouter();
+  const params = useParams();
+  const id = params?.id as string | undefined;
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [durationYears, setDurationYears] = useState(4);
   const [departmentId, setDepartmentId] = useState("");
   const [status, setStatus] = useState<"ACTIVE" | "INACTIVE">("ACTIVE");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [departments, setDepartments] = useState<DepartmentResponse[]>([]);
-  const [departmentsLoading, setDepartmentsLoading] = useState(true);
+  const [program, setProgram] = useState<ProgramResponse | null>(null);
 
   useEffect(() => {
     async function fetchDepartments() {
@@ -41,24 +44,47 @@ export default function CreateProgramPage() {
         if (!res.ok) return;
         const json = await res.json();
         setDepartments(json.data ?? []);
-      } finally {
-        setDepartmentsLoading(false);
+      } catch {
+        // ignore
       }
     }
     fetchDepartments();
   }, []);
 
+  useEffect(() => {
+    if (!id) return;
+    async function fetchProgram() {
+      try {
+        const res = await fetch(`/api/programs/${id}`);
+        if (!res.ok) {
+          if (res.status === 404) setError("Program not found");
+          else setError("Failed to load program");
+          return;
+        }
+        const data: ProgramResponse = await res.json();
+        setProgram(data);
+        setName(data.name ?? "");
+        setCode(data.code ?? "");
+        setDurationYears(data.duration_years ?? 4);
+        setDepartmentId(String(data.department_id));
+        setStatus((data.status as "ACTIVE" | "INACTIVE") ?? "ACTIVE");
+      } catch {
+        setError("Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchProgram();
+  }, [id]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!id || !departmentId) return;
     setError(null);
-    if (!departmentId) {
-      setError("Please select a department");
-      return;
-    }
     setIsSubmitting(true);
     try {
-      const res = await fetch("/api/programs", {
-        method: "POST",
+      const res = await fetch(`/api/programs/${id}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: name.trim(),
@@ -70,7 +96,7 @@ export default function CreateProgramPage() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(data?.error ?? "Failed to create program");
+        setError(data?.error ?? "Failed to update program");
         return;
       }
       router.push("/programs");
@@ -81,6 +107,25 @@ export default function CreateProgramPage() {
     }
   };
 
+  if (loading && !program) {
+    return (
+      <div className="mx-auto max-w-2xl space-y-6">
+        <p className="text-muted-foreground">Loading…</p>
+      </div>
+    );
+  }
+
+  if (error && !program) {
+    return (
+      <div className="mx-auto max-w-2xl space-y-6">
+        <p className="text-destructive">{error}</p>
+        <Button variant="outline" asChild>
+          <Link href="/programs">Back to Programs</Link>
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div className="flex items-center gap-2">
@@ -90,9 +135,9 @@ export default function CreateProgramPage() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Create Program</h1>
+          <h1 className="text-2xl font-bold">Edit Program</h1>
           <p className="text-muted-foreground">
-            Add a new academic program
+            Update program details
           </p>
         </div>
       </div>
@@ -142,14 +187,9 @@ export default function CreateProgramPage() {
               </Field>
               <Field>
                 <FieldLabel>Department</FieldLabel>
-                <Select
-                  value={departmentId}
-                  onValueChange={setDepartmentId}
-                  required
-                  disabled={departmentsLoading}
-                >
+                <Select value={departmentId} onValueChange={setDepartmentId} required>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder={departmentsLoading ? "Loading…" : "Select department"} />
+                    <SelectValue placeholder="Select department" />
                   </SelectTrigger>
                   <SelectContent>
                     {departments.map((dept) => (
@@ -174,8 +214,8 @@ export default function CreateProgramPage() {
               </Field>
             </FieldGroup>
             <div className="flex gap-2">
-              <Button type="submit" disabled={isSubmitting || departmentsLoading}>
-                {isSubmitting ? "Creating…" : "Create Program"}
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Saving…" : "Save changes"}
               </Button>
               <Button type="button" variant="outline" asChild>
                 <Link href="/programs">Cancel</Link>

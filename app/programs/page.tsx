@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,15 +14,29 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Plus } from "lucide-react";
-
-// Static mock data - replace with prisma.programs.findMany({ include: { department: true } })
-const MOCK_PROGRAMS = [
-  { id: "1", name: "B.Tech Computer Science", code: "BTCS", duration_years: 4, status: "ACTIVE" as const, department: { name: "Computer Science" } },
-  { id: "2", name: "B.Tech Electrical", code: "BTEE", duration_years: 4, status: "ACTIVE" as const, department: { name: "Electrical Engineering" } },
-  { id: "3", name: "M.Tech CSE", code: "MTCS", duration_years: 2, status: "INACTIVE" as const, department: { name: "Computer Science" } },
-];
+import type { ProgramListItem } from "@/lib/api-types";
 
 export default function ProgramsPage() {
+  const [programs, setPrograms] = useState<ProgramListItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchPrograms() {
+      try {
+        const res = await fetch("/api/programs");
+        if (!res.ok) throw new Error("Failed to load programs");
+        const json = await res.json();
+        setPrograms(json.data ?? []);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPrograms();
+  }, []);
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -42,38 +59,54 @@ export default function ProgramsPage() {
           <h2 className="text-lg font-semibold">All Programs</h2>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Code</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Department</TableHead>
-                <TableHead>Duration</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="w-[100px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {MOCK_PROGRAMS.map((prog) => (
-                <TableRow key={prog.id}>
-                  <TableCell className="font-medium">{prog.code}</TableCell>
-                  <TableCell>{prog.name}</TableCell>
-                  <TableCell>{prog.department.name}</TableCell>
-                  <TableCell>{prog.duration_years} years</TableCell>
-                  <TableCell>
-                    <Badge variant={prog.status === "ACTIVE" ? "default" : "secondary"}>
-                      {prog.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href={`/programs/${prog.id}/edit`}>Edit</Link>
-                    </Button>
-                  </TableCell>
+          {loading && (
+            <p className="text-muted-foreground">Loading programs…</p>
+          )}
+          {error && (
+            <p className="text-destructive">{error}</p>
+          )}
+          {!loading && !error && (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Code</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Department</TableHead>
+                  <TableHead>Duration</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="w-[100px]">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {programs.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-muted-foreground text-center">
+                      No programs yet. Create one to get started.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  programs.map((prog) => (
+                    <TableRow key={prog.id}>
+                      <TableCell className="font-medium">{prog.code}</TableCell>
+                      <TableCell>{prog.name}</TableCell>
+                      <TableCell>{prog.department_name}</TableCell>
+                      <TableCell>{prog.duration_years} years</TableCell>
+                      <TableCell>
+                        <Badge variant={prog.status === "ACTIVE" ? "default" : "secondary"}>
+                          {prog.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link href={`/programs/${prog.id}/edit`}>Edit</Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>
