@@ -27,31 +27,35 @@ export type AggregatePrograms = {
 }
 
 export type ProgramsAvgAggregateOutputType = {
+  id: number | null
   duration_years: number | null
+  department_id: number | null
 }
 
 export type ProgramsSumAggregateOutputType = {
+  id: number | null
   duration_years: number | null
+  department_id: number | null
 }
 
 export type ProgramsMinAggregateOutputType = {
-  id: string | null
+  id: number | null
   name: string | null
   code: string | null
   duration_years: number | null
   status: $Enums.program_status | null
-  department_id: string | null
+  department_id: number | null
   created_at: Date | null
   updated_at: Date | null
 }
 
 export type ProgramsMaxAggregateOutputType = {
-  id: string | null
+  id: number | null
   name: string | null
   code: string | null
   duration_years: number | null
   status: $Enums.program_status | null
-  department_id: string | null
+  department_id: number | null
   created_at: Date | null
   updated_at: Date | null
 }
@@ -70,11 +74,15 @@ export type ProgramsCountAggregateOutputType = {
 
 
 export type ProgramsAvgAggregateInputType = {
+  id?: true
   duration_years?: true
+  department_id?: true
 }
 
 export type ProgramsSumAggregateInputType = {
+  id?: true
   duration_years?: true
+  department_id?: true
 }
 
 export type ProgramsMinAggregateInputType = {
@@ -198,12 +206,12 @@ export type programsGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 export type ProgramsGroupByOutputType = {
-  id: string
+  id: number
   name: string
   code: string
   duration_years: number
   status: $Enums.program_status
-  department_id: string
+  department_id: number
   created_at: Date
   updated_at: Date
   _count: ProgramsCountAggregateOutputType | null
@@ -232,12 +240,12 @@ export type programsWhereInput = {
   AND?: Prisma.programsWhereInput | Prisma.programsWhereInput[]
   OR?: Prisma.programsWhereInput[]
   NOT?: Prisma.programsWhereInput | Prisma.programsWhereInput[]
-  id?: Prisma.StringFilter<"programs"> | string
+  id?: Prisma.IntFilter<"programs"> | number
   name?: Prisma.StringFilter<"programs"> | string
   code?: Prisma.StringFilter<"programs"> | string
   duration_years?: Prisma.IntFilter<"programs"> | number
   status?: Prisma.Enumprogram_statusFilter<"programs"> | $Enums.program_status
-  department_id?: Prisma.StringFilter<"programs"> | string
+  department_id?: Prisma.IntFilter<"programs"> | number
   created_at?: Prisma.DateTimeFilter<"programs"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"programs"> | Date | string
   department?: Prisma.XOR<Prisma.DepartmentsScalarRelationFilter, Prisma.departmentsWhereInput>
@@ -258,7 +266,7 @@ export type programsOrderByWithRelationInput = {
 }
 
 export type programsWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  id?: number
   code?: string
   name_department_id?: Prisma.programsNameDepartment_idCompoundUniqueInput
   AND?: Prisma.programsWhereInput | Prisma.programsWhereInput[]
@@ -267,7 +275,7 @@ export type programsWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"programs"> | string
   duration_years?: Prisma.IntFilter<"programs"> | number
   status?: Prisma.Enumprogram_statusFilter<"programs"> | $Enums.program_status
-  department_id?: Prisma.StringFilter<"programs"> | string
+  department_id?: Prisma.IntFilter<"programs"> | number
   created_at?: Prisma.DateTimeFilter<"programs"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"programs"> | Date | string
   department?: Prisma.XOR<Prisma.DepartmentsScalarRelationFilter, Prisma.departmentsWhereInput>
@@ -294,18 +302,17 @@ export type programsScalarWhereWithAggregatesInput = {
   AND?: Prisma.programsScalarWhereWithAggregatesInput | Prisma.programsScalarWhereWithAggregatesInput[]
   OR?: Prisma.programsScalarWhereWithAggregatesInput[]
   NOT?: Prisma.programsScalarWhereWithAggregatesInput | Prisma.programsScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"programs"> | string
+  id?: Prisma.IntWithAggregatesFilter<"programs"> | number
   name?: Prisma.StringWithAggregatesFilter<"programs"> | string
   code?: Prisma.StringWithAggregatesFilter<"programs"> | string
   duration_years?: Prisma.IntWithAggregatesFilter<"programs"> | number
   status?: Prisma.Enumprogram_statusWithAggregatesFilter<"programs"> | $Enums.program_status
-  department_id?: Prisma.StringWithAggregatesFilter<"programs"> | string
+  department_id?: Prisma.IntWithAggregatesFilter<"programs"> | number
   created_at?: Prisma.DateTimeWithAggregatesFilter<"programs"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"programs"> | Date | string
 }
 
 export type programsCreateInput = {
-  id?: string
   name: string
   code: string
   duration_years: number
@@ -317,19 +324,18 @@ export type programsCreateInput = {
 }
 
 export type programsUncheckedCreateInput = {
-  id?: string
+  id?: number
   name: string
   code: string
   duration_years: number
   status?: $Enums.program_status
-  department_id: string
+  department_id: number
   created_at?: Date | string
   updated_at?: Date | string
   courses?: Prisma.coursesUncheckedCreateNestedManyWithoutProgramInput
 }
 
 export type programsUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   duration_years?: Prisma.IntFieldUpdateOperationsInput | number
@@ -341,30 +347,29 @@ export type programsUpdateInput = {
 }
 
 export type programsUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   duration_years?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.Enumprogram_statusFieldUpdateOperationsInput | $Enums.program_status
-  department_id?: Prisma.StringFieldUpdateOperationsInput | string
+  department_id?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   courses?: Prisma.coursesUncheckedUpdateManyWithoutProgramNestedInput
 }
 
 export type programsCreateManyInput = {
-  id?: string
+  id?: number
   name: string
   code: string
   duration_years: number
   status?: $Enums.program_status
-  department_id: string
+  department_id: number
   created_at?: Date | string
   updated_at?: Date | string
 }
 
 export type programsUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   duration_years?: Prisma.IntFieldUpdateOperationsInput | number
@@ -374,12 +379,12 @@ export type programsUpdateManyMutationInput = {
 }
 
 export type programsUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   duration_years?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.Enumprogram_statusFieldUpdateOperationsInput | $Enums.program_status
-  department_id?: Prisma.StringFieldUpdateOperationsInput | string
+  department_id?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -396,7 +401,7 @@ export type programsOrderByRelationAggregateInput = {
 
 export type programsNameDepartment_idCompoundUniqueInput = {
   name: string
-  department_id: string
+  department_id: number
 }
 
 export type programsCountOrderByAggregateInput = {
@@ -411,7 +416,9 @@ export type programsCountOrderByAggregateInput = {
 }
 
 export type programsAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   duration_years?: Prisma.SortOrder
+  department_id?: Prisma.SortOrder
 }
 
 export type programsMaxOrderByAggregateInput = {
@@ -437,7 +444,9 @@ export type programsMinOrderByAggregateInput = {
 }
 
 export type programsSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   duration_years?: Prisma.SortOrder
+  department_id?: Prisma.SortOrder
 }
 
 export type ProgramsScalarRelationFilter = {
@@ -487,14 +496,6 @@ export type programsUncheckedUpdateManyWithoutDepartmentNestedInput = {
   deleteMany?: Prisma.programsScalarWhereInput | Prisma.programsScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type Enumprogram_statusFieldUpdateOperationsInput = {
   set?: $Enums.program_status
 }
@@ -514,7 +515,6 @@ export type programsUpdateOneRequiredWithoutCoursesNestedInput = {
 }
 
 export type programsCreateWithoutDepartmentInput = {
-  id?: string
   name: string
   code: string
   duration_years: number
@@ -525,7 +525,7 @@ export type programsCreateWithoutDepartmentInput = {
 }
 
 export type programsUncheckedCreateWithoutDepartmentInput = {
-  id?: string
+  id?: number
   name: string
   code: string
   duration_years: number
@@ -565,18 +565,17 @@ export type programsScalarWhereInput = {
   AND?: Prisma.programsScalarWhereInput | Prisma.programsScalarWhereInput[]
   OR?: Prisma.programsScalarWhereInput[]
   NOT?: Prisma.programsScalarWhereInput | Prisma.programsScalarWhereInput[]
-  id?: Prisma.StringFilter<"programs"> | string
+  id?: Prisma.IntFilter<"programs"> | number
   name?: Prisma.StringFilter<"programs"> | string
   code?: Prisma.StringFilter<"programs"> | string
   duration_years?: Prisma.IntFilter<"programs"> | number
   status?: Prisma.Enumprogram_statusFilter<"programs"> | $Enums.program_status
-  department_id?: Prisma.StringFilter<"programs"> | string
+  department_id?: Prisma.IntFilter<"programs"> | number
   created_at?: Prisma.DateTimeFilter<"programs"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"programs"> | Date | string
 }
 
 export type programsCreateWithoutCoursesInput = {
-  id?: string
   name: string
   code: string
   duration_years: number
@@ -587,12 +586,12 @@ export type programsCreateWithoutCoursesInput = {
 }
 
 export type programsUncheckedCreateWithoutCoursesInput = {
-  id?: string
+  id?: number
   name: string
   code: string
   duration_years: number
   status?: $Enums.program_status
-  department_id: string
+  department_id: number
   created_at?: Date | string
   updated_at?: Date | string
 }
@@ -614,7 +613,6 @@ export type programsUpdateToOneWithWhereWithoutCoursesInput = {
 }
 
 export type programsUpdateWithoutCoursesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   duration_years?: Prisma.IntFieldUpdateOperationsInput | number
@@ -625,18 +623,18 @@ export type programsUpdateWithoutCoursesInput = {
 }
 
 export type programsUncheckedUpdateWithoutCoursesInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   duration_years?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.Enumprogram_statusFieldUpdateOperationsInput | $Enums.program_status
-  department_id?: Prisma.StringFieldUpdateOperationsInput | string
+  department_id?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type programsCreateManyDepartmentInput = {
-  id?: string
+  id?: number
   name: string
   code: string
   duration_years: number
@@ -646,7 +644,6 @@ export type programsCreateManyDepartmentInput = {
 }
 
 export type programsUpdateWithoutDepartmentInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   duration_years?: Prisma.IntFieldUpdateOperationsInput | number
@@ -657,7 +654,7 @@ export type programsUpdateWithoutDepartmentInput = {
 }
 
 export type programsUncheckedUpdateWithoutDepartmentInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   duration_years?: Prisma.IntFieldUpdateOperationsInput | number
@@ -668,7 +665,7 @@ export type programsUncheckedUpdateWithoutDepartmentInput = {
 }
 
 export type programsUncheckedUpdateManyWithoutDepartmentInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   duration_years?: Prisma.IntFieldUpdateOperationsInput | number
@@ -777,12 +774,12 @@ export type $programsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     courses: Prisma.$coursesPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
+    id: number
     name: string
     code: string
     duration_years: number
     status: $Enums.program_status
-    department_id: string
+    department_id: number
     created_at: Date
     updated_at: Date
   }, ExtArgs["result"]["programs"]>
@@ -1210,12 +1207,12 @@ export interface Prisma__programsClient<T, Null = never, ExtArgs extends runtime
  * Fields of the programs model
  */
 export interface programsFieldRefs {
-  readonly id: Prisma.FieldRef<"programs", 'String'>
+  readonly id: Prisma.FieldRef<"programs", 'Int'>
   readonly name: Prisma.FieldRef<"programs", 'String'>
   readonly code: Prisma.FieldRef<"programs", 'String'>
   readonly duration_years: Prisma.FieldRef<"programs", 'Int'>
   readonly status: Prisma.FieldRef<"programs", 'program_status'>
-  readonly department_id: Prisma.FieldRef<"programs", 'String'>
+  readonly department_id: Prisma.FieldRef<"programs", 'Int'>
   readonly created_at: Prisma.FieldRef<"programs", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"programs", 'DateTime'>
 }

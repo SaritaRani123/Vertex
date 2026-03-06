@@ -27,15 +27,17 @@ export type AggregateSemesters = {
 }
 
 export type SemestersAvgAggregateOutputType = {
+  id: number | null
   year: number | null
 }
 
 export type SemestersSumAggregateOutputType = {
+  id: number | null
   year: number | null
 }
 
 export type SemestersMinAggregateOutputType = {
-  id: string | null
+  id: number | null
   year: number | null
   type: $Enums.semester_type | null
   created_at: Date | null
@@ -43,7 +45,7 @@ export type SemestersMinAggregateOutputType = {
 }
 
 export type SemestersMaxAggregateOutputType = {
-  id: string | null
+  id: number | null
   year: number | null
   type: $Enums.semester_type | null
   created_at: Date | null
@@ -61,10 +63,12 @@ export type SemestersCountAggregateOutputType = {
 
 
 export type SemestersAvgAggregateInputType = {
+  id?: true
   year?: true
 }
 
 export type SemestersSumAggregateInputType = {
+  id?: true
   year?: true
 }
 
@@ -180,7 +184,7 @@ export type semestersGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 export type SemestersGroupByOutputType = {
-  id: string
+  id: number
   year: number
   type: $Enums.semester_type
   created_at: Date
@@ -211,7 +215,7 @@ export type semestersWhereInput = {
   AND?: Prisma.semestersWhereInput | Prisma.semestersWhereInput[]
   OR?: Prisma.semestersWhereInput[]
   NOT?: Prisma.semestersWhereInput | Prisma.semestersWhereInput[]
-  id?: Prisma.StringFilter<"semesters"> | string
+  id?: Prisma.IntFilter<"semesters"> | number
   year?: Prisma.IntFilter<"semesters"> | number
   type?: Prisma.Enumsemester_typeFilter<"semesters"> | $Enums.semester_type
   created_at?: Prisma.DateTimeFilter<"semesters"> | Date | string
@@ -229,7 +233,7 @@ export type semestersOrderByWithRelationInput = {
 }
 
 export type semestersWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  id?: number
   year_type?: Prisma.semestersYearTypeCompoundUniqueInput
   AND?: Prisma.semestersWhereInput | Prisma.semestersWhereInput[]
   OR?: Prisma.semestersWhereInput[]
@@ -258,7 +262,7 @@ export type semestersScalarWhereWithAggregatesInput = {
   AND?: Prisma.semestersScalarWhereWithAggregatesInput | Prisma.semestersScalarWhereWithAggregatesInput[]
   OR?: Prisma.semestersScalarWhereWithAggregatesInput[]
   NOT?: Prisma.semestersScalarWhereWithAggregatesInput | Prisma.semestersScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"semesters"> | string
+  id?: Prisma.IntWithAggregatesFilter<"semesters"> | number
   year?: Prisma.IntWithAggregatesFilter<"semesters"> | number
   type?: Prisma.Enumsemester_typeWithAggregatesFilter<"semesters"> | $Enums.semester_type
   created_at?: Prisma.DateTimeWithAggregatesFilter<"semesters"> | Date | string
@@ -266,7 +270,6 @@ export type semestersScalarWhereWithAggregatesInput = {
 }
 
 export type semestersCreateInput = {
-  id?: string
   year: number
   type: $Enums.semester_type
   created_at?: Date | string
@@ -275,7 +278,7 @@ export type semestersCreateInput = {
 }
 
 export type semestersUncheckedCreateInput = {
-  id?: string
+  id?: number
   year: number
   type: $Enums.semester_type
   created_at?: Date | string
@@ -284,7 +287,6 @@ export type semestersUncheckedCreateInput = {
 }
 
 export type semestersUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.Enumsemester_typeFieldUpdateOperationsInput | $Enums.semester_type
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -293,7 +295,7 @@ export type semestersUpdateInput = {
 }
 
 export type semestersUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.Enumsemester_typeFieldUpdateOperationsInput | $Enums.semester_type
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -302,7 +304,7 @@ export type semestersUncheckedUpdateInput = {
 }
 
 export type semestersCreateManyInput = {
-  id?: string
+  id?: number
   year: number
   type: $Enums.semester_type
   created_at?: Date | string
@@ -310,7 +312,6 @@ export type semestersCreateManyInput = {
 }
 
 export type semestersUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.Enumsemester_typeFieldUpdateOperationsInput | $Enums.semester_type
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -318,7 +319,7 @@ export type semestersUpdateManyMutationInput = {
 }
 
 export type semestersUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.Enumsemester_typeFieldUpdateOperationsInput | $Enums.semester_type
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -339,6 +340,7 @@ export type semestersCountOrderByAggregateInput = {
 }
 
 export type semestersAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   year?: Prisma.SortOrder
 }
 
@@ -359,6 +361,7 @@ export type semestersMinOrderByAggregateInput = {
 }
 
 export type semestersSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   year?: Prisma.SortOrder
 }
 
@@ -386,7 +389,6 @@ export type semestersUpdateOneRequiredWithoutTermsNestedInput = {
 }
 
 export type semestersCreateWithoutTermsInput = {
-  id?: string
   year: number
   type: $Enums.semester_type
   created_at?: Date | string
@@ -394,7 +396,7 @@ export type semestersCreateWithoutTermsInput = {
 }
 
 export type semestersUncheckedCreateWithoutTermsInput = {
-  id?: string
+  id?: number
   year: number
   type: $Enums.semester_type
   created_at?: Date | string
@@ -418,7 +420,6 @@ export type semestersUpdateToOneWithWhereWithoutTermsInput = {
 }
 
 export type semestersUpdateWithoutTermsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   year?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.Enumsemester_typeFieldUpdateOperationsInput | $Enums.semester_type
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -426,7 +427,7 @@ export type semestersUpdateWithoutTermsInput = {
 }
 
 export type semestersUncheckedUpdateWithoutTermsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.Enumsemester_typeFieldUpdateOperationsInput | $Enums.semester_type
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -512,7 +513,7 @@ export type $semestersPayload<ExtArgs extends runtime.Types.Extensions.InternalA
     terms: Prisma.$termsPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
+    id: number
     year: number
     type: $Enums.semester_type
     created_at: Date
@@ -941,7 +942,7 @@ export interface Prisma__semestersClient<T, Null = never, ExtArgs extends runtim
  * Fields of the semesters model
  */
 export interface semestersFieldRefs {
-  readonly id: Prisma.FieldRef<"semesters", 'String'>
+  readonly id: Prisma.FieldRef<"semesters", 'Int'>
   readonly year: Prisma.FieldRef<"semesters", 'Int'>
   readonly type: Prisma.FieldRef<"semesters", 'semester_type'>
   readonly created_at: Prisma.FieldRef<"semesters", 'DateTime'>

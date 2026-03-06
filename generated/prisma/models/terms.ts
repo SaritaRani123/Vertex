@@ -20,21 +20,35 @@ export type termsModel = runtime.Types.Result.DefaultSelection<Prisma.$termsPayl
 
 export type AggregateTerms = {
   _count: TermsCountAggregateOutputType | null
+  _avg: TermsAvgAggregateOutputType | null
+  _sum: TermsSumAggregateOutputType | null
   _min: TermsMinAggregateOutputType | null
   _max: TermsMaxAggregateOutputType | null
 }
 
+export type TermsAvgAggregateOutputType = {
+  id: number | null
+  semester_id: number | null
+  course_id: number | null
+}
+
+export type TermsSumAggregateOutputType = {
+  id: number | null
+  semester_id: number | null
+  course_id: number | null
+}
+
 export type TermsMinAggregateOutputType = {
-  id: string | null
-  semester_id: string | null
-  course_id: string | null
+  id: number | null
+  semester_id: number | null
+  course_id: number | null
   created_at: Date | null
 }
 
 export type TermsMaxAggregateOutputType = {
-  id: string | null
-  semester_id: string | null
-  course_id: string | null
+  id: number | null
+  semester_id: number | null
+  course_id: number | null
   created_at: Date | null
 }
 
@@ -46,6 +60,18 @@ export type TermsCountAggregateOutputType = {
   _all: number
 }
 
+
+export type TermsAvgAggregateInputType = {
+  id?: true
+  semester_id?: true
+  course_id?: true
+}
+
+export type TermsSumAggregateInputType = {
+  id?: true
+  semester_id?: true
+  course_id?: true
+}
 
 export type TermsMinAggregateInputType = {
   id?: true
@@ -107,6 +133,18 @@ export type TermsAggregateArgs<ExtArgs extends runtime.Types.Extensions.Internal
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: TermsAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: TermsSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: TermsMinAggregateInputType
@@ -137,16 +175,20 @@ export type termsGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   _count?: TermsCountAggregateInputType | true
+  _avg?: TermsAvgAggregateInputType
+  _sum?: TermsSumAggregateInputType
   _min?: TermsMinAggregateInputType
   _max?: TermsMaxAggregateInputType
 }
 
 export type TermsGroupByOutputType = {
-  id: string
-  semester_id: string
-  course_id: string
+  id: number
+  semester_id: number
+  course_id: number
   created_at: Date
   _count: TermsCountAggregateOutputType | null
+  _avg: TermsAvgAggregateOutputType | null
+  _sum: TermsSumAggregateOutputType | null
   _min: TermsMinAggregateOutputType | null
   _max: TermsMaxAggregateOutputType | null
 }
@@ -170,9 +212,9 @@ export type termsWhereInput = {
   AND?: Prisma.termsWhereInput | Prisma.termsWhereInput[]
   OR?: Prisma.termsWhereInput[]
   NOT?: Prisma.termsWhereInput | Prisma.termsWhereInput[]
-  id?: Prisma.StringFilter<"terms"> | string
-  semester_id?: Prisma.StringFilter<"terms"> | string
-  course_id?: Prisma.StringFilter<"terms"> | string
+  id?: Prisma.IntFilter<"terms"> | number
+  semester_id?: Prisma.IntFilter<"terms"> | number
+  course_id?: Prisma.IntFilter<"terms"> | number
   created_at?: Prisma.DateTimeFilter<"terms"> | Date | string
   semester?: Prisma.XOR<Prisma.SemestersScalarRelationFilter, Prisma.semestersWhereInput>
   course?: Prisma.XOR<Prisma.CoursesScalarRelationFilter, Prisma.coursesWhereInput>
@@ -188,13 +230,13 @@ export type termsOrderByWithRelationInput = {
 }
 
 export type termsWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  id?: number
   semester_id_course_id?: Prisma.termsSemester_idCourse_idCompoundUniqueInput
   AND?: Prisma.termsWhereInput | Prisma.termsWhereInput[]
   OR?: Prisma.termsWhereInput[]
   NOT?: Prisma.termsWhereInput | Prisma.termsWhereInput[]
-  semester_id?: Prisma.StringFilter<"terms"> | string
-  course_id?: Prisma.StringFilter<"terms"> | string
+  semester_id?: Prisma.IntFilter<"terms"> | number
+  course_id?: Prisma.IntFilter<"terms"> | number
   created_at?: Prisma.DateTimeFilter<"terms"> | Date | string
   semester?: Prisma.XOR<Prisma.SemestersScalarRelationFilter, Prisma.semestersWhereInput>
   course?: Prisma.XOR<Prisma.CoursesScalarRelationFilter, Prisma.coursesWhereInput>
@@ -206,64 +248,63 @@ export type termsOrderByWithAggregationInput = {
   course_id?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   _count?: Prisma.termsCountOrderByAggregateInput
+  _avg?: Prisma.termsAvgOrderByAggregateInput
   _max?: Prisma.termsMaxOrderByAggregateInput
   _min?: Prisma.termsMinOrderByAggregateInput
+  _sum?: Prisma.termsSumOrderByAggregateInput
 }
 
 export type termsScalarWhereWithAggregatesInput = {
   AND?: Prisma.termsScalarWhereWithAggregatesInput | Prisma.termsScalarWhereWithAggregatesInput[]
   OR?: Prisma.termsScalarWhereWithAggregatesInput[]
   NOT?: Prisma.termsScalarWhereWithAggregatesInput | Prisma.termsScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"terms"> | string
-  semester_id?: Prisma.StringWithAggregatesFilter<"terms"> | string
-  course_id?: Prisma.StringWithAggregatesFilter<"terms"> | string
+  id?: Prisma.IntWithAggregatesFilter<"terms"> | number
+  semester_id?: Prisma.IntWithAggregatesFilter<"terms"> | number
+  course_id?: Prisma.IntWithAggregatesFilter<"terms"> | number
   created_at?: Prisma.DateTimeWithAggregatesFilter<"terms"> | Date | string
 }
 
 export type termsCreateInput = {
-  id?: string
   created_at?: Date | string
   semester: Prisma.semestersCreateNestedOneWithoutTermsInput
   course: Prisma.coursesCreateNestedOneWithoutTermsInput
 }
 
 export type termsUncheckedCreateInput = {
-  id?: string
-  semester_id: string
-  course_id: string
+  id?: number
+  semester_id: number
+  course_id: number
   created_at?: Date | string
 }
 
 export type termsUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   semester?: Prisma.semestersUpdateOneRequiredWithoutTermsNestedInput
   course?: Prisma.coursesUpdateOneRequiredWithoutTermsNestedInput
 }
 
 export type termsUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  semester_id?: Prisma.StringFieldUpdateOperationsInput | string
-  course_id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  semester_id?: Prisma.IntFieldUpdateOperationsInput | number
+  course_id?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type termsCreateManyInput = {
-  id?: string
-  semester_id: string
-  course_id: string
+  id?: number
+  semester_id: number
+  course_id: number
   created_at?: Date | string
 }
 
 export type termsUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type termsUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  semester_id?: Prisma.StringFieldUpdateOperationsInput | string
-  course_id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  semester_id?: Prisma.IntFieldUpdateOperationsInput | number
+  course_id?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -278,8 +319,8 @@ export type termsOrderByRelationAggregateInput = {
 }
 
 export type termsSemester_idCourse_idCompoundUniqueInput = {
-  semester_id: string
-  course_id: string
+  semester_id: number
+  course_id: number
 }
 
 export type termsCountOrderByAggregateInput = {
@@ -287,6 +328,12 @@ export type termsCountOrderByAggregateInput = {
   semester_id?: Prisma.SortOrder
   course_id?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+}
+
+export type termsAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  semester_id?: Prisma.SortOrder
+  course_id?: Prisma.SortOrder
 }
 
 export type termsMaxOrderByAggregateInput = {
@@ -301,6 +348,12 @@ export type termsMinOrderByAggregateInput = {
   semester_id?: Prisma.SortOrder
   course_id?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
+}
+
+export type termsSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  semester_id?: Prisma.SortOrder
+  course_id?: Prisma.SortOrder
 }
 
 export type termsCreateNestedManyWithoutCourseInput = {
@@ -388,14 +441,13 @@ export type termsUncheckedUpdateManyWithoutSemesterNestedInput = {
 }
 
 export type termsCreateWithoutCourseInput = {
-  id?: string
   created_at?: Date | string
   semester: Prisma.semestersCreateNestedOneWithoutTermsInput
 }
 
 export type termsUncheckedCreateWithoutCourseInput = {
-  id?: string
-  semester_id: string
+  id?: number
+  semester_id: number
   created_at?: Date | string
 }
 
@@ -429,21 +481,20 @@ export type termsScalarWhereInput = {
   AND?: Prisma.termsScalarWhereInput | Prisma.termsScalarWhereInput[]
   OR?: Prisma.termsScalarWhereInput[]
   NOT?: Prisma.termsScalarWhereInput | Prisma.termsScalarWhereInput[]
-  id?: Prisma.StringFilter<"terms"> | string
-  semester_id?: Prisma.StringFilter<"terms"> | string
-  course_id?: Prisma.StringFilter<"terms"> | string
+  id?: Prisma.IntFilter<"terms"> | number
+  semester_id?: Prisma.IntFilter<"terms"> | number
+  course_id?: Prisma.IntFilter<"terms"> | number
   created_at?: Prisma.DateTimeFilter<"terms"> | Date | string
 }
 
 export type termsCreateWithoutSemesterInput = {
-  id?: string
   created_at?: Date | string
   course: Prisma.coursesCreateNestedOneWithoutTermsInput
 }
 
 export type termsUncheckedCreateWithoutSemesterInput = {
-  id?: string
-  course_id: string
+  id?: number
+  course_id: number
   created_at?: Date | string
 }
 
@@ -474,50 +525,48 @@ export type termsUpdateManyWithWhereWithoutSemesterInput = {
 }
 
 export type termsCreateManyCourseInput = {
-  id?: string
-  semester_id: string
+  id?: number
+  semester_id: number
   created_at?: Date | string
 }
 
 export type termsUpdateWithoutCourseInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   semester?: Prisma.semestersUpdateOneRequiredWithoutTermsNestedInput
 }
 
 export type termsUncheckedUpdateWithoutCourseInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  semester_id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  semester_id?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type termsUncheckedUpdateManyWithoutCourseInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  semester_id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  semester_id?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type termsCreateManySemesterInput = {
-  id?: string
-  course_id: string
+  id?: number
+  course_id: number
   created_at?: Date | string
 }
 
 export type termsUpdateWithoutSemesterInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   course?: Prisma.coursesUpdateOneRequiredWithoutTermsNestedInput
 }
 
 export type termsUncheckedUpdateWithoutSemesterInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  course_id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  course_id?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type termsUncheckedUpdateManyWithoutSemesterInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  course_id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  course_id?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -578,9 +627,9 @@ export type $termsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     course: Prisma.$coursesPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
-    semester_id: string
-    course_id: string
+    id: number
+    semester_id: number
+    course_id: number
     created_at: Date
   }, ExtArgs["result"]["terms"]>
   composites: {}
@@ -1007,9 +1056,9 @@ export interface Prisma__termsClient<T, Null = never, ExtArgs extends runtime.Ty
  * Fields of the terms model
  */
 export interface termsFieldRefs {
-  readonly id: Prisma.FieldRef<"terms", 'String'>
-  readonly semester_id: Prisma.FieldRef<"terms", 'String'>
-  readonly course_id: Prisma.FieldRef<"terms", 'String'>
+  readonly id: Prisma.FieldRef<"terms", 'Int'>
+  readonly semester_id: Prisma.FieldRef<"terms", 'Int'>
+  readonly course_id: Prisma.FieldRef<"terms", 'Int'>
   readonly created_at: Prisma.FieldRef<"terms", 'DateTime'>
 }
     

@@ -27,19 +27,23 @@ export type AggregateCourses = {
 }
 
 export type CoursesAvgAggregateOutputType = {
+  id: number | null
   credits: number | null
   lecture_hours: number | null
   lab_hours: number | null
+  program_id: number | null
 }
 
 export type CoursesSumAggregateOutputType = {
+  id: number | null
   credits: number | null
   lecture_hours: number | null
   lab_hours: number | null
+  program_id: number | null
 }
 
 export type CoursesMinAggregateOutputType = {
-  id: string | null
+  id: number | null
   name: string | null
   code: string | null
   description: string | null
@@ -47,13 +51,13 @@ export type CoursesMinAggregateOutputType = {
   lecture_hours: number | null
   lab_hours: number | null
   status: $Enums.course_status | null
-  program_id: string | null
+  program_id: number | null
   created_at: Date | null
   updated_at: Date | null
 }
 
 export type CoursesMaxAggregateOutputType = {
-  id: string | null
+  id: number | null
   name: string | null
   code: string | null
   description: string | null
@@ -61,7 +65,7 @@ export type CoursesMaxAggregateOutputType = {
   lecture_hours: number | null
   lab_hours: number | null
   status: $Enums.course_status | null
-  program_id: string | null
+  program_id: number | null
   created_at: Date | null
   updated_at: Date | null
 }
@@ -84,15 +88,19 @@ export type CoursesCountAggregateOutputType = {
 
 
 export type CoursesAvgAggregateInputType = {
+  id?: true
   credits?: true
   lecture_hours?: true
   lab_hours?: true
+  program_id?: true
 }
 
 export type CoursesSumAggregateInputType = {
+  id?: true
   credits?: true
   lecture_hours?: true
   lab_hours?: true
+  program_id?: true
 }
 
 export type CoursesMinAggregateInputType = {
@@ -226,7 +234,7 @@ export type coursesGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 export type CoursesGroupByOutputType = {
-  id: string
+  id: number
   name: string
   code: string
   description: string | null
@@ -235,7 +243,7 @@ export type CoursesGroupByOutputType = {
   lecture_hours: number
   lab_hours: number
   status: $Enums.course_status
-  program_id: string
+  program_id: number
   created_at: Date
   updated_at: Date
   _count: CoursesCountAggregateOutputType | null
@@ -264,7 +272,7 @@ export type coursesWhereInput = {
   AND?: Prisma.coursesWhereInput | Prisma.coursesWhereInput[]
   OR?: Prisma.coursesWhereInput[]
   NOT?: Prisma.coursesWhereInput | Prisma.coursesWhereInput[]
-  id?: Prisma.StringFilter<"courses"> | string
+  id?: Prisma.IntFilter<"courses"> | number
   name?: Prisma.StringFilter<"courses"> | string
   code?: Prisma.StringFilter<"courses"> | string
   description?: Prisma.StringNullableFilter<"courses"> | string | null
@@ -273,7 +281,7 @@ export type coursesWhereInput = {
   lecture_hours?: Prisma.IntFilter<"courses"> | number
   lab_hours?: Prisma.IntFilter<"courses"> | number
   status?: Prisma.Enumcourse_statusFilter<"courses"> | $Enums.course_status
-  program_id?: Prisma.StringFilter<"courses"> | string
+  program_id?: Prisma.IntFilter<"courses"> | number
   created_at?: Prisma.DateTimeFilter<"courses"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"courses"> | Date | string
   program?: Prisma.XOR<Prisma.ProgramsScalarRelationFilter, Prisma.programsWhereInput>
@@ -298,7 +306,7 @@ export type coursesOrderByWithRelationInput = {
 }
 
 export type coursesWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  id?: number
   code?: string
   AND?: Prisma.coursesWhereInput | Prisma.coursesWhereInput[]
   OR?: Prisma.coursesWhereInput[]
@@ -310,7 +318,7 @@ export type coursesWhereUniqueInput = Prisma.AtLeast<{
   lecture_hours?: Prisma.IntFilter<"courses"> | number
   lab_hours?: Prisma.IntFilter<"courses"> | number
   status?: Prisma.Enumcourse_statusFilter<"courses"> | $Enums.course_status
-  program_id?: Prisma.StringFilter<"courses"> | string
+  program_id?: Prisma.IntFilter<"courses"> | number
   created_at?: Prisma.DateTimeFilter<"courses"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"courses"> | Date | string
   program?: Prisma.XOR<Prisma.ProgramsScalarRelationFilter, Prisma.programsWhereInput>
@@ -341,7 +349,7 @@ export type coursesScalarWhereWithAggregatesInput = {
   AND?: Prisma.coursesScalarWhereWithAggregatesInput | Prisma.coursesScalarWhereWithAggregatesInput[]
   OR?: Prisma.coursesScalarWhereWithAggregatesInput[]
   NOT?: Prisma.coursesScalarWhereWithAggregatesInput | Prisma.coursesScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"courses"> | string
+  id?: Prisma.IntWithAggregatesFilter<"courses"> | number
   name?: Prisma.StringWithAggregatesFilter<"courses"> | string
   code?: Prisma.StringWithAggregatesFilter<"courses"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"courses"> | string | null
@@ -350,13 +358,12 @@ export type coursesScalarWhereWithAggregatesInput = {
   lecture_hours?: Prisma.IntWithAggregatesFilter<"courses"> | number
   lab_hours?: Prisma.IntWithAggregatesFilter<"courses"> | number
   status?: Prisma.Enumcourse_statusWithAggregatesFilter<"courses"> | $Enums.course_status
-  program_id?: Prisma.StringWithAggregatesFilter<"courses"> | string
+  program_id?: Prisma.IntWithAggregatesFilter<"courses"> | number
   created_at?: Prisma.DateTimeWithAggregatesFilter<"courses"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"courses"> | Date | string
 }
 
 export type coursesCreateInput = {
-  id?: string
   name: string
   code: string
   description?: string | null
@@ -372,7 +379,7 @@ export type coursesCreateInput = {
 }
 
 export type coursesUncheckedCreateInput = {
-  id?: string
+  id?: number
   name: string
   code: string
   description?: string | null
@@ -381,14 +388,13 @@ export type coursesUncheckedCreateInput = {
   lecture_hours: number
   lab_hours: number
   status?: $Enums.course_status
-  program_id: string
+  program_id: number
   created_at?: Date | string
   updated_at?: Date | string
   terms?: Prisma.termsUncheckedCreateNestedManyWithoutCourseInput
 }
 
 export type coursesUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -404,7 +410,7 @@ export type coursesUpdateInput = {
 }
 
 export type coursesUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -413,14 +419,14 @@ export type coursesUncheckedUpdateInput = {
   lecture_hours?: Prisma.IntFieldUpdateOperationsInput | number
   lab_hours?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.Enumcourse_statusFieldUpdateOperationsInput | $Enums.course_status
-  program_id?: Prisma.StringFieldUpdateOperationsInput | string
+  program_id?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   terms?: Prisma.termsUncheckedUpdateManyWithoutCourseNestedInput
 }
 
 export type coursesCreateManyInput = {
-  id?: string
+  id?: number
   name: string
   code: string
   description?: string | null
@@ -429,13 +435,12 @@ export type coursesCreateManyInput = {
   lecture_hours: number
   lab_hours: number
   status?: $Enums.course_status
-  program_id: string
+  program_id: number
   created_at?: Date | string
   updated_at?: Date | string
 }
 
 export type coursesUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -449,7 +454,7 @@ export type coursesUpdateManyMutationInput = {
 }
 
 export type coursesUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -458,7 +463,7 @@ export type coursesUncheckedUpdateManyInput = {
   lecture_hours?: Prisma.IntFieldUpdateOperationsInput | number
   lab_hours?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.Enumcourse_statusFieldUpdateOperationsInput | $Enums.course_status
-  program_id?: Prisma.StringFieldUpdateOperationsInput | string
+  program_id?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -497,9 +502,11 @@ export type coursesCountOrderByAggregateInput = {
 }
 
 export type coursesAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   credits?: Prisma.SortOrder
   lecture_hours?: Prisma.SortOrder
   lab_hours?: Prisma.SortOrder
+  program_id?: Prisma.SortOrder
 }
 
 export type coursesMaxOrderByAggregateInput = {
@@ -531,9 +538,11 @@ export type coursesMinOrderByAggregateInput = {
 }
 
 export type coursesSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   credits?: Prisma.SortOrder
   lecture_hours?: Prisma.SortOrder
   lab_hours?: Prisma.SortOrder
+  program_id?: Prisma.SortOrder
 }
 
 export type CoursesScalarRelationFilter = {
@@ -615,7 +624,6 @@ export type coursesUpdateOneRequiredWithoutTermsNestedInput = {
 }
 
 export type coursesCreateWithoutProgramInput = {
-  id?: string
   name: string
   code: string
   description?: string | null
@@ -630,7 +638,7 @@ export type coursesCreateWithoutProgramInput = {
 }
 
 export type coursesUncheckedCreateWithoutProgramInput = {
-  id?: string
+  id?: number
   name: string
   code: string
   description?: string | null
@@ -674,7 +682,7 @@ export type coursesScalarWhereInput = {
   AND?: Prisma.coursesScalarWhereInput | Prisma.coursesScalarWhereInput[]
   OR?: Prisma.coursesScalarWhereInput[]
   NOT?: Prisma.coursesScalarWhereInput | Prisma.coursesScalarWhereInput[]
-  id?: Prisma.StringFilter<"courses"> | string
+  id?: Prisma.IntFilter<"courses"> | number
   name?: Prisma.StringFilter<"courses"> | string
   code?: Prisma.StringFilter<"courses"> | string
   description?: Prisma.StringNullableFilter<"courses"> | string | null
@@ -683,13 +691,12 @@ export type coursesScalarWhereInput = {
   lecture_hours?: Prisma.IntFilter<"courses"> | number
   lab_hours?: Prisma.IntFilter<"courses"> | number
   status?: Prisma.Enumcourse_statusFilter<"courses"> | $Enums.course_status
-  program_id?: Prisma.StringFilter<"courses"> | string
+  program_id?: Prisma.IntFilter<"courses"> | number
   created_at?: Prisma.DateTimeFilter<"courses"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"courses"> | Date | string
 }
 
 export type coursesCreateWithoutTermsInput = {
-  id?: string
   name: string
   code: string
   description?: string | null
@@ -704,7 +711,7 @@ export type coursesCreateWithoutTermsInput = {
 }
 
 export type coursesUncheckedCreateWithoutTermsInput = {
-  id?: string
+  id?: number
   name: string
   code: string
   description?: string | null
@@ -713,7 +720,7 @@ export type coursesUncheckedCreateWithoutTermsInput = {
   lecture_hours: number
   lab_hours: number
   status?: $Enums.course_status
-  program_id: string
+  program_id: number
   created_at?: Date | string
   updated_at?: Date | string
 }
@@ -735,7 +742,6 @@ export type coursesUpdateToOneWithWhereWithoutTermsInput = {
 }
 
 export type coursesUpdateWithoutTermsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -750,7 +756,7 @@ export type coursesUpdateWithoutTermsInput = {
 }
 
 export type coursesUncheckedUpdateWithoutTermsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -759,13 +765,13 @@ export type coursesUncheckedUpdateWithoutTermsInput = {
   lecture_hours?: Prisma.IntFieldUpdateOperationsInput | number
   lab_hours?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.Enumcourse_statusFieldUpdateOperationsInput | $Enums.course_status
-  program_id?: Prisma.StringFieldUpdateOperationsInput | string
+  program_id?: Prisma.IntFieldUpdateOperationsInput | number
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type coursesCreateManyProgramInput = {
-  id?: string
+  id?: number
   name: string
   code: string
   description?: string | null
@@ -779,7 +785,6 @@ export type coursesCreateManyProgramInput = {
 }
 
 export type coursesUpdateWithoutProgramInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -794,7 +799,7 @@ export type coursesUpdateWithoutProgramInput = {
 }
 
 export type coursesUncheckedUpdateWithoutProgramInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -809,7 +814,7 @@ export type coursesUncheckedUpdateWithoutProgramInput = {
 }
 
 export type coursesUncheckedUpdateManyWithoutProgramInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -938,7 +943,7 @@ export type $coursesPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     terms: Prisma.$termsPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
+    id: number
     name: string
     code: string
     description: string | null
@@ -947,7 +952,7 @@ export type $coursesPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     lecture_hours: number
     lab_hours: number
     status: $Enums.course_status
-    program_id: string
+    program_id: number
     created_at: Date
     updated_at: Date
   }, ExtArgs["result"]["courses"]>
@@ -1375,7 +1380,7 @@ export interface Prisma__coursesClient<T, Null = never, ExtArgs extends runtime.
  * Fields of the courses model
  */
 export interface coursesFieldRefs {
-  readonly id: Prisma.FieldRef<"courses", 'String'>
+  readonly id: Prisma.FieldRef<"courses", 'Int'>
   readonly name: Prisma.FieldRef<"courses", 'String'>
   readonly code: Prisma.FieldRef<"courses", 'String'>
   readonly description: Prisma.FieldRef<"courses", 'String'>
@@ -1384,7 +1389,7 @@ export interface coursesFieldRefs {
   readonly lecture_hours: Prisma.FieldRef<"courses", 'Int'>
   readonly lab_hours: Prisma.FieldRef<"courses", 'Int'>
   readonly status: Prisma.FieldRef<"courses", 'course_status'>
-  readonly program_id: Prisma.FieldRef<"courses", 'String'>
+  readonly program_id: Prisma.FieldRef<"courses", 'Int'>
   readonly created_at: Prisma.FieldRef<"courses", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"courses", 'DateTime'>
 }

@@ -34,7 +34,7 @@ enum semester_type {
 // ===============================
 
 model departments {
-  id          String     @id @default(uuid())
+  id          Int        @id @default(autoincrement())
   name        String     @unique
   code        String     @unique
 
@@ -49,13 +49,13 @@ model departments {
 // --------------------------------
 
 model programs {
-  id              String          @id @default(uuid())
+  id              Int             @id @default(autoincrement())
   name            String
   code            String          @unique
   duration_years  Int
   status          program_status  @default(ACTIVE)
 
-  department_id   String
+  department_id   Int
   department      departments     @relation(fields: [department_id], references: [id], onDelete: Restrict)
 
   courses         courses[]
@@ -70,7 +70,7 @@ model programs {
 // --------------------------------
 
 model courses {
-  id              String          @id @default(uuid())
+  id              Int             @id @default(autoincrement())
   name            String
   code            String          @unique
   description     String?
@@ -83,7 +83,7 @@ model courses {
 
   status          course_status   @default(ACTIVE)
 
-  program_id      String
+  program_id      Int
   program         programs        @relation(fields: [program_id], references: [id], onDelete: Restrict)
 
   terms           terms[]
@@ -98,7 +98,7 @@ model courses {
 // --------------------------------
 
 model semesters {
-  id          String         @id @default(uuid())
+  id          Int            @id @default(autoincrement())
   year        Int
   type        semester_type
 
@@ -116,12 +116,12 @@ model semesters {
 // --------------------------------
 
 model terms {
-  id            String     @id @default(uuid())
+  id            Int        @id @default(autoincrement())
 
-  semester_id   String
+  semester_id   Int
   semester      semesters  @relation(fields: [semester_id], references: [id], onDelete: Cascade)
 
-  course_id     String
+  course_id     Int
   course        courses    @relation(fields: [course_id], references: [id], onDelete: Cascade)
 
   created_at    DateTime   @default(now())
