@@ -66,6 +66,41 @@ curl http://localhost:3000/api/programs
 
 ---
 
+## Courses
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/courses` | Get all courses |
+| GET | `/api/courses/:id` | Get course by ID |
+| POST | `/api/courses` | Create course |
+| PUT | `/api/courses/:id` | Update course |
+| DELETE | `/api/courses/:id` | Delete course |
+
+---
+
+## Semesters
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/semesters` | Get all semesters |
+| GET | `/api/semesters/:id` | Get semester by ID |
+| POST | `/api/semesters` | Create semester |
+| PUT | `/api/semesters/:id` | Update semester |
+| DELETE | `/api/semesters/:id` | Delete semester |
+
+---
+
+## Terms
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET | `/api/terms` | Get all term assignments |
+| GET | `/api/terms/:id` | Get term assignment by ID |
+| POST | `/api/terms` | Assign course to semester |
+| DELETE | `/api/terms/:id` | Remove term assignment |
+
+---
+
 ## HTTP Status Codes
 
 | Code | Usage |

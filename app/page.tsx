@@ -13,7 +13,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -44,6 +44,57 @@ export default function DashboardPage() {
           <CardContent>
             <Button asChild>
               <Link href="/programs">View Programs</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <GraduationCap className="size-5" />
+              Courses
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Manage courses and assign to programs
+            </p>
+          </CardHeader>
+          <CardContent>
+            <Button asChild>
+              <Link href="/courses">View Courses</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <GraduationCap className="size-5" />
+              Semesters
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Manage semester periods
+            </p>
+          </CardHeader>
+          <CardContent>
+            <Button asChild>
+              <Link href="/semesters">View Semesters</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <GraduationCap className="size-5" />
+              Terms
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Assign courses to semesters (terms)
+            </p>
+          </CardHeader>
+          <CardContent>
+            <Button asChild>
+              <Link href="/terms">View Terms</Link>
             </Button>
           </CardContent>
         </Card>

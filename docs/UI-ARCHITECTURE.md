@@ -12,6 +12,12 @@
 | 3 | Create Department | `/departments/create` | Form to add a new department |
 | 4 | Programs List | `/programs` | View all programs with department filter |
 | 5 | Create Program | `/programs/create` | Form to add a new program |
+| 6 | Courses List | `/courses` | View all courses and manage CRUD |
+| 7 | Create Course | `/courses/create` | Form to add a new course |
+| 8 | Semesters List | `/semesters` | View semester periods |
+| 9 | Create Semester | `/semesters/create` | Form to add a new semester |
+| 10 | Terms List | `/terms` | View course-semester assignments |
+| 11 | Create Term | `/terms/create` | Assign a course to a semester |
 
 ---
 
@@ -76,6 +82,79 @@
 | **Components** | `Card`, `Field`, `FieldLabel`, `Input`, `Select`, `Button` |
 | **Client/Server** | **"use client"** — form state, department fetch for dropdown |
 | **Data** | `GET /api/departments` for dropdown; `POST /api/programs` on submit |
+
+---
+
+### 6. Courses List (`/courses`)
+
+| Item | Description |
+|------|-------------|
+| **Layout** | Full-width table with action buttons |
+| **Sections** | Header (title + add button), table with course fields and actions |
+| **Components** | `Card`, `Table`, `Button`, `AlertDialog` |
+| **Client/Server** | **"use client"** — fetches courses from API, handles delete/refresh |
+| **Data fetch** | `fetch('/api/courses')` on mount |
+| **Interactions** | Edit and delete courses; delete uses confirmation dialog |
+
+---
+
+### 7. Create Course (`/courses/create`)
+
+| Item | Description |
+|------|-------------|
+| **Layout** | Centered form, max-width container |
+| **Sections** | Name, code, description, prerequisites, credits, lecture hours, lab hours, status, program dropdown |
+| **Components** | `Card`, `Field`, `Input`, `Select`, `Button` |
+| **Client/Server** | **"use client"** — form state, program dropdown fetch, submission | 
+| **Data** | `GET /api/programs` for dropdown; `POST /api/courses` on submit |
+
+---
+
+### 8. Semesters List (`/semesters`)
+
+| Item | Description |
+|------|-------------|
+| **Layout** | Full-width page with table |
+| **Sections** | Header + add button, table with year + type + actions |
+| **Components** | `Card`, `Table`, `Button`, `AlertDialog` |
+| **Client/Server** | **"use client"** — fetches semesters, delete actions |
+| **Data fetch** | `fetch('/api/semesters')` |
+
+---
+
+### 9. Create Semester (`/semesters/create`)
+
+| Item | Description |
+|------|-------------|
+| **Layout** | Centered form |
+| **Sections** | Year, type dropdown |
+| **Components** | `Card`, `Field`, `Input`, `Select`, `Button` |
+| **Client/Server** | **"use client"** — submission to API |
+| **Data** | `POST /api/semesters` |
+
+---
+
+### 10. Terms List (`/terms`)
+
+| Item | Description |
+|------|-------------|
+| **Layout** | Full-width table |
+| **Sections** | Header + add button, table with course and semester mapping |
+| **Components** | `Card`, `Table`, `Button`, `AlertDialog` |
+| **Client/Server** | **"use client"** — fetches terms, delete actions |
+| **Data fetch** | `fetch('/api/terms')` |
+
+---
+
+### 11. Create Term (`/terms/create`)
+
+| Item | Description |
+|------|-------------|
+| **Layout** | Centered form |
+| **Sections** | Semester select, course select |
+| **Components** | `Card`, `Field`, `Select`, `Button` |
+| **Client/Server** | **"use client"** — selection fetch and submission |
+| **Data** | `POST /api/terms` |
 
 ---
 

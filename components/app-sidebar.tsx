@@ -1,11 +1,14 @@
 import Link from "next/link"
-import { LayoutDashboard, Building2, GraduationCap } from "lucide-react"
+import { LayoutDashboard, Building2, GraduationCap, BookOpen, CalendarDays, Layers } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/departments", label: "Departments", icon: Building2 },
   { href: "/programs", label: "Programs", icon: GraduationCap },
+  { href: "/courses", label: "Courses", icon: BookOpen },
+  { href: "/semesters", label: "Semesters", icon: CalendarDays },
+  { href: "/terms", label: "Terms", icon: Layers },
 ]
 
 export function AppSidebar() {

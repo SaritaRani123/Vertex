@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { ProgramInput, ProgramStatus } from "@/lib/api-types";
+import type { ProgramInput } from "@/lib/api-types";
 
 const programStatusSchema = z.enum(["ACTIVE", "INACTIVE"]);
 
