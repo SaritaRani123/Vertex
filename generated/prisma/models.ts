@@ -8,9 +8,9 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/departments'
-export type * from './models/programs'
-export type * from './models/courses'
-export type * from './models/semesters'
-export type * from './models/terms'
+export type * from './models/Departments'
+export type * from './models/Programs'
+export type * from './models/Courses'
+export type * from './models/Semesters'
+export type * from './models/Terms'
 export type * from './commonInputTypes'

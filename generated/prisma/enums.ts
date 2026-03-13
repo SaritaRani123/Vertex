@@ -9,27 +9,27 @@
 * 🟢 You can import this file directly.
 */
 
-export const program_status = {
+export const ProgramStatus = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE'
 } as const
 
-export type program_status = (typeof program_status)[keyof typeof program_status]
+export type ProgramStatus = (typeof ProgramStatus)[keyof typeof ProgramStatus]
 
 
-export const course_status = {
+export const CourseStatus = {
   ACTIVE: 'ACTIVE',
   INACTIVE: 'INACTIVE',
   ARCHIVED: 'ARCHIVED'
 } as const
 
-export type course_status = (typeof course_status)[keyof typeof course_status]
+export type CourseStatus = (typeof CourseStatus)[keyof typeof CourseStatus]
 
 
-export const semester_type = {
+export const SemesterType = {
   FALL: 'FALL',
   WINTER: 'WINTER',
   SUMMER: 'SUMMER'
 } as const
 
-export type semester_type = (typeof semester_type)[keyof typeof semester_type]
+export type SemesterType = (typeof SemesterType)[keyof typeof SemesterType]

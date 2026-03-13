@@ -51,11 +51,11 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  departments: 'departments',
-  programs: 'programs',
-  courses: 'courses',
-  semesters: 'semesters',
-  terms: 'terms'
+  Departments: 'Departments',
+  Programs: 'Programs',
+  Courses: 'Courses',
+  Semesters: 'Semesters',
+  Terms: 'Terms'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -75,64 +75,64 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 
 export const DepartmentsScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  code: 'code',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
+  Id: 'Id',
+  Name: 'Name',
+  Code: 'Code',
+  CreatedAt: 'CreatedAt',
+  UpdatedAt: 'UpdatedAt'
 } as const
 
 export type DepartmentsScalarFieldEnum = (typeof DepartmentsScalarFieldEnum)[keyof typeof DepartmentsScalarFieldEnum]
 
 
 export const ProgramsScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  code: 'code',
-  duration_years: 'duration_years',
-  status: 'status',
-  department_id: 'department_id',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
+  Id: 'Id',
+  Name: 'Name',
+  Code: 'Code',
+  DurationYears: 'DurationYears',
+  Status: 'Status',
+  DepartmentId: 'DepartmentId',
+  CreatedAt: 'CreatedAt',
+  UpdatedAt: 'UpdatedAt'
 } as const
 
 export type ProgramsScalarFieldEnum = (typeof ProgramsScalarFieldEnum)[keyof typeof ProgramsScalarFieldEnum]
 
 
 export const CoursesScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  code: 'code',
-  description: 'description',
-  prerequisites: 'prerequisites',
-  credits: 'credits',
-  lecture_hours: 'lecture_hours',
-  lab_hours: 'lab_hours',
-  status: 'status',
-  program_id: 'program_id',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
+  Id: 'Id',
+  Name: 'Name',
+  Code: 'Code',
+  Description: 'Description',
+  Prerequisites: 'Prerequisites',
+  Credits: 'Credits',
+  LectureHours: 'LectureHours',
+  LabHours: 'LabHours',
+  Status: 'Status',
+  ProgramId: 'ProgramId',
+  CreatedAt: 'CreatedAt',
+  UpdatedAt: 'UpdatedAt'
 } as const
 
 export type CoursesScalarFieldEnum = (typeof CoursesScalarFieldEnum)[keyof typeof CoursesScalarFieldEnum]
 
 
 export const SemestersScalarFieldEnum = {
-  id: 'id',
-  year: 'year',
-  type: 'type',
-  created_at: 'created_at',
-  updated_at: 'updated_at'
+  Id: 'Id',
+  Year: 'Year',
+  Type: 'Type',
+  CreatedAt: 'CreatedAt',
+  UpdatedAt: 'UpdatedAt'
 } as const
 
 export type SemestersScalarFieldEnum = (typeof SemestersScalarFieldEnum)[keyof typeof SemestersScalarFieldEnum]
 
 
 export const TermsScalarFieldEnum = {
-  id: 'id',
-  semester_id: 'semester_id',
-  course_id: 'course_id',
-  created_at: 'created_at'
+  Id: 'Id',
+  SemesterId: 'SemesterId',
+  CourseId: 'CourseId',
+  CreatedAt: 'CreatedAt'
 } as const
 
 export type TermsScalarFieldEnum = (typeof TermsScalarFieldEnum)[keyof typeof TermsScalarFieldEnum]

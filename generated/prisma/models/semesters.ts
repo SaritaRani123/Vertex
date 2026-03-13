@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `semesters` model and its related types.
+ * This file exports the `Semesters` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,10 +13,10 @@ import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
 /**
- * Model semesters
+ * Model Semesters
  * 
  */
-export type semestersModel = runtime.Types.Result.DefaultSelection<Prisma.$semestersPayload>
+export type SemestersModel = runtime.Types.Result.DefaultSelection<Prisma.$SemestersPayload>
 
 export type AggregateSemesters = {
   _count: SemestersCountAggregateOutputType | null
@@ -27,109 +27,109 @@ export type AggregateSemesters = {
 }
 
 export type SemestersAvgAggregateOutputType = {
-  id: number | null
-  year: number | null
+  Id: number | null
+  Year: number | null
 }
 
 export type SemestersSumAggregateOutputType = {
-  id: number | null
-  year: number | null
+  Id: number | null
+  Year: number | null
 }
 
 export type SemestersMinAggregateOutputType = {
-  id: number | null
-  year: number | null
-  type: $Enums.semester_type | null
-  created_at: Date | null
-  updated_at: Date | null
+  Id: number | null
+  Year: number | null
+  Type: $Enums.SemesterType | null
+  CreatedAt: Date | null
+  UpdatedAt: Date | null
 }
 
 export type SemestersMaxAggregateOutputType = {
-  id: number | null
-  year: number | null
-  type: $Enums.semester_type | null
-  created_at: Date | null
-  updated_at: Date | null
+  Id: number | null
+  Year: number | null
+  Type: $Enums.SemesterType | null
+  CreatedAt: Date | null
+  UpdatedAt: Date | null
 }
 
 export type SemestersCountAggregateOutputType = {
-  id: number
-  year: number
-  type: number
-  created_at: number
-  updated_at: number
+  Id: number
+  Year: number
+  Type: number
+  CreatedAt: number
+  UpdatedAt: number
   _all: number
 }
 
 
 export type SemestersAvgAggregateInputType = {
-  id?: true
-  year?: true
+  Id?: true
+  Year?: true
 }
 
 export type SemestersSumAggregateInputType = {
-  id?: true
-  year?: true
+  Id?: true
+  Year?: true
 }
 
 export type SemestersMinAggregateInputType = {
-  id?: true
-  year?: true
-  type?: true
-  created_at?: true
-  updated_at?: true
+  Id?: true
+  Year?: true
+  Type?: true
+  CreatedAt?: true
+  UpdatedAt?: true
 }
 
 export type SemestersMaxAggregateInputType = {
-  id?: true
-  year?: true
-  type?: true
-  created_at?: true
-  updated_at?: true
+  Id?: true
+  Year?: true
+  Type?: true
+  CreatedAt?: true
+  UpdatedAt?: true
 }
 
 export type SemestersCountAggregateInputType = {
-  id?: true
-  year?: true
-  type?: true
-  created_at?: true
-  updated_at?: true
+  Id?: true
+  Year?: true
+  Type?: true
+  CreatedAt?: true
+  UpdatedAt?: true
   _all?: true
 }
 
 export type SemestersAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which semesters to aggregate.
+   * Filter which Semesters to aggregate.
    */
-  where?: Prisma.semestersWhereInput
+  where?: Prisma.SemestersWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of semesters to fetch.
+   * Determine the order of Semesters to fetch.
    */
-  orderBy?: Prisma.semestersOrderByWithRelationInput | Prisma.semestersOrderByWithRelationInput[]
+  orderBy?: Prisma.SemestersOrderByWithRelationInput | Prisma.SemestersOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.semestersWhereUniqueInput
+  cursor?: Prisma.SemestersWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` semesters from the position of the cursor.
+   * Take `±n` Semesters from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` semesters.
+   * Skip the first `n` Semesters.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned semesters
+   * Count returned Semesters
   **/
   _count?: true | SemestersCountAggregateInputType
   /**
@@ -169,11 +169,11 @@ export type GetSemestersAggregateType<T extends SemestersAggregateArgs> = {
 
 
 
-export type semestersGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.semestersWhereInput
-  orderBy?: Prisma.semestersOrderByWithAggregationInput | Prisma.semestersOrderByWithAggregationInput[]
+export type SemestersGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SemestersWhereInput
+  orderBy?: Prisma.SemestersOrderByWithAggregationInput | Prisma.SemestersOrderByWithAggregationInput[]
   by: Prisma.SemestersScalarFieldEnum[] | Prisma.SemestersScalarFieldEnum
-  having?: Prisma.semestersScalarWhereWithAggregatesInput
+  having?: Prisma.SemestersScalarWhereWithAggregatesInput
   take?: number
   skip?: number
   _count?: SemestersCountAggregateInputType | true
@@ -184,11 +184,11 @@ export type semestersGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 export type SemestersGroupByOutputType = {
-  id: number
-  year: number
-  type: $Enums.semester_type
-  created_at: Date
-  updated_at: Date
+  Id: number
+  Year: number
+  Type: $Enums.SemesterType
+  CreatedAt: Date
+  UpdatedAt: Date
   _count: SemestersCountAggregateOutputType | null
   _avg: SemestersAvgAggregateOutputType | null
   _sum: SemestersSumAggregateOutputType | null
@@ -196,7 +196,7 @@ export type SemestersGroupByOutputType = {
   _max: SemestersMaxAggregateOutputType | null
 }
 
-type GetSemestersGroupByPayload<T extends semestersGroupByArgs> = Prisma.PrismaPromise<
+type GetSemestersGroupByPayload<T extends SemestersGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SemestersGroupByOutputType, T['by']> &
       {
@@ -211,227 +211,227 @@ type GetSemestersGroupByPayload<T extends semestersGroupByArgs> = Prisma.PrismaP
 
 
 
-export type semestersWhereInput = {
-  AND?: Prisma.semestersWhereInput | Prisma.semestersWhereInput[]
-  OR?: Prisma.semestersWhereInput[]
-  NOT?: Prisma.semestersWhereInput | Prisma.semestersWhereInput[]
-  id?: Prisma.IntFilter<"semesters"> | number
-  year?: Prisma.IntFilter<"semesters"> | number
-  type?: Prisma.Enumsemester_typeFilter<"semesters"> | $Enums.semester_type
-  created_at?: Prisma.DateTimeFilter<"semesters"> | Date | string
-  updated_at?: Prisma.DateTimeFilter<"semesters"> | Date | string
-  terms?: Prisma.TermsListRelationFilter
+export type SemestersWhereInput = {
+  AND?: Prisma.SemestersWhereInput | Prisma.SemestersWhereInput[]
+  OR?: Prisma.SemestersWhereInput[]
+  NOT?: Prisma.SemestersWhereInput | Prisma.SemestersWhereInput[]
+  Id?: Prisma.IntFilter<"Semesters"> | number
+  Year?: Prisma.IntFilter<"Semesters"> | number
+  Type?: Prisma.EnumSemesterTypeFilter<"Semesters"> | $Enums.SemesterType
+  CreatedAt?: Prisma.DateTimeFilter<"Semesters"> | Date | string
+  UpdatedAt?: Prisma.DateTimeFilter<"Semesters"> | Date | string
+  Terms?: Prisma.TermsListRelationFilter
 }
 
-export type semestersOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  year?: Prisma.SortOrder
-  type?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
-  terms?: Prisma.termsOrderByRelationAggregateInput
+export type SemestersOrderByWithRelationInput = {
+  Id?: Prisma.SortOrder
+  Year?: Prisma.SortOrder
+  Type?: Prisma.SortOrder
+  CreatedAt?: Prisma.SortOrder
+  UpdatedAt?: Prisma.SortOrder
+  Terms?: Prisma.TermsOrderByRelationAggregateInput
 }
 
-export type semestersWhereUniqueInput = Prisma.AtLeast<{
-  id?: number
-  year_type?: Prisma.semestersYearTypeCompoundUniqueInput
-  AND?: Prisma.semestersWhereInput | Prisma.semestersWhereInput[]
-  OR?: Prisma.semestersWhereInput[]
-  NOT?: Prisma.semestersWhereInput | Prisma.semestersWhereInput[]
-  year?: Prisma.IntFilter<"semesters"> | number
-  type?: Prisma.Enumsemester_typeFilter<"semesters"> | $Enums.semester_type
-  created_at?: Prisma.DateTimeFilter<"semesters"> | Date | string
-  updated_at?: Prisma.DateTimeFilter<"semesters"> | Date | string
-  terms?: Prisma.TermsListRelationFilter
-}, "id" | "year_type">
+export type SemestersWhereUniqueInput = Prisma.AtLeast<{
+  Id?: number
+  semesters_year_type_key?: Prisma.SemestersSemesters_year_type_keyCompoundUniqueInput
+  AND?: Prisma.SemestersWhereInput | Prisma.SemestersWhereInput[]
+  OR?: Prisma.SemestersWhereInput[]
+  NOT?: Prisma.SemestersWhereInput | Prisma.SemestersWhereInput[]
+  Year?: Prisma.IntFilter<"Semesters"> | number
+  Type?: Prisma.EnumSemesterTypeFilter<"Semesters"> | $Enums.SemesterType
+  CreatedAt?: Prisma.DateTimeFilter<"Semesters"> | Date | string
+  UpdatedAt?: Prisma.DateTimeFilter<"Semesters"> | Date | string
+  Terms?: Prisma.TermsListRelationFilter
+}, "Id" | "semesters_year_type_key">
 
-export type semestersOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  year?: Prisma.SortOrder
-  type?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
-  _count?: Prisma.semestersCountOrderByAggregateInput
-  _avg?: Prisma.semestersAvgOrderByAggregateInput
-  _max?: Prisma.semestersMaxOrderByAggregateInput
-  _min?: Prisma.semestersMinOrderByAggregateInput
-  _sum?: Prisma.semestersSumOrderByAggregateInput
+export type SemestersOrderByWithAggregationInput = {
+  Id?: Prisma.SortOrder
+  Year?: Prisma.SortOrder
+  Type?: Prisma.SortOrder
+  CreatedAt?: Prisma.SortOrder
+  UpdatedAt?: Prisma.SortOrder
+  _count?: Prisma.SemestersCountOrderByAggregateInput
+  _avg?: Prisma.SemestersAvgOrderByAggregateInput
+  _max?: Prisma.SemestersMaxOrderByAggregateInput
+  _min?: Prisma.SemestersMinOrderByAggregateInput
+  _sum?: Prisma.SemestersSumOrderByAggregateInput
 }
 
-export type semestersScalarWhereWithAggregatesInput = {
-  AND?: Prisma.semestersScalarWhereWithAggregatesInput | Prisma.semestersScalarWhereWithAggregatesInput[]
-  OR?: Prisma.semestersScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.semestersScalarWhereWithAggregatesInput | Prisma.semestersScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<"semesters"> | number
-  year?: Prisma.IntWithAggregatesFilter<"semesters"> | number
-  type?: Prisma.Enumsemester_typeWithAggregatesFilter<"semesters"> | $Enums.semester_type
-  created_at?: Prisma.DateTimeWithAggregatesFilter<"semesters"> | Date | string
-  updated_at?: Prisma.DateTimeWithAggregatesFilter<"semesters"> | Date | string
+export type SemestersScalarWhereWithAggregatesInput = {
+  AND?: Prisma.SemestersScalarWhereWithAggregatesInput | Prisma.SemestersScalarWhereWithAggregatesInput[]
+  OR?: Prisma.SemestersScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.SemestersScalarWhereWithAggregatesInput | Prisma.SemestersScalarWhereWithAggregatesInput[]
+  Id?: Prisma.IntWithAggregatesFilter<"Semesters"> | number
+  Year?: Prisma.IntWithAggregatesFilter<"Semesters"> | number
+  Type?: Prisma.EnumSemesterTypeWithAggregatesFilter<"Semesters"> | $Enums.SemesterType
+  CreatedAt?: Prisma.DateTimeWithAggregatesFilter<"Semesters"> | Date | string
+  UpdatedAt?: Prisma.DateTimeWithAggregatesFilter<"Semesters"> | Date | string
 }
 
-export type semestersCreateInput = {
-  year: number
-  type: $Enums.semester_type
-  created_at?: Date | string
-  updated_at?: Date | string
-  terms?: Prisma.termsCreateNestedManyWithoutSemesterInput
+export type SemestersCreateInput = {
+  Year: number
+  Type: $Enums.SemesterType
+  CreatedAt?: Date | string
+  UpdatedAt?: Date | string
+  Terms?: Prisma.TermsCreateNestedManyWithoutSemesterInput
 }
 
-export type semestersUncheckedCreateInput = {
-  id?: number
-  year: number
-  type: $Enums.semester_type
-  created_at?: Date | string
-  updated_at?: Date | string
-  terms?: Prisma.termsUncheckedCreateNestedManyWithoutSemesterInput
+export type SemestersUncheckedCreateInput = {
+  Id?: number
+  Year: number
+  Type: $Enums.SemesterType
+  CreatedAt?: Date | string
+  UpdatedAt?: Date | string
+  Terms?: Prisma.TermsUncheckedCreateNestedManyWithoutSemesterInput
 }
 
-export type semestersUpdateInput = {
-  year?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.Enumsemester_typeFieldUpdateOperationsInput | $Enums.semester_type
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  terms?: Prisma.termsUpdateManyWithoutSemesterNestedInput
+export type SemestersUpdateInput = {
+  Year?: Prisma.IntFieldUpdateOperationsInput | number
+  Type?: Prisma.EnumSemesterTypeFieldUpdateOperationsInput | $Enums.SemesterType
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  UpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  Terms?: Prisma.TermsUpdateManyWithoutSemesterNestedInput
 }
 
-export type semestersUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  year?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.Enumsemester_typeFieldUpdateOperationsInput | $Enums.semester_type
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  terms?: Prisma.termsUncheckedUpdateManyWithoutSemesterNestedInput
+export type SemestersUncheckedUpdateInput = {
+  Id?: Prisma.IntFieldUpdateOperationsInput | number
+  Year?: Prisma.IntFieldUpdateOperationsInput | number
+  Type?: Prisma.EnumSemesterTypeFieldUpdateOperationsInput | $Enums.SemesterType
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  UpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  Terms?: Prisma.TermsUncheckedUpdateManyWithoutSemesterNestedInput
 }
 
-export type semestersCreateManyInput = {
-  id?: number
-  year: number
-  type: $Enums.semester_type
-  created_at?: Date | string
-  updated_at?: Date | string
+export type SemestersCreateManyInput = {
+  Id?: number
+  Year: number
+  Type: $Enums.SemesterType
+  CreatedAt?: Date | string
+  UpdatedAt?: Date | string
 }
 
-export type semestersUpdateManyMutationInput = {
-  year?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.Enumsemester_typeFieldUpdateOperationsInput | $Enums.semester_type
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type SemestersUpdateManyMutationInput = {
+  Year?: Prisma.IntFieldUpdateOperationsInput | number
+  Type?: Prisma.EnumSemesterTypeFieldUpdateOperationsInput | $Enums.SemesterType
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  UpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type semestersUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  year?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.Enumsemester_typeFieldUpdateOperationsInput | $Enums.semester_type
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type SemestersUncheckedUpdateManyInput = {
+  Id?: Prisma.IntFieldUpdateOperationsInput | number
+  Year?: Prisma.IntFieldUpdateOperationsInput | number
+  Type?: Prisma.EnumSemesterTypeFieldUpdateOperationsInput | $Enums.SemesterType
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  UpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type semestersYearTypeCompoundUniqueInput = {
-  year: number
-  type: $Enums.semester_type
+export type SemestersSemesters_year_type_keyCompoundUniqueInput = {
+  Year: number
+  Type: $Enums.SemesterType
 }
 
-export type semestersCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  year?: Prisma.SortOrder
-  type?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
+export type SemestersCountOrderByAggregateInput = {
+  Id?: Prisma.SortOrder
+  Year?: Prisma.SortOrder
+  Type?: Prisma.SortOrder
+  CreatedAt?: Prisma.SortOrder
+  UpdatedAt?: Prisma.SortOrder
 }
 
-export type semestersAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  year?: Prisma.SortOrder
+export type SemestersAvgOrderByAggregateInput = {
+  Id?: Prisma.SortOrder
+  Year?: Prisma.SortOrder
 }
 
-export type semestersMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  year?: Prisma.SortOrder
-  type?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
+export type SemestersMaxOrderByAggregateInput = {
+  Id?: Prisma.SortOrder
+  Year?: Prisma.SortOrder
+  Type?: Prisma.SortOrder
+  CreatedAt?: Prisma.SortOrder
+  UpdatedAt?: Prisma.SortOrder
 }
 
-export type semestersMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  year?: Prisma.SortOrder
-  type?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
+export type SemestersMinOrderByAggregateInput = {
+  Id?: Prisma.SortOrder
+  Year?: Prisma.SortOrder
+  Type?: Prisma.SortOrder
+  CreatedAt?: Prisma.SortOrder
+  UpdatedAt?: Prisma.SortOrder
 }
 
-export type semestersSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  year?: Prisma.SortOrder
+export type SemestersSumOrderByAggregateInput = {
+  Id?: Prisma.SortOrder
+  Year?: Prisma.SortOrder
 }
 
 export type SemestersScalarRelationFilter = {
-  is?: Prisma.semestersWhereInput
-  isNot?: Prisma.semestersWhereInput
+  is?: Prisma.SemestersWhereInput
+  isNot?: Prisma.SemestersWhereInput
 }
 
-export type Enumsemester_typeFieldUpdateOperationsInput = {
-  set?: $Enums.semester_type
+export type EnumSemesterTypeFieldUpdateOperationsInput = {
+  set?: $Enums.SemesterType
 }
 
-export type semestersCreateNestedOneWithoutTermsInput = {
-  create?: Prisma.XOR<Prisma.semestersCreateWithoutTermsInput, Prisma.semestersUncheckedCreateWithoutTermsInput>
-  connectOrCreate?: Prisma.semestersCreateOrConnectWithoutTermsInput
-  connect?: Prisma.semestersWhereUniqueInput
+export type SemestersCreateNestedOneWithoutTermsInput = {
+  create?: Prisma.XOR<Prisma.SemestersCreateWithoutTermsInput, Prisma.SemestersUncheckedCreateWithoutTermsInput>
+  connectOrCreate?: Prisma.SemestersCreateOrConnectWithoutTermsInput
+  connect?: Prisma.SemestersWhereUniqueInput
 }
 
-export type semestersUpdateOneRequiredWithoutTermsNestedInput = {
-  create?: Prisma.XOR<Prisma.semestersCreateWithoutTermsInput, Prisma.semestersUncheckedCreateWithoutTermsInput>
-  connectOrCreate?: Prisma.semestersCreateOrConnectWithoutTermsInput
-  upsert?: Prisma.semestersUpsertWithoutTermsInput
-  connect?: Prisma.semestersWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.semestersUpdateToOneWithWhereWithoutTermsInput, Prisma.semestersUpdateWithoutTermsInput>, Prisma.semestersUncheckedUpdateWithoutTermsInput>
+export type SemestersUpdateOneRequiredWithoutTermsNestedInput = {
+  create?: Prisma.XOR<Prisma.SemestersCreateWithoutTermsInput, Prisma.SemestersUncheckedCreateWithoutTermsInput>
+  connectOrCreate?: Prisma.SemestersCreateOrConnectWithoutTermsInput
+  upsert?: Prisma.SemestersUpsertWithoutTermsInput
+  connect?: Prisma.SemestersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SemestersUpdateToOneWithWhereWithoutTermsInput, Prisma.SemestersUpdateWithoutTermsInput>, Prisma.SemestersUncheckedUpdateWithoutTermsInput>
 }
 
-export type semestersCreateWithoutTermsInput = {
-  year: number
-  type: $Enums.semester_type
-  created_at?: Date | string
-  updated_at?: Date | string
+export type SemestersCreateWithoutTermsInput = {
+  Year: number
+  Type: $Enums.SemesterType
+  CreatedAt?: Date | string
+  UpdatedAt?: Date | string
 }
 
-export type semestersUncheckedCreateWithoutTermsInput = {
-  id?: number
-  year: number
-  type: $Enums.semester_type
-  created_at?: Date | string
-  updated_at?: Date | string
+export type SemestersUncheckedCreateWithoutTermsInput = {
+  Id?: number
+  Year: number
+  Type: $Enums.SemesterType
+  CreatedAt?: Date | string
+  UpdatedAt?: Date | string
 }
 
-export type semestersCreateOrConnectWithoutTermsInput = {
-  where: Prisma.semestersWhereUniqueInput
-  create: Prisma.XOR<Prisma.semestersCreateWithoutTermsInput, Prisma.semestersUncheckedCreateWithoutTermsInput>
+export type SemestersCreateOrConnectWithoutTermsInput = {
+  where: Prisma.SemestersWhereUniqueInput
+  create: Prisma.XOR<Prisma.SemestersCreateWithoutTermsInput, Prisma.SemestersUncheckedCreateWithoutTermsInput>
 }
 
-export type semestersUpsertWithoutTermsInput = {
-  update: Prisma.XOR<Prisma.semestersUpdateWithoutTermsInput, Prisma.semestersUncheckedUpdateWithoutTermsInput>
-  create: Prisma.XOR<Prisma.semestersCreateWithoutTermsInput, Prisma.semestersUncheckedCreateWithoutTermsInput>
-  where?: Prisma.semestersWhereInput
+export type SemestersUpsertWithoutTermsInput = {
+  update: Prisma.XOR<Prisma.SemestersUpdateWithoutTermsInput, Prisma.SemestersUncheckedUpdateWithoutTermsInput>
+  create: Prisma.XOR<Prisma.SemestersCreateWithoutTermsInput, Prisma.SemestersUncheckedCreateWithoutTermsInput>
+  where?: Prisma.SemestersWhereInput
 }
 
-export type semestersUpdateToOneWithWhereWithoutTermsInput = {
-  where?: Prisma.semestersWhereInput
-  data: Prisma.XOR<Prisma.semestersUpdateWithoutTermsInput, Prisma.semestersUncheckedUpdateWithoutTermsInput>
+export type SemestersUpdateToOneWithWhereWithoutTermsInput = {
+  where?: Prisma.SemestersWhereInput
+  data: Prisma.XOR<Prisma.SemestersUpdateWithoutTermsInput, Prisma.SemestersUncheckedUpdateWithoutTermsInput>
 }
 
-export type semestersUpdateWithoutTermsInput = {
-  year?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.Enumsemester_typeFieldUpdateOperationsInput | $Enums.semester_type
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type SemestersUpdateWithoutTermsInput = {
+  Year?: Prisma.IntFieldUpdateOperationsInput | number
+  Type?: Prisma.EnumSemesterTypeFieldUpdateOperationsInput | $Enums.SemesterType
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  UpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type semestersUncheckedUpdateWithoutTermsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  year?: Prisma.IntFieldUpdateOperationsInput | number
-  type?: Prisma.Enumsemester_typeFieldUpdateOperationsInput | $Enums.semester_type
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type SemestersUncheckedUpdateWithoutTermsInput = {
+  Id?: Prisma.IntFieldUpdateOperationsInput | number
+  Year?: Prisma.IntFieldUpdateOperationsInput | number
+  Type?: Prisma.EnumSemesterTypeFieldUpdateOperationsInput | $Enums.SemesterType
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  UpdatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -440,11 +440,11 @@ export type semestersUncheckedUpdateWithoutTermsInput = {
  */
 
 export type SemestersCountOutputType = {
-  terms: number
+  Terms: number
 }
 
 export type SemestersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  terms?: boolean | SemestersCountOutputTypeCountTermsArgs
+  Terms?: boolean | SemestersCountOutputTypeCountTermsArgs
 }
 
 /**
@@ -461,79 +461,79 @@ export type SemestersCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ex
  * SemestersCountOutputType without action
  */
 export type SemestersCountOutputTypeCountTermsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.termsWhereInput
+  where?: Prisma.TermsWhereInput
 }
 
 
-export type semestersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  year?: boolean
-  type?: boolean
-  created_at?: boolean
-  updated_at?: boolean
-  terms?: boolean | Prisma.semesters$termsArgs<ExtArgs>
+export type SemestersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  Id?: boolean
+  Year?: boolean
+  Type?: boolean
+  CreatedAt?: boolean
+  UpdatedAt?: boolean
+  Terms?: boolean | Prisma.Semesters$TermsArgs<ExtArgs>
   _count?: boolean | Prisma.SemestersCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["semesters"]>
 
-export type semestersSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  year?: boolean
-  type?: boolean
-  created_at?: boolean
-  updated_at?: boolean
+export type SemestersSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  Id?: boolean
+  Year?: boolean
+  Type?: boolean
+  CreatedAt?: boolean
+  UpdatedAt?: boolean
 }, ExtArgs["result"]["semesters"]>
 
-export type semestersSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  year?: boolean
-  type?: boolean
-  created_at?: boolean
-  updated_at?: boolean
+export type SemestersSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  Id?: boolean
+  Year?: boolean
+  Type?: boolean
+  CreatedAt?: boolean
+  UpdatedAt?: boolean
 }, ExtArgs["result"]["semesters"]>
 
-export type semestersSelectScalar = {
-  id?: boolean
-  year?: boolean
-  type?: boolean
-  created_at?: boolean
-  updated_at?: boolean
+export type SemestersSelectScalar = {
+  Id?: boolean
+  Year?: boolean
+  Type?: boolean
+  CreatedAt?: boolean
+  UpdatedAt?: boolean
 }
 
-export type semestersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "year" | "type" | "created_at" | "updated_at", ExtArgs["result"]["semesters"]>
-export type semestersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  terms?: boolean | Prisma.semesters$termsArgs<ExtArgs>
+export type SemestersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"Id" | "Year" | "Type" | "CreatedAt" | "UpdatedAt", ExtArgs["result"]["semesters"]>
+export type SemestersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  Terms?: boolean | Prisma.Semesters$TermsArgs<ExtArgs>
   _count?: boolean | Prisma.SemestersCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type semestersIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type semestersIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type SemestersIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type SemestersIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
-export type $semestersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "semesters"
+export type $SemestersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "Semesters"
   objects: {
-    terms: Prisma.$termsPayload<ExtArgs>[]
+    Terms: Prisma.$TermsPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: number
-    year: number
-    type: $Enums.semester_type
-    created_at: Date
-    updated_at: Date
+    Id: number
+    Year: number
+    Type: $Enums.SemesterType
+    CreatedAt: Date
+    UpdatedAt: Date
   }, ExtArgs["result"]["semesters"]>
   composites: {}
 }
 
-export type semestersGetPayload<S extends boolean | null | undefined | semestersDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$semestersPayload, S>
+export type SemestersGetPayload<S extends boolean | null | undefined | SemestersDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$SemestersPayload, S>
 
-export type semestersCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<semestersFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+export type SemestersCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<SemestersFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
     select?: SemestersCountAggregateInputType | true
   }
 
-export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['semesters'], meta: { name: 'semesters' } }
+export interface SemestersDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Semesters'], meta: { name: 'Semesters' } }
   /**
    * Find zero or one Semesters that matches the filter.
-   * @param {semestersFindUniqueArgs} args - Arguments to find a Semesters
+   * @param {SemestersFindUniqueArgs} args - Arguments to find a Semesters
    * @example
    * // Get one Semesters
    * const semesters = await prisma.semesters.findUnique({
@@ -542,12 +542,12 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  findUnique<T extends semestersFindUniqueArgs>(args: Prisma.SelectSubset<T, semestersFindUniqueArgs<ExtArgs>>): Prisma.Prisma__semestersClient<runtime.Types.Result.GetResult<Prisma.$semestersPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends SemestersFindUniqueArgs>(args: Prisma.SelectSubset<T, SemestersFindUniqueArgs<ExtArgs>>): Prisma.Prisma__SemestersClient<runtime.Types.Result.GetResult<Prisma.$SemestersPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find one Semesters that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {semestersFindUniqueOrThrowArgs} args - Arguments to find a Semesters
+   * @param {SemestersFindUniqueOrThrowArgs} args - Arguments to find a Semesters
    * @example
    * // Get one Semesters
    * const semesters = await prisma.semesters.findUniqueOrThrow({
@@ -556,13 +556,13 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  findUniqueOrThrow<T extends semestersFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, semestersFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__semestersClient<runtime.Types.Result.GetResult<Prisma.$semestersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends SemestersFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, SemestersFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__SemestersClient<runtime.Types.Result.GetResult<Prisma.$SemestersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Semesters that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {semestersFindFirstArgs} args - Arguments to find a Semesters
+   * @param {SemestersFindFirstArgs} args - Arguments to find a Semesters
    * @example
    * // Get one Semesters
    * const semesters = await prisma.semesters.findFirst({
@@ -571,14 +571,14 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  findFirst<T extends semestersFindFirstArgs>(args?: Prisma.SelectSubset<T, semestersFindFirstArgs<ExtArgs>>): Prisma.Prisma__semestersClient<runtime.Types.Result.GetResult<Prisma.$semestersPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends SemestersFindFirstArgs>(args?: Prisma.SelectSubset<T, SemestersFindFirstArgs<ExtArgs>>): Prisma.Prisma__SemestersClient<runtime.Types.Result.GetResult<Prisma.$SemestersPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Semesters that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {semestersFindFirstOrThrowArgs} args - Arguments to find a Semesters
+   * @param {SemestersFindFirstOrThrowArgs} args - Arguments to find a Semesters
    * @example
    * // Get one Semesters
    * const semesters = await prisma.semesters.findFirstOrThrow({
@@ -587,13 +587,13 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  findFirstOrThrow<T extends semestersFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, semestersFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__semestersClient<runtime.Types.Result.GetResult<Prisma.$semestersPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends SemestersFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, SemestersFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__SemestersClient<runtime.Types.Result.GetResult<Prisma.$SemestersPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find zero or more Semesters that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {semestersFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {SemestersFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
    * // Get all Semesters
    * const semesters = await prisma.semesters.findMany()
@@ -601,15 +601,15 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * // Get first 10 Semesters
    * const semesters = await prisma.semesters.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const semestersWithIdOnly = await prisma.semesters.findMany({ select: { id: true } })
+   * // Only select the `Id`
+   * const semestersWithIdOnly = await prisma.semesters.findMany({ select: { Id: true } })
    * 
    */
-  findMany<T extends semestersFindManyArgs>(args?: Prisma.SelectSubset<T, semestersFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$semestersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends SemestersFindManyArgs>(args?: Prisma.SelectSubset<T, SemestersFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SemestersPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
    * Create a Semesters.
-   * @param {semestersCreateArgs} args - Arguments to create a Semesters.
+   * @param {SemestersCreateArgs} args - Arguments to create a Semesters.
    * @example
    * // Create one Semesters
    * const Semesters = await prisma.semesters.create({
@@ -619,11 +619,11 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  create<T extends semestersCreateArgs>(args: Prisma.SelectSubset<T, semestersCreateArgs<ExtArgs>>): Prisma.Prisma__semestersClient<runtime.Types.Result.GetResult<Prisma.$semestersPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends SemestersCreateArgs>(args: Prisma.SelectSubset<T, SemestersCreateArgs<ExtArgs>>): Prisma.Prisma__SemestersClient<runtime.Types.Result.GetResult<Prisma.$SemestersPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Create many Semesters.
-   * @param {semestersCreateManyArgs} args - Arguments to create many Semesters.
+   * @param {SemestersCreateManyArgs} args - Arguments to create many Semesters.
    * @example
    * // Create many Semesters
    * const semesters = await prisma.semesters.createMany({
@@ -633,11 +633,11 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    *     
    */
-  createMany<T extends semestersCreateManyArgs>(args?: Prisma.SelectSubset<T, semestersCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends SemestersCreateManyArgs>(args?: Prisma.SelectSubset<T, SemestersCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Create many Semesters and returns the data saved in the database.
-   * @param {semestersCreateManyAndReturnArgs} args - Arguments to create many Semesters.
+   * @param {SemestersCreateManyAndReturnArgs} args - Arguments to create many Semesters.
    * @example
    * // Create many Semesters
    * const semesters = await prisma.semesters.createManyAndReturn({
@@ -646,9 +646,9 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   ]
    * })
    * 
-   * // Create many Semesters and only return the `id`
+   * // Create many Semesters and only return the `Id`
    * const semestersWithIdOnly = await prisma.semesters.createManyAndReturn({
-   *   select: { id: true },
+   *   select: { Id: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -657,11 +657,11 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * Read more here: https://pris.ly/d/null-undefined
    * 
    */
-  createManyAndReturn<T extends semestersCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, semestersCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$semestersPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+  createManyAndReturn<T extends SemestersCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, SemestersCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SemestersPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Delete a Semesters.
-   * @param {semestersDeleteArgs} args - Arguments to delete one Semesters.
+   * @param {SemestersDeleteArgs} args - Arguments to delete one Semesters.
    * @example
    * // Delete one Semesters
    * const Semesters = await prisma.semesters.delete({
@@ -671,11 +671,11 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  delete<T extends semestersDeleteArgs>(args: Prisma.SelectSubset<T, semestersDeleteArgs<ExtArgs>>): Prisma.Prisma__semestersClient<runtime.Types.Result.GetResult<Prisma.$semestersPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends SemestersDeleteArgs>(args: Prisma.SelectSubset<T, SemestersDeleteArgs<ExtArgs>>): Prisma.Prisma__SemestersClient<runtime.Types.Result.GetResult<Prisma.$SemestersPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Update one Semesters.
-   * @param {semestersUpdateArgs} args - Arguments to update one Semesters.
+   * @param {SemestersUpdateArgs} args - Arguments to update one Semesters.
    * @example
    * // Update one Semesters
    * const semesters = await prisma.semesters.update({
@@ -688,11 +688,11 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  update<T extends semestersUpdateArgs>(args: Prisma.SelectSubset<T, semestersUpdateArgs<ExtArgs>>): Prisma.Prisma__semestersClient<runtime.Types.Result.GetResult<Prisma.$semestersPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends SemestersUpdateArgs>(args: Prisma.SelectSubset<T, SemestersUpdateArgs<ExtArgs>>): Prisma.Prisma__SemestersClient<runtime.Types.Result.GetResult<Prisma.$SemestersPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Delete zero or more Semesters.
-   * @param {semestersDeleteManyArgs} args - Arguments to filter Semesters to delete.
+   * @param {SemestersDeleteManyArgs} args - Arguments to filter Semesters to delete.
    * @example
    * // Delete a few Semesters
    * const { count } = await prisma.semesters.deleteMany({
@@ -702,13 +702,13 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  deleteMany<T extends semestersDeleteManyArgs>(args?: Prisma.SelectSubset<T, semestersDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends SemestersDeleteManyArgs>(args?: Prisma.SelectSubset<T, SemestersDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Semesters.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {semestersUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {SemestersUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
    * // Update many Semesters
    * const semesters = await prisma.semesters.updateMany({
@@ -721,11 +721,11 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * })
    * 
    */
-  updateMany<T extends semestersUpdateManyArgs>(args: Prisma.SelectSubset<T, semestersUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends SemestersUpdateManyArgs>(args: Prisma.SelectSubset<T, SemestersUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Semesters and returns the data updated in the database.
-   * @param {semestersUpdateManyAndReturnArgs} args - Arguments to update many Semesters.
+   * @param {SemestersUpdateManyAndReturnArgs} args - Arguments to update many Semesters.
    * @example
    * // Update many Semesters
    * const semesters = await prisma.semesters.updateManyAndReturn({
@@ -737,9 +737,9 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   ]
    * })
    * 
-   * // Update zero or more Semesters and only return the `id`
+   * // Update zero or more Semesters and only return the `Id`
    * const semestersWithIdOnly = await prisma.semesters.updateManyAndReturn({
-   *   select: { id: true },
+   *   select: { Id: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -751,11 +751,11 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * Read more here: https://pris.ly/d/null-undefined
    * 
    */
-  updateManyAndReturn<T extends semestersUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, semestersUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$semestersPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+  updateManyAndReturn<T extends SemestersUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, SemestersUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SemestersPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Semesters.
-   * @param {semestersUpsertArgs} args - Arguments to update or create a Semesters.
+   * @param {SemestersUpsertArgs} args - Arguments to update or create a Semesters.
    * @example
    * // Update or create a Semesters
    * const semesters = await prisma.semesters.upsert({
@@ -770,14 +770,14 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
    */
-  upsert<T extends semestersUpsertArgs>(args: Prisma.SelectSubset<T, semestersUpsertArgs<ExtArgs>>): Prisma.Prisma__semestersClient<runtime.Types.Result.GetResult<Prisma.$semestersPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends SemestersUpsertArgs>(args: Prisma.SelectSubset<T, SemestersUpsertArgs<ExtArgs>>): Prisma.Prisma__SemestersClient<runtime.Types.Result.GetResult<Prisma.$SemestersPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
    * Count the number of Semesters.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {semestersCountArgs} args - Arguments to filter Semesters to count.
+   * @param {SemestersCountArgs} args - Arguments to filter Semesters to count.
    * @example
    * // Count the number of Semesters
    * const count = await prisma.semesters.count({
@@ -786,8 +786,8 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    *   }
    * })
   **/
-  count<T extends semestersCountArgs>(
-    args?: Prisma.Subset<T, semestersCountArgs>,
+  count<T extends SemestersCountArgs>(
+    args?: Prisma.Subset<T, SemestersCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
@@ -826,7 +826,7 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * Group by Semesters.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {semestersGroupByArgs} args - Group by arguments.
+   * @param {SemestersGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -841,14 +841,14 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
    * 
   **/
   groupBy<
-    T extends semestersGroupByArgs,
+    T extends SemestersGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: semestersGroupByArgs['orderBy'] }
-      : { orderBy?: semestersGroupByArgs['orderBy'] },
+      ? { orderBy: SemestersGroupByArgs['orderBy'] }
+      : { orderBy?: SemestersGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -897,22 +897,22 @@ export interface semestersDelegate<ExtArgs extends runtime.Types.Extensions.Inte
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, semestersGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSemestersGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, SemestersGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSemestersGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the semesters model
+ * Fields of the Semesters model
  */
-readonly fields: semestersFieldRefs;
+readonly fields: SemestersFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for semesters.
+ * The delegate class that acts as a "Promise-like" for Semesters.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__semestersClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__SemestersClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  terms<T extends Prisma.semesters$termsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.semesters$termsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$termsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  Terms<T extends Prisma.Semesters$TermsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Semesters$TermsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TermsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -939,439 +939,439 @@ export interface Prisma__semestersClient<T, Null = never, ExtArgs extends runtim
 
 
 /**
- * Fields of the semesters model
+ * Fields of the Semesters model
  */
-export interface semestersFieldRefs {
-  readonly id: Prisma.FieldRef<"semesters", 'Int'>
-  readonly year: Prisma.FieldRef<"semesters", 'Int'>
-  readonly type: Prisma.FieldRef<"semesters", 'semester_type'>
-  readonly created_at: Prisma.FieldRef<"semesters", 'DateTime'>
-  readonly updated_at: Prisma.FieldRef<"semesters", 'DateTime'>
+export interface SemestersFieldRefs {
+  readonly Id: Prisma.FieldRef<"Semesters", 'Int'>
+  readonly Year: Prisma.FieldRef<"Semesters", 'Int'>
+  readonly Type: Prisma.FieldRef<"Semesters", 'SemesterType'>
+  readonly CreatedAt: Prisma.FieldRef<"Semesters", 'DateTime'>
+  readonly UpdatedAt: Prisma.FieldRef<"Semesters", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * semesters findUnique
+ * Semesters findUnique
  */
-export type semestersFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the semesters
+   * Select specific fields to fetch from the Semesters
    */
-  select?: Prisma.semestersSelect<ExtArgs> | null
+  select?: Prisma.SemestersSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the semesters
+   * Omit specific fields from the Semesters
    */
-  omit?: Prisma.semestersOmit<ExtArgs> | null
+  omit?: Prisma.SemestersOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.semestersInclude<ExtArgs> | null
+  include?: Prisma.SemestersInclude<ExtArgs> | null
   /**
-   * Filter, which semesters to fetch.
+   * Filter, which Semesters to fetch.
    */
-  where: Prisma.semestersWhereUniqueInput
+  where: Prisma.SemestersWhereUniqueInput
 }
 
 /**
- * semesters findUniqueOrThrow
+ * Semesters findUniqueOrThrow
  */
-export type semestersFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the semesters
+   * Select specific fields to fetch from the Semesters
    */
-  select?: Prisma.semestersSelect<ExtArgs> | null
+  select?: Prisma.SemestersSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the semesters
+   * Omit specific fields from the Semesters
    */
-  omit?: Prisma.semestersOmit<ExtArgs> | null
+  omit?: Prisma.SemestersOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.semestersInclude<ExtArgs> | null
+  include?: Prisma.SemestersInclude<ExtArgs> | null
   /**
-   * Filter, which semesters to fetch.
+   * Filter, which Semesters to fetch.
    */
-  where: Prisma.semestersWhereUniqueInput
+  where: Prisma.SemestersWhereUniqueInput
 }
 
 /**
- * semesters findFirst
+ * Semesters findFirst
  */
-export type semestersFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the semesters
+   * Select specific fields to fetch from the Semesters
    */
-  select?: Prisma.semestersSelect<ExtArgs> | null
+  select?: Prisma.SemestersSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the semesters
+   * Omit specific fields from the Semesters
    */
-  omit?: Prisma.semestersOmit<ExtArgs> | null
+  omit?: Prisma.SemestersOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.semestersInclude<ExtArgs> | null
+  include?: Prisma.SemestersInclude<ExtArgs> | null
   /**
-   * Filter, which semesters to fetch.
+   * Filter, which Semesters to fetch.
    */
-  where?: Prisma.semestersWhereInput
+  where?: Prisma.SemestersWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of semesters to fetch.
+   * Determine the order of Semesters to fetch.
    */
-  orderBy?: Prisma.semestersOrderByWithRelationInput | Prisma.semestersOrderByWithRelationInput[]
+  orderBy?: Prisma.SemestersOrderByWithRelationInput | Prisma.SemestersOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for semesters.
+   * Sets the position for searching for Semesters.
    */
-  cursor?: Prisma.semestersWhereUniqueInput
+  cursor?: Prisma.SemestersWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` semesters from the position of the cursor.
+   * Take `±n` Semesters from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` semesters.
+   * Skip the first `n` Semesters.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of semesters.
+   * Filter by unique combinations of Semesters.
    */
   distinct?: Prisma.SemestersScalarFieldEnum | Prisma.SemestersScalarFieldEnum[]
 }
 
 /**
- * semesters findFirstOrThrow
+ * Semesters findFirstOrThrow
  */
-export type semestersFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the semesters
+   * Select specific fields to fetch from the Semesters
    */
-  select?: Prisma.semestersSelect<ExtArgs> | null
+  select?: Prisma.SemestersSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the semesters
+   * Omit specific fields from the Semesters
    */
-  omit?: Prisma.semestersOmit<ExtArgs> | null
+  omit?: Prisma.SemestersOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.semestersInclude<ExtArgs> | null
+  include?: Prisma.SemestersInclude<ExtArgs> | null
   /**
-   * Filter, which semesters to fetch.
+   * Filter, which Semesters to fetch.
    */
-  where?: Prisma.semestersWhereInput
+  where?: Prisma.SemestersWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of semesters to fetch.
+   * Determine the order of Semesters to fetch.
    */
-  orderBy?: Prisma.semestersOrderByWithRelationInput | Prisma.semestersOrderByWithRelationInput[]
+  orderBy?: Prisma.SemestersOrderByWithRelationInput | Prisma.SemestersOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for semesters.
+   * Sets the position for searching for Semesters.
    */
-  cursor?: Prisma.semestersWhereUniqueInput
+  cursor?: Prisma.SemestersWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` semesters from the position of the cursor.
+   * Take `±n` Semesters from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` semesters.
+   * Skip the first `n` Semesters.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of semesters.
+   * Filter by unique combinations of Semesters.
    */
   distinct?: Prisma.SemestersScalarFieldEnum | Prisma.SemestersScalarFieldEnum[]
 }
 
 /**
- * semesters findMany
+ * Semesters findMany
  */
-export type semestersFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the semesters
+   * Select specific fields to fetch from the Semesters
    */
-  select?: Prisma.semestersSelect<ExtArgs> | null
+  select?: Prisma.SemestersSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the semesters
+   * Omit specific fields from the Semesters
    */
-  omit?: Prisma.semestersOmit<ExtArgs> | null
+  omit?: Prisma.SemestersOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.semestersInclude<ExtArgs> | null
+  include?: Prisma.SemestersInclude<ExtArgs> | null
   /**
-   * Filter, which semesters to fetch.
+   * Filter, which Semesters to fetch.
    */
-  where?: Prisma.semestersWhereInput
+  where?: Prisma.SemestersWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of semesters to fetch.
+   * Determine the order of Semesters to fetch.
    */
-  orderBy?: Prisma.semestersOrderByWithRelationInput | Prisma.semestersOrderByWithRelationInput[]
+  orderBy?: Prisma.SemestersOrderByWithRelationInput | Prisma.SemestersOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing semesters.
+   * Sets the position for listing Semesters.
    */
-  cursor?: Prisma.semestersWhereUniqueInput
+  cursor?: Prisma.SemestersWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` semesters from the position of the cursor.
+   * Take `±n` Semesters from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` semesters.
+   * Skip the first `n` Semesters.
    */
   skip?: number
   distinct?: Prisma.SemestersScalarFieldEnum | Prisma.SemestersScalarFieldEnum[]
 }
 
 /**
- * semesters create
+ * Semesters create
  */
-export type semestersCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the semesters
+   * Select specific fields to fetch from the Semesters
    */
-  select?: Prisma.semestersSelect<ExtArgs> | null
+  select?: Prisma.SemestersSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the semesters
+   * Omit specific fields from the Semesters
    */
-  omit?: Prisma.semestersOmit<ExtArgs> | null
+  omit?: Prisma.SemestersOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.semestersInclude<ExtArgs> | null
+  include?: Prisma.SemestersInclude<ExtArgs> | null
   /**
-   * The data needed to create a semesters.
+   * The data needed to create a Semesters.
    */
-  data: Prisma.XOR<Prisma.semestersCreateInput, Prisma.semestersUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.SemestersCreateInput, Prisma.SemestersUncheckedCreateInput>
 }
 
 /**
- * semesters createMany
+ * Semesters createMany
  */
-export type semestersCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many semesters.
+   * The data used to create many Semesters.
    */
-  data: Prisma.semestersCreateManyInput | Prisma.semestersCreateManyInput[]
+  data: Prisma.SemestersCreateManyInput | Prisma.SemestersCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * semesters createManyAndReturn
+ * Semesters createManyAndReturn
  */
-export type semestersCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the semesters
+   * Select specific fields to fetch from the Semesters
    */
-  select?: Prisma.semestersSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.SemestersSelectCreateManyAndReturn<ExtArgs> | null
   /**
-   * Omit specific fields from the semesters
+   * Omit specific fields from the Semesters
    */
-  omit?: Prisma.semestersOmit<ExtArgs> | null
+  omit?: Prisma.SemestersOmit<ExtArgs> | null
   /**
-   * The data used to create many semesters.
+   * The data used to create many Semesters.
    */
-  data: Prisma.semestersCreateManyInput | Prisma.semestersCreateManyInput[]
+  data: Prisma.SemestersCreateManyInput | Prisma.SemestersCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * semesters update
+ * Semesters update
  */
-export type semestersUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the semesters
+   * Select specific fields to fetch from the Semesters
    */
-  select?: Prisma.semestersSelect<ExtArgs> | null
+  select?: Prisma.SemestersSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the semesters
+   * Omit specific fields from the Semesters
    */
-  omit?: Prisma.semestersOmit<ExtArgs> | null
+  omit?: Prisma.SemestersOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.semestersInclude<ExtArgs> | null
+  include?: Prisma.SemestersInclude<ExtArgs> | null
   /**
-   * The data needed to update a semesters.
+   * The data needed to update a Semesters.
    */
-  data: Prisma.XOR<Prisma.semestersUpdateInput, Prisma.semestersUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.SemestersUpdateInput, Prisma.SemestersUncheckedUpdateInput>
   /**
-   * Choose, which semesters to update.
+   * Choose, which Semesters to update.
    */
-  where: Prisma.semestersWhereUniqueInput
+  where: Prisma.SemestersWhereUniqueInput
 }
 
 /**
- * semesters updateMany
+ * Semesters updateMany
  */
-export type semestersUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update semesters.
+   * The data used to update Semesters.
    */
-  data: Prisma.XOR<Prisma.semestersUpdateManyMutationInput, Prisma.semestersUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.SemestersUpdateManyMutationInput, Prisma.SemestersUncheckedUpdateManyInput>
   /**
-   * Filter which semesters to update
+   * Filter which Semesters to update
    */
-  where?: Prisma.semestersWhereInput
+  where?: Prisma.SemestersWhereInput
   /**
-   * Limit how many semesters to update.
+   * Limit how many Semesters to update.
    */
   limit?: number
 }
 
 /**
- * semesters updateManyAndReturn
+ * Semesters updateManyAndReturn
  */
-export type semestersUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the semesters
+   * Select specific fields to fetch from the Semesters
    */
-  select?: Prisma.semestersSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.SemestersSelectUpdateManyAndReturn<ExtArgs> | null
   /**
-   * Omit specific fields from the semesters
+   * Omit specific fields from the Semesters
    */
-  omit?: Prisma.semestersOmit<ExtArgs> | null
+  omit?: Prisma.SemestersOmit<ExtArgs> | null
   /**
-   * The data used to update semesters.
+   * The data used to update Semesters.
    */
-  data: Prisma.XOR<Prisma.semestersUpdateManyMutationInput, Prisma.semestersUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.SemestersUpdateManyMutationInput, Prisma.SemestersUncheckedUpdateManyInput>
   /**
-   * Filter which semesters to update
+   * Filter which Semesters to update
    */
-  where?: Prisma.semestersWhereInput
+  where?: Prisma.SemestersWhereInput
   /**
-   * Limit how many semesters to update.
+   * Limit how many Semesters to update.
    */
   limit?: number
 }
 
 /**
- * semesters upsert
+ * Semesters upsert
  */
-export type semestersUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the semesters
+   * Select specific fields to fetch from the Semesters
    */
-  select?: Prisma.semestersSelect<ExtArgs> | null
+  select?: Prisma.SemestersSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the semesters
+   * Omit specific fields from the Semesters
    */
-  omit?: Prisma.semestersOmit<ExtArgs> | null
+  omit?: Prisma.SemestersOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.semestersInclude<ExtArgs> | null
+  include?: Prisma.SemestersInclude<ExtArgs> | null
   /**
-   * The filter to search for the semesters to update in case it exists.
+   * The filter to search for the Semesters to update in case it exists.
    */
-  where: Prisma.semestersWhereUniqueInput
+  where: Prisma.SemestersWhereUniqueInput
   /**
-   * In case the semesters found by the `where` argument doesn't exist, create a new semesters with this data.
+   * In case the Semesters found by the `where` argument doesn't exist, create a new Semesters with this data.
    */
-  create: Prisma.XOR<Prisma.semestersCreateInput, Prisma.semestersUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.SemestersCreateInput, Prisma.SemestersUncheckedCreateInput>
   /**
-   * In case the semesters was found with the provided `where` argument, update it with this data.
+   * In case the Semesters was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.semestersUpdateInput, Prisma.semestersUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.SemestersUpdateInput, Prisma.SemestersUncheckedUpdateInput>
 }
 
 /**
- * semesters delete
+ * Semesters delete
  */
-export type semestersDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the semesters
+   * Select specific fields to fetch from the Semesters
    */
-  select?: Prisma.semestersSelect<ExtArgs> | null
+  select?: Prisma.SemestersSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the semesters
+   * Omit specific fields from the Semesters
    */
-  omit?: Prisma.semestersOmit<ExtArgs> | null
+  omit?: Prisma.SemestersOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.semestersInclude<ExtArgs> | null
+  include?: Prisma.SemestersInclude<ExtArgs> | null
   /**
-   * Filter which semesters to delete.
+   * Filter which Semesters to delete.
    */
-  where: Prisma.semestersWhereUniqueInput
+  where: Prisma.SemestersWhereUniqueInput
 }
 
 /**
- * semesters deleteMany
+ * Semesters deleteMany
  */
-export type semestersDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which semesters to delete
+   * Filter which Semesters to delete
    */
-  where?: Prisma.semestersWhereInput
+  where?: Prisma.SemestersWhereInput
   /**
-   * Limit how many semesters to delete.
+   * Limit how many Semesters to delete.
    */
   limit?: number
 }
 
 /**
- * semesters.terms
+ * Semesters.Terms
  */
-export type semesters$termsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Semesters$TermsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the terms
+   * Select specific fields to fetch from the Terms
    */
-  select?: Prisma.termsSelect<ExtArgs> | null
+  select?: Prisma.TermsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the terms
+   * Omit specific fields from the Terms
    */
-  omit?: Prisma.termsOmit<ExtArgs> | null
+  omit?: Prisma.TermsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.termsInclude<ExtArgs> | null
-  where?: Prisma.termsWhereInput
-  orderBy?: Prisma.termsOrderByWithRelationInput | Prisma.termsOrderByWithRelationInput[]
-  cursor?: Prisma.termsWhereUniqueInput
+  include?: Prisma.TermsInclude<ExtArgs> | null
+  where?: Prisma.TermsWhereInput
+  orderBy?: Prisma.TermsOrderByWithRelationInput | Prisma.TermsOrderByWithRelationInput[]
+  cursor?: Prisma.TermsWhereUniqueInput
   take?: number
   skip?: number
   distinct?: Prisma.TermsScalarFieldEnum | Prisma.TermsScalarFieldEnum[]
 }
 
 /**
- * semesters without action
+ * Semesters without action
  */
-export type semestersDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type SemestersDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the semesters
+   * Select specific fields to fetch from the Semesters
    */
-  select?: Prisma.semestersSelect<ExtArgs> | null
+  select?: Prisma.SemestersSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the semesters
+   * Omit specific fields from the Semesters
    */
-  omit?: Prisma.semestersOmit<ExtArgs> | null
+  omit?: Prisma.SemestersOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.semestersInclude<ExtArgs> | null
+  include?: Prisma.SemestersInclude<ExtArgs> | null
 }

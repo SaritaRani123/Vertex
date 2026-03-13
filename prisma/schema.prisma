@@ -12,18 +12,18 @@ datasource db {
 // ENUMS
 // ===============================
 
-enum program_status {
+enum ProgramStatus {
   ACTIVE
   INACTIVE
 }
 
-enum course_status {
+enum CourseStatus {
   ACTIVE
   INACTIVE
   ARCHIVED
 }
 
-enum semester_type {
+enum SemesterType {
   FALL
   WINTER
   SUMMER
@@ -33,100 +33,105 @@ enum semester_type {
 // MODELS
 // ===============================
 
-model departments {
-  id          Int        @id @default(autoincrement())
-  name        String     @unique
-  code        String     @unique
+model Departments {
+  Id   Int    @id @default(autoincrement()) @map("id")
+  Name String @unique @map("name")
+  Code String @unique @map("code")
 
-  programs    programs[]
+  Programs Programs[] @relation("DepartmentPrograms")
 
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @updatedAt
+  CreatedAt DateTime @default(now()) @map("created_at")
+  UpdatedAt DateTime @updatedAt @map("updated_at")
 
-  @@index([code])
+  @@index([Code], name: "departments_code_idx")
+  @@map("departments")
 }
 
 // --------------------------------
 
-model programs {
-  id              Int             @id @default(autoincrement())
-  name            String
-  code            String          @unique
-  duration_years  Int
-  status          program_status  @default(ACTIVE)
+model Programs {
+  Id            Int           @id @default(autoincrement()) @map("id")
+  Name          String        @map("name")
+  Code          String        @unique @map("code")
+  DurationYears Int           @map("duration_years")
+  Status        ProgramStatus @default(ACTIVE) @map("status")
 
-  department_id   Int
-  department      departments     @relation(fields: [department_id], references: [id], onDelete: Restrict)
+  DepartmentId Int         @map("department_id")
+  Department   Departments @relation("DepartmentPrograms", fields: [DepartmentId], references: [Id], onDelete: Restrict)
 
-  courses         courses[]
+  Courses Courses[] @relation("ProgramCourses")
 
-  created_at      DateTime        @default(now())
-  updated_at      DateTime        @updatedAt
+  CreatedAt DateTime @default(now()) @map("created_at")
+  UpdatedAt DateTime @updatedAt @map("updated_at")
 
-  @@index([department_id])
-  @@unique([name, department_id])
+  @@unique([Name, DepartmentId], name: "programs_name_department_id_key")
+  @@index([DepartmentId], name: "programs_department_id_idx")
+  @@map("programs")
 }
 
 // --------------------------------
 
-model courses {
-  id              Int             @id @default(autoincrement())
-  name            String
-  code            String          @unique
-  description     String?
+model Courses {
+  Id          Int     @id @default(autoincrement()) @map("id")
+  Name        String  @map("name")
+  Code        String  @unique @map("code")
+  Description String? @map("description")
 
-  prerequisites   String[]
+  Prerequisites String[] @map("prerequisites")
 
-  credits         Int
-  lecture_hours   Int
-  lab_hours       Int
+  Credits      Int @map("credits")
+  LectureHours Int @map("lecture_hours")
+  LabHours     Int @map("lab_hours")
 
-  status          course_status   @default(ACTIVE)
+  Status CourseStatus @default(ACTIVE) @map("status")
 
-  program_id      Int
-  program         programs        @relation(fields: [program_id], references: [id], onDelete: Restrict)
+  ProgramId Int      @map("program_id")
+  Program   Programs @relation("ProgramCourses", fields: [ProgramId], references: [Id], onDelete: Restrict)
 
-  terms           terms[]
+  Terms Terms[] @relation("CourseTerms")
 
-  created_at      DateTime        @default(now())
-  updated_at      DateTime        @updatedAt
+  CreatedAt DateTime @default(now()) @map("created_at")
+  UpdatedAt DateTime @updatedAt @map("updated_at")
 
-  @@index([program_id])
-  @@index([status])
+  @@index([ProgramId], name: "courses_program_id_idx")
+  @@index([Status], name: "courses_status_idx")
+  @@map("courses")
 }
 
 // --------------------------------
 
-model semesters {
-  id          Int            @id @default(autoincrement())
-  year        Int
-  type        semester_type
+model Semesters {
+  Id   Int          @id @default(autoincrement()) @map("id")
+  Year Int          @map("year")
+  Type SemesterType @map("type")
 
-  terms       terms[]
+  Terms Terms[] @relation("SemesterTerms")
 
-  created_at  DateTime       @default(now())
-  updated_at  DateTime       @updatedAt
+  CreatedAt DateTime @default(now()) @map("created_at")
+  UpdatedAt DateTime @updatedAt @map("updated_at")
 
-  @@unique([year, type])
-  @@index([year])
+  @@unique([Year, Type], name: "semesters_year_type_key")
+  @@index([Year], name: "semesters_year_idx")
+  @@map("semesters")
 }
 
 // --------------------------------
 // BRIDGE TABLE
 // --------------------------------
 
-model terms {
-  id            Int        @id @default(autoincrement())
+model Terms {
+  Id Int @id @default(autoincrement()) @map("id")
 
-  semester_id   Int
-  semester      semesters  @relation(fields: [semester_id], references: [id], onDelete: Cascade)
+  SemesterId Int       @map("semester_id")
+  Semester   Semesters @relation("SemesterTerms", fields: [SemesterId], references: [Id], onDelete: Cascade)
 
-  course_id     Int
-  course        courses    @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  CourseId Int     @map("course_id")
+  Course   Courses @relation("CourseTerms", fields: [CourseId], references: [Id], onDelete: Cascade)
 
-  created_at    DateTime   @default(now())
+  CreatedAt DateTime @default(now()) @map("created_at")
 
-  @@unique([semester_id, course_id])
-  @@index([semester_id])
-  @@index([course_id])
+  @@unique([SemesterId, CourseId], name: "terms_semester_id_course_id_key")
+  @@index([SemesterId], name: "terms_semester_id_idx")
+  @@index([CourseId], name: "terms_course_id_idx")
+  @@map("terms")
 }

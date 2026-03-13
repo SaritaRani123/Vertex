@@ -10,24 +10,24 @@ function parseId(id: string): number | null {
 }
 
 function toProgramResponse(row: {
-  id: number;
-  name: string;
-  code: string;
-  duration_years: number;
-  status: string;
-  department_id: number;
-  created_at: Date;
-  updated_at: Date;
+  Id: number;
+  Name: string;
+  Code: string;
+  DurationYears: number;
+  Status: string;
+  DepartmentId: number;
+  CreatedAt: Date;
+  UpdatedAt: Date;
 }): ProgramResponse {
   return {
-    id: row.id,
-    name: row.name,
-    code: row.code,
-    duration_years: row.duration_years,
-    status: row.status as ProgramStatus,
-    department_id: row.department_id,
-    created_at: row.created_at.toISOString(),
-    updated_at: row.updated_at.toISOString(),
+    id: row.Id,
+    name: row.Name,
+    code: row.Code,
+    duration_years: row.DurationYears,
+    status: row.Status as ProgramStatus,
+    department_id: row.DepartmentId,
+    created_at: row.CreatedAt.toISOString(),
+    updated_at: row.UpdatedAt.toISOString(),
   };
 }
 
@@ -40,7 +40,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
   const numericId = parseId(id);
   if (numericId === null) return notFound("Program not found");
   try {
-    const row = await prisma.programs.findUnique({ where: { id: numericId } });
+    const row = await prisma.programs.findUnique({ where: { Id: numericId } });
     if (!row) return notFound("Program not found");
     return json(toProgramResponse(row));
   } catch {
@@ -53,7 +53,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   const numericId = parseId(id);
   if (numericId === null) return notFound("Program not found");
   try {
-    const row = await prisma.programs.findUnique({ where: { id: numericId } });
+    const row = await prisma.programs.findUnique({ where: { Id: numericId } });
     if (!row) return notFound("Program not found");
 
     const body = await request.json();
@@ -68,14 +68,14 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     if (parsed.data.department_id !== undefined) {
       const dept = await prisma.departments.findUnique({
-        where: { id: parsed.data.department_id },
+        where: { Id: parsed.data.department_id },
       });
       if (!dept) return validationError("Department not found");
     }
 
     if (parsed.data.code !== undefined) {
       const existing = await prisma.programs.findFirst({
-        where: { id: { not: numericId }, code: parsed.data.code },
+        where: { Id: { not: numericId }, Code: parsed.data.code },
       });
       if (existing) return validationError("Another program already has this code");
     }
@@ -84,13 +84,13 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       (parsed.data.name !== undefined && parsed.data.department_id !== undefined) ||
       (parsed.data.name !== undefined && parsed.data.department_id === undefined)
     ) {
-      const name = parsed.data.name ?? row.name;
-      const deptId = parsed.data.department_id ?? row.department_id;
+      const name = parsed.data.name ?? row.Name;
+      const deptId = parsed.data.department_id ?? row.DepartmentId;
       const existing = await prisma.programs.findFirst({
         where: {
-          id: { not: numericId },
-          name: name,
-          department_id: deptId,
+          Id: { not: numericId },
+          Name: name,
+          DepartmentId: deptId,
         },
       });
       if (existing) {
@@ -101,16 +101,16 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     const updated = await prisma.programs.update({
-      where: { id: numericId },
+      where: { Id: numericId },
       data: {
-        ...(parsed.data.name !== undefined && { name: parsed.data.name }),
-        ...(parsed.data.code !== undefined && { code: parsed.data.code }),
+        ...(parsed.data.name !== undefined && { Name: parsed.data.name }),
+        ...(parsed.data.code !== undefined && { Code: parsed.data.code }),
         ...(parsed.data.duration_years !== undefined && {
-          duration_years: parsed.data.duration_years,
+          DurationYears: parsed.data.duration_years,
         }),
-        ...(parsed.data.status !== undefined && { status: parsed.data.status }),
+        ...(parsed.data.status !== undefined && { Status: parsed.data.status }),
         ...(parsed.data.department_id !== undefined && {
-          department_id: parsed.data.department_id,
+          DepartmentId: parsed.data.department_id,
         }),
       },
     });
@@ -125,9 +125,9 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
   const numericId = parseId(id);
   if (numericId === null) return notFound("Program not found");
   try {
-    const row = await prisma.programs.findUnique({ where: { id: numericId } });
+    const row = await prisma.programs.findUnique({ where: { Id: numericId } });
     if (!row) return notFound("Program not found");
-    await prisma.programs.delete({ where: { id: numericId } });
+    await prisma.programs.delete({ where: { Id: numericId } });
     return new Response(null, { status: 204 });
   } catch (e) {
     const message = e instanceof Error ? e.message : "";

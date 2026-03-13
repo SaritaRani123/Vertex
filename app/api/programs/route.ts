@@ -5,41 +5,41 @@ import type { ProgramResponse, ProgramListResponse, ProgramListItem, ProgramStat
 import { safeValidateProgramCreate } from "@/lib/validations/programs";
 
 function toProgramResponse(row: {
-  id: number;
-  name: string;
-  code: string;
-  duration_years: number;
-  status: string;
-  department_id: number;
-  created_at: Date;
-  updated_at: Date;
+  Id: number;
+  Name: string;
+  Code: string;
+  DurationYears: number;
+  Status: string;
+  DepartmentId: number;
+  CreatedAt: Date;
+  UpdatedAt: Date;
 }): ProgramResponse {
   return {
-    id: row.id,
-    name: row.name,
-    code: row.code,
-    duration_years: row.duration_years,
-    status: row.status as ProgramStatus,
-    department_id: row.department_id,
-    created_at: row.created_at.toISOString(),
-    updated_at: row.updated_at.toISOString(),
+    id: row.Id,
+    name: row.Name,
+    code: row.Code,
+    duration_years: row.DurationYears,
+    status: row.Status as ProgramStatus,
+    department_id: row.DepartmentId,
+    created_at: row.CreatedAt.toISOString(),
+    updated_at: row.UpdatedAt.toISOString(),
   };
 }
 
 function toProgramListItem(row: {
-  id: number;
-  name: string;
-  code: string;
-  duration_years: number;
-  status: string;
-  department_id: number;
-  created_at: Date;
-  updated_at: Date;
-  department: { name: string };
+  Id: number;
+  Name: string;
+  Code: string;
+  DurationYears: number;
+  Status: string;
+  DepartmentId: number;
+  CreatedAt: Date;
+  UpdatedAt: Date;
+  Department: { Name: string };
 }): ProgramListItem {
   return {
     ...toProgramResponse(row),
-    department_name: row.department.name,
+    department_name: row.Department.Name,
   };
 }
 
@@ -49,9 +49,9 @@ export async function GET(request: NextRequest) {
     const departmentIdParam = searchParams.get("department_id");
     const departmentId = departmentIdParam ? parseInt(departmentIdParam, 10) : null;
     const list = await prisma.programs.findMany({
-      where: departmentId != null && !Number.isNaN(departmentId) ? { department_id: departmentId } : undefined,
-      orderBy: [{ department: { name: "asc" } }, { name: "asc" }],
-      include: { department: { select: { name: true } } },
+      where: departmentId != null && !Number.isNaN(departmentId) ? { DepartmentId: departmentId } : undefined,
+      orderBy: [{ Department: { Name: "asc" } }, { Name: "asc" }],
+      include: { Department: { select: { Name: true } } },
     });
     const data: ProgramListResponse = {
       data: list.map(toProgramListItem),
@@ -70,21 +70,21 @@ export async function POST(request: NextRequest) {
       return fromZodError(parsed.error);
     }
     const department = await prisma.departments.findUnique({
-      where: { id: parsed.data.department_id },
+      where: { Id: parsed.data.department_id },
     });
     if (!department) {
       return validationError("Department not found");
     }
     const existingCode = await prisma.programs.findUnique({
-      where: { code: parsed.data.code },
+      where: { Code: parsed.data.code },
     });
     if (existingCode) {
       return validationError("A program with this code already exists");
     }
     const existingNameDept = await prisma.programs.findFirst({
       where: {
-        name: parsed.data.name,
-        department_id: parsed.data.department_id,
+        Name: parsed.data.name,
+        DepartmentId: parsed.data.department_id,
       },
     });
     if (existingNameDept) {
@@ -94,11 +94,11 @@ export async function POST(request: NextRequest) {
     }
     const created = await prisma.programs.create({
       data: {
-        name: parsed.data.name,
-        code: parsed.data.code,
-        duration_years: parsed.data.duration_years,
-        status: parsed.data.status ?? "ACTIVE",
-        department_id: parsed.data.department_id,
+        Name: parsed.data.name,
+        Code: parsed.data.code,
+        DurationYears: parsed.data.duration_years,
+        Status: parsed.data.status ?? "ACTIVE",
+        DepartmentId: parsed.data.department_id,
       },
     });
     return json(toProgramResponse(created), 201);

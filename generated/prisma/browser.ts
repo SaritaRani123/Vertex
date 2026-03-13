@@ -18,27 +18,27 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
- * Model departments
+ * Model Departments
  * 
  */
-export type departments = Prisma.departmentsModel
+export type Departments = Prisma.DepartmentsModel
 /**
- * Model programs
+ * Model Programs
  * 
  */
-export type programs = Prisma.programsModel
+export type Programs = Prisma.ProgramsModel
 /**
- * Model courses
+ * Model Courses
  * 
  */
-export type courses = Prisma.coursesModel
+export type Courses = Prisma.CoursesModel
 /**
- * Model semesters
+ * Model Semesters
  * 
  */
-export type semesters = Prisma.semestersModel
+export type Semesters = Prisma.SemestersModel
 /**
- * Model terms
+ * Model Terms
  * 
  */
-export type terms = Prisma.termsModel
+export type Terms = Prisma.TermsModel
