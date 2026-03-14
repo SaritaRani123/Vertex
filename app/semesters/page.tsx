@@ -50,12 +50,18 @@ export default function SemestersPage() {
 
   const handleDelete = async () => {
     if (deleteId === null) return;
+    setError(null);
     setIsDeleting(true);
     try {
       const res = await fetch(`/api/semesters/${deleteId}`, {
         method: "DELETE",
       });
-      if (!res.ok) throw new Error("Failed to delete semester");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data?.error ?? "Failed to delete semester");
+        setIsDeleting(false);
+        return;
+      }
       setSemesters(semesters.filter((s) => s.id !== deleteId));
       setDeleteId(null);
     } catch (e) {

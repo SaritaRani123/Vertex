@@ -99,12 +99,24 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
   try {
     const row = await prisma.departments.findUnique({ where: { Id: numericId } });
     if (!row) return notFound("Department not found");
+
+    const programsCount = await prisma.programs.count({
+      where: { DepartmentId: numericId },
+    });
+    if (programsCount > 0) {
+      return validationError(
+        "Cannot delete this department because it has programs. Remove or reassign the programs first.",
+      );
+    }
+
     await prisma.departments.delete({ where: { Id: numericId } });
     return new Response(null, { status: 204 });
   } catch (e) {
     const message = e instanceof Error ? e.message : "";
     if (message.includes("Foreign key") || message.includes("restrict")) {
-      return validationError("Cannot delete department while it has programs");
+      return validationError(
+        "Cannot delete this department because it has programs. Remove or reassign the programs first.",
+      );
     }
     return internalError();
   }

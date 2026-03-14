@@ -21,7 +21,7 @@ export function safeValidateSemesterCreate(
 }
 
 export const semesterUpdateSchema = z.object({
-  year: z.number().int().min(1900).max(3000).optional(),
+  year: z.number().int().min(1900, "Year must be valid").max(3000, "Year must be valid").optional(),
   type: semesterTypeSchema.optional(),
 });
 

@@ -95,12 +95,24 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
   try {
     const row = await prisma.semesters.findUnique({ where: { Id: numericId } });
     if (!row) return notFound("Semester not found");
+
+    const termsCount = await prisma.terms.count({
+      where: { SemesterId: numericId },
+    });
+    if (termsCount > 0) {
+      return validationError(
+        "Cannot delete this semester because it has term assignments. Remove the term assignments first.",
+      );
+    }
+
     await prisma.semesters.delete({ where: { Id: numericId } });
     return new Response(null, { status: 204 });
   } catch (e) {
     const message = e instanceof Error ? e.message : "";
     if (message.includes("Foreign key") || message.includes("restrict") || message.includes("cascade")) {
-      return validationError("Cannot delete semester while it has terms assigned");
+      return validationError(
+        "Cannot delete this semester because it has term assignments. Remove the term assignments first.",
+      );
     }
     return internalError();
   }

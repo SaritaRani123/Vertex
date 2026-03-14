@@ -1,9 +1,6 @@
-/**
- * API type definitions — input and response data.
- * No `any`; all types are explicit for type safety.
- */
+// API request/response types (see docs/API_SPECIFICATION.md)
 
-// ============== Departments ==============
+// Departments
 
 export interface DepartmentInput {
   name: string;
@@ -22,7 +19,7 @@ export interface DepartmentListResponse {
   data: DepartmentResponse[];
 }
 
-// ============== Programs ==============
+// Programs
 
 export type ProgramStatus = "ACTIVE" | "INACTIVE";
 
@@ -53,7 +50,7 @@ export interface ProgramListResponse {
   data: ProgramListItem[];
 }
 
-// ============== Courses ==============
+// Courses
 
 export type CourseStatus = "ACTIVE" | "INACTIVE" | "ARCHIVED";
 
@@ -89,7 +86,7 @@ export interface CourseListResponse {
   data: CourseResponse[];
 }
 
-// ============== Semesters ==============
+// Semesters
 
 export type SemesterType = "FALL" | "WINTER" | "SUMMER";
 
@@ -110,7 +107,7 @@ export interface SemesterListResponse {
   data: SemesterResponse[];
 }
 
-// ============== Terms ==============
+// Terms
 
 export interface TermInput {
   semester_id: number;
@@ -128,7 +125,7 @@ export interface TermListResponse {
   data: Array<TermResponse & { semester_year: number; semester_type: SemesterType; course_name: string; course_code: string }>;
 }
 
-// ============== Error response (for 400 validation) ==============
+// Error responses
 
 export interface ValidationErrorResponse {
   error: string;

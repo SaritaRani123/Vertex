@@ -50,12 +50,18 @@ export default function DepartmentsPage() {
 
   const handleDelete = async () => {
     if (deleteId === null) return;
+    setError(null);
     setIsDeleting(true);
     try {
       const res = await fetch(`/api/departments/${deleteId}`, {
         method: "DELETE",
       });
-      if (!res.ok) throw new Error("Failed to delete department");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data?.error ?? "Failed to delete department");
+        setIsDeleting(false);
+        return;
+      }
       setDepartments(departments.filter((d) => d.id !== deleteId));
       setDeleteId(null);
     } catch (e) {
@@ -63,7 +69,7 @@ export default function DepartmentsPage() {
     } finally {
       setIsDeleting(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">

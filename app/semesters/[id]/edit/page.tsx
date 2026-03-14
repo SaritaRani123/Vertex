@@ -5,7 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel, FieldGroup } from "@/components/ui/field";
+import { Field, FieldLabel, FieldGroup, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -29,6 +29,7 @@ export default function EditSemesterPage() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [semesterType, setSemesterType] = useState<"FALL" | "WINTER" | "SUMMER">("FALL");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     async function load() {
@@ -53,14 +54,16 @@ export default function EditSemesterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
-    if (!id) {
-      setError("Missing ID");
+    setFieldErrors({});
+    if (!id) return;
+    const errors: Record<string, string> = {};
+    if (year < 1900 || year > 3000) errors.year = "Year must be between 1900 and 3000";
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setError("Please fix the errors below.");
       return;
     }
-
     setIsSubmitting(true);
-
     try {
       const res = await fetch(`/api/semesters/${id}`, {
         method: "PUT",
@@ -70,6 +73,15 @@ export default function EditSemesterPage() {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(data?.error ?? "Failed to update semester");
+        const details = data?.details as Array<{ path: (string | number)[]; message: string }> | undefined;
+        if (details?.length) {
+          const byField: Record<string, string> = {};
+          for (const d of details) {
+            const key = String(d.path[0] ?? "");
+            if (key && !byField[key]) byField[key] = d.message;
+          }
+          setFieldErrors(byField);
+        }
         setIsSubmitting(false);
         return;
       }
@@ -113,8 +125,9 @@ export default function EditSemesterPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
+            {error && <p className="text-sm text-destructive">{error}</p>}
             <FieldGroup>
-              <Field>
+              <Field data-invalid={!!fieldErrors.year}>
                 <FieldLabel htmlFor="year">Year</FieldLabel>
                 <Input
                   id="year"
@@ -122,18 +135,21 @@ export default function EditSemesterPage() {
                   min={1900}
                   max={3000}
                   value={year}
-                  onChange={(e) => setYear(parseInt(e.target.value, 10) || new Date().getFullYear())}
+                  onChange={(e) => { setYear(parseInt(e.target.value, 10) || new Date().getFullYear()); setFieldErrors((p) => ({ ...p, year: "" })); }}
                   required
+                  aria-invalid={!!fieldErrors.year}
                 />
+                {fieldErrors.year && <FieldError>{fieldErrors.year}</FieldError>}
               </Field>
-              <Field>
+              <Field data-invalid={!!fieldErrors.type}>
                 <FieldLabel>Type</FieldLabel>
                 <Select value={semesterType} onValueChange={(value) => {
                   if (value === "FALL" || value === "WINTER" || value === "SUMMER") {
                     setSemesterType(value);
+                    setFieldErrors((p) => ({ ...p, type: "" }));
                   }
                 }}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full" aria-invalid={!!fieldErrors.type}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -142,9 +158,9 @@ export default function EditSemesterPage() {
                     <SelectItem value="SUMMER">Summer</SelectItem>
                   </SelectContent>
                 </Select>
+                {fieldErrors.type && <FieldError>{fieldErrors.type}</FieldError>}
               </Field>
             </FieldGroup>
-            {error && <p className="text-sm text-destructive">{error}</p>}
             <div className="flex gap-2">
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? "Updating…" : "Update Semester"}

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel, FieldGroup } from "@/components/ui/field";
+import { Field, FieldLabel, FieldGroup, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -16,13 +16,15 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 import type { ProgramResponse } from "@/lib/api-types";
+import type { CourseOption } from "@/components/course-multi-select";
+import { CourseMultiSelect } from "@/components/course-multi-select";
 
 export default function CreateCoursePage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [description, setDescription] = useState("");
-  const [prerequisites, setPrerequisites] = useState("");
+  const [prerequisiteIds, setPrerequisiteIds] = useState<number[]>([]);
   const [credits, setCredits] = useState(3);
   const [lectureHours, setLectureHours] = useState(2);
   const [labHours, setLabHours] = useState(0);
@@ -30,9 +32,11 @@ export default function CreateCoursePage() {
   const [programId, setProgramId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const [programs, setPrograms] = useState<ProgramResponse[]>([]);
   const [programsLoading, setProgramsLoading] = useState(true);
+  const [courses, setCourses] = useState<CourseOption[]>([]);
 
   useEffect(() => {
     async function fetchPrograms() {
@@ -48,29 +52,65 @@ export default function CreateCoursePage() {
     fetchPrograms();
   }, []);
 
+  useEffect(() => {
+    async function fetchCourses() {
+      try {
+        const res = await fetch("/api/courses");
+        if (!res.ok) return;
+        const json = await res.json();
+        const data = json.data ?? [];
+        setCourses(
+          data.map((c: { id: number; name: string; code: string; description?: string | null; credits?: number; lecture_hours?: number; lab_hours?: number; status?: string; program_name?: string }) => ({
+            id: c.id,
+            name: c.name,
+            code: c.code,
+            description: c.description ?? undefined,
+            credits: c.credits,
+            lecture_hours: c.lecture_hours,
+            lab_hours: c.lab_hours,
+            status: c.status,
+            program_name: c.program_name,
+          }))
+        );
+      } catch {
+        // ignore
+      }
+    }
+    fetchCourses();
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
-    if (!programId) {
-      setError("Please select a program");
+    setFieldErrors({});
+    const trimmedName = name.trim();
+    const trimmedCode = code.trim().toUpperCase();
+    const errors: Record<string, string> = {};
+    if (!trimmedName) errors.name = "Name is required";
+    if (!trimmedCode) errors.code = "Code is required";
+    if (credits < 0) errors.credits = "Credits must be 0 or more";
+    if (lectureHours < 0) errors.lecture_hours = "Lecture hours must be 0 or more";
+    if (labHours < 0) errors.lab_hours = "Lab hours must be 0 or more";
+    if (!programId) errors.program_id = "Please select a program";
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setError("Please fix the errors below.");
       return;
     }
-
     setIsSubmitting(true);
-
     try {
+      const prerequisiteCodes = prerequisiteIds
+        .map((id) => courses.find((c) => c.id === id)?.code)
+        .filter((c): c is string => Boolean(c));
+
       const res = await fetch("/api/courses", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: name.trim(),
-          code: code.trim().toUpperCase(),
+          name: trimmedName,
+          code: trimmedCode,
           description: description.trim() || null,
-          prerequisites: prerequisites
-            .split(",")
-            .map((x) => x.trim())
-            .filter(Boolean),
+          prerequisites: prerequisiteCodes,
           credits,
           lecture_hours: lectureHours,
           lab_hours: labHours,
@@ -80,7 +120,17 @@ export default function CreateCoursePage() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(data?.error ?? "Failed to create course");
+        const msg = data?.error ?? "Failed to create course";
+        const details = data?.details as Array<{ path: (string | number)[]; message: string }> | undefined;
+        setError(details?.length ? `${msg} ${details.map((d) => d.message).join(". ")}` : msg);
+        if (details?.length) {
+          const byField: Record<string, string> = {};
+          for (const d of details) {
+            const key = String(d.path[0] ?? "");
+            if (key && !byField[key]) byField[key] = d.message;
+          }
+          setFieldErrors(byField);
+        }
         setIsSubmitting(false);
         return;
       }
@@ -114,26 +164,30 @@ export default function CreateCoursePage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && <p className="text-sm text-destructive">{error}</p>}
             <FieldGroup>
-              <Field>
+              <Field data-invalid={!!fieldErrors.name}>
                 <FieldLabel htmlFor="name">Name</FieldLabel>
                 <Input
                   id="name"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => { setName(e.target.value); setFieldErrors((p) => ({ ...p, name: "" })); }}
                   placeholder="e.g. Data Structures"
                   required
+                  aria-invalid={!!fieldErrors.name}
                 />
+                {fieldErrors.name && <FieldError>{fieldErrors.name}</FieldError>}
               </Field>
-              <Field>
+              <Field data-invalid={!!fieldErrors.code}>
                 <FieldLabel htmlFor="code">Code</FieldLabel>
                 <Input
                   id="code"
                   value={code}
-                  onChange={(e) => setCode(e.target.value.toUpperCase())}
+                  onChange={(e) => { setCode(e.target.value.toUpperCase()); setFieldErrors((p) => ({ ...p, code: "" })); }}
                   placeholder="e.g. CS201"
                   required
                   className="uppercase"
+                  aria-invalid={!!fieldErrors.code}
                 />
+                {fieldErrors.code && <FieldError>{fieldErrors.code}</FieldError>}
               </Field>
               <Field>
                 <FieldLabel htmlFor="description">Description</FieldLabel>
@@ -145,57 +199,63 @@ export default function CreateCoursePage() {
               </Field>
               <Field>
                 <FieldLabel htmlFor="prerequisites">Prerequisites</FieldLabel>
-                <Input
-                  id="prerequisites"
-                  value={prerequisites}
-                  onChange={(e) => setPrerequisites(e.target.value)}
-                  placeholder="Comma-separated, e.g. CS101, MA101"
+                <CourseMultiSelect
+                  selectedCourses={prerequisiteIds}
+                  onChange={(ids) => setPrerequisiteIds(ids)}
+                  courses={courses}
                 />
               </Field>
-              <Field>
+              <Field data-invalid={!!fieldErrors.credits}>
                 <FieldLabel htmlFor="credits">Credits</FieldLabel>
                 <Input
                   id="credits"
                   type="number"
                   min={0}
                   value={credits}
-                  onChange={(e) => setCredits(parseInt(e.target.value, 10) || 0)}
+                  onChange={(e) => { setCredits(parseInt(e.target.value, 10) || 0); setFieldErrors((p) => ({ ...p, credits: "" })); }}
                   required
+                  aria-invalid={!!fieldErrors.credits}
                 />
+                {fieldErrors.credits && <FieldError>{fieldErrors.credits}</FieldError>}
               </Field>
-              <Field>
+              <Field data-invalid={!!fieldErrors.lecture_hours}>
                 <FieldLabel htmlFor="lectureHours">Lecture Hours</FieldLabel>
                 <Input
                   id="lectureHours"
                   type="number"
                   min={0}
                   value={lectureHours}
-                  onChange={(e) => setLectureHours(parseInt(e.target.value, 10) || 0)}
+                  onChange={(e) => { setLectureHours(parseInt(e.target.value, 10) || 0); setFieldErrors((p) => ({ ...p, lecture_hours: "" })); }}
                   required
+                  aria-invalid={!!fieldErrors.lecture_hours}
                 />
+                {fieldErrors.lecture_hours && <FieldError>{fieldErrors.lecture_hours}</FieldError>}
               </Field>
-              <Field>
+              <Field data-invalid={!!fieldErrors.lab_hours}>
                 <FieldLabel htmlFor="labHours">Lab Hours</FieldLabel>
                 <Input
                   id="labHours"
                   type="number"
                   min={0}
                   value={labHours}
-                  onChange={(e) => setLabHours(parseInt(e.target.value, 10) || 0)}
+                  onChange={(e) => { setLabHours(parseInt(e.target.value, 10) || 0); setFieldErrors((p) => ({ ...p, lab_hours: "" })); }}
                   required
+                  aria-invalid={!!fieldErrors.lab_hours}
                 />
+                {fieldErrors.lab_hours && <FieldError>{fieldErrors.lab_hours}</FieldError>}
               </Field>
-              <Field>
+              <Field data-invalid={!!fieldErrors.program_id}>
                 <FieldLabel>Program</FieldLabel>
                 <Select
                   value={programId}
                   onValueChange={(value) => {
                     if (value !== null) setProgramId(value);
+                    setFieldErrors((p) => ({ ...p, program_id: "" }));
                   }}
                   required
                   disabled={programsLoading}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full" aria-invalid={!!fieldErrors.program_id}>
                     <SelectValue placeholder={programsLoading ? "Loading…" : "Select program"}>
                       {programId && !programsLoading
                         ? programs.find((p) => String(p.id) === programId)?.name
@@ -210,6 +270,7 @@ export default function CreateCoursePage() {
                     ))}
                   </SelectContent>
                 </Select>
+                {fieldErrors.program_id && <FieldError>{fieldErrors.program_id}</FieldError>}
               </Field>
               <Field>
                 <FieldLabel>Status</FieldLabel>

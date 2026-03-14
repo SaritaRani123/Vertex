@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vertex — College Scheduling System
 
-## Getting Started
+A web app to manage departments, programs, courses, semesters, and term (course–semester) assignments. Built with **Next.js**, **Prisma**, and **PostgreSQL**.
 
-First, run the development server:
+## Run the project
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). Set up `.env` with `DATABASE_URL` for your database and run migrations if needed.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## What’s inside
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Dashboard** — Links to each module.
+- **Departments** — CRUD; list, create, edit, delete.
+- **Programs** — CRUD with optional department filter.
+- **Courses** — CRUD with prerequisites (multi-select) and tooltips.
+- **Semesters** — CRUD (year + type: FALL / WINTER / SUMMER).
+- **Terms** — Assign courses to semesters; list, create, edit, delete.
 
-## Learn More
+All create/edit forms use field-level validation and show API errors under the relevant fields.
 
-To learn more about Next.js, take a look at the following resources:
+## Docs
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **[API Specification](docs/API_SPECIFICATION.md)** — Endpoints, request/response bodies, errors, delete rules.
+- **[UI Architecture](docs/UI_ARCHITECTURE.md)** — Screens, routes, components, and workflows.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Tech
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js (App Router), React, TypeScript
+- Prisma + PostgreSQL
+- shadcn/ui–style components

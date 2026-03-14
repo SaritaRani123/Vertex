@@ -5,7 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel, FieldGroup } from "@/components/ui/field";
+import { Field, FieldLabel, FieldGroup, FieldError } from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -26,6 +26,7 @@ export default function EditTermPage() {
   const [courseId, setCourseId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [semesters, setSemesters] = useState<SemesterResponse[]>([]);
   const [courses, setCourses] = useState<CourseResponse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -78,15 +79,21 @@ export default function EditTermPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-
+    setFieldErrors({});
     const semesterId = getSemesterId();
-    if (!semesterId || !courseId) {
-      setError("Please select semester year, type and course");
+    const errors: Record<string, string> = {};
+    if (!semesterYear) errors.semester_year = "Please select a semester year";
+    else if (!semesterType) errors.semester_type = "Please select a semester type";
+    else if (!semesterId)
+      errors.semester_type =
+        "No semester exists for the selected year and type. Add it in Semesters first.";
+    if (!courseId) errors.course_id = "Please select a course";
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setError("Please fix the errors below.");
       return;
     }
-
     setIsSubmitting(true);
-
     try {
       const res = await fetch(`/api/terms/${termId}`, {
         method: "PUT",
@@ -96,6 +103,19 @@ export default function EditTermPage() {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(data?.error ?? "Failed to update term");
+        const details = data?.details as Array<{ path: (string | number)[]; message: string }> | undefined;
+        if (details?.length) {
+          const byField: Record<string, string> = {};
+          for (const d of details) {
+            const key = String(d.path[0] ?? "");
+            if (key && !byField[key]) byField[key] = d.message;
+            if (key === "semester_id") {
+              byField.semester_year = byField.semester_year ?? d.message;
+              byField.semester_type = byField.semester_type ?? d.message;
+            }
+          }
+          setFieldErrors(byField);
+        }
         setIsSubmitting(false);
         return;
       }
@@ -129,14 +149,17 @@ export default function EditTermPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && <p className="text-sm text-destructive">{error}</p>}
             <FieldGroup>
-              <Field>
+              <Field data-invalid={!!fieldErrors.semester_year}>
                 <FieldLabel>Semester Year</FieldLabel>
                 <Select
                   value={semesterYear}
-                  onValueChange={(value) => { if (value !== null) setSemesterYear(value); }}
+                  onValueChange={(value) => {
+                    if (value !== null) setSemesterYear(value);
+                    setFieldErrors((p) => ({ ...p, semester_year: "", semester_type: "" }));
+                  }}
                   disabled={loading}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full" aria-invalid={!!fieldErrors.semester_year}>
                     <SelectValue>
                       {semesterYear || (loading ? "Loading…" : "Select year")}
                     </SelectValue>
@@ -151,17 +174,19 @@ export default function EditTermPage() {
                       ))}
                   </SelectContent>
                 </Select>
+                {fieldErrors.semester_year && <FieldError>{fieldErrors.semester_year}</FieldError>}
               </Field>
-              <Field>
+              <Field data-invalid={!!fieldErrors.semester_type}>
                 <FieldLabel>Semester Type</FieldLabel>
                 <Select
                   value={semesterType}
                   onValueChange={(value) => {
                     if (value === "FALL" || value === "WINTER" || value === "SUMMER") setSemesterType(value);
+                    setFieldErrors((p) => ({ ...p, semester_year: "", semester_type: "" }));
                   }}
                   disabled={loading}
                 >
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full" aria-invalid={!!fieldErrors.semester_type}>
                     <SelectValue>
                       {semesterType || (loading ? "Loading…" : "Select type")}
                     </SelectValue>
@@ -174,11 +199,19 @@ export default function EditTermPage() {
                     ))}
                   </SelectContent>
                 </Select>
+                {fieldErrors.semester_type && <FieldError>{fieldErrors.semester_type}</FieldError>}
               </Field>
-              <Field>
+              <Field data-invalid={!!fieldErrors.course_id}>
                 <FieldLabel>Course</FieldLabel>
-                <Select value={courseId} onValueChange={(value) => { if (value !== null) setCourseId(value); }} disabled={loading}>
-                  <SelectTrigger className="w-full">
+                <Select
+                  value={courseId}
+                  onValueChange={(value) => {
+                    if (value !== null) setCourseId(value);
+                    setFieldErrors((p) => ({ ...p, course_id: "" }));
+                  }}
+                  disabled={loading}
+                >
+                  <SelectTrigger className="w-full" aria-invalid={!!fieldErrors.course_id}>
                     <SelectValue>
                       {courseId
                         ? `${courses.find((c) => String(c.id) === courseId)?.code ?? ""} - ${courses.find((c) => String(c.id) === courseId)?.name ?? ""}`
@@ -195,6 +228,7 @@ export default function EditTermPage() {
                     ))}
                   </SelectContent>
                 </Select>
+                {fieldErrors.course_id && <FieldError>{fieldErrors.course_id}</FieldError>}
               </Field>
             </FieldGroup>
             <div className="flex gap-2">

@@ -9,6 +9,7 @@ import {
   Field,
   FieldLabel,
   FieldGroup,
+  FieldError,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft } from "lucide-react";
@@ -22,6 +23,7 @@ export default function EditDepartmentPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (!id) return;
@@ -49,16 +51,36 @@ export default function EditDepartmentPage() {
     e.preventDefault();
     if (!id) return;
     setError(null);
+    setFieldErrors({});
+    const trimmedName = name.trim();
+    const trimmedCode = code.trim().toUpperCase();
+    const errors: Record<string, string> = {};
+    if (!trimmedName) errors.name = "Name is required";
+    if (!trimmedCode) errors.code = "Code is required";
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setError("Please fix the errors below.");
+      return;
+    }
     setIsSubmitting(true);
     try {
       const res = await fetch(`/api/departments/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), code: code.trim().toUpperCase() }),
+        body: JSON.stringify({ name: trimmedName, code: trimmedCode }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(data?.error ?? "Failed to update department");
+        const details = data?.details as Array<{ path: (string | number)[]; message: string }> | undefined;
+        if (details?.length) {
+          const byField: Record<string, string> = {};
+          for (const d of details) {
+            const key = String(d.path[0] ?? "");
+            if (key && !byField[key]) byField[key] = d.message;
+          }
+          setFieldErrors(byField);
+        }
         return;
       }
       router.push("/departments");
@@ -114,26 +136,30 @@ export default function EditDepartmentPage() {
               <p className="text-sm text-destructive">{error}</p>
             )}
             <FieldGroup>
-              <Field>
+              <Field data-invalid={!!fieldErrors.name}>
                 <FieldLabel htmlFor="name">Name</FieldLabel>
                 <Input
                   id="name"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => { setName(e.target.value); setFieldErrors((prev) => ({ ...prev, name: "" })); }}
                   placeholder="e.g. Computer Science"
                   required
+                  aria-invalid={!!fieldErrors.name}
                 />
+                {fieldErrors.name && <FieldError>{fieldErrors.name}</FieldError>}
               </Field>
-              <Field>
+              <Field data-invalid={!!fieldErrors.code}>
                 <FieldLabel htmlFor="code">Code</FieldLabel>
                 <Input
                   id="code"
                   value={code}
-                  onChange={(e) => setCode(e.target.value.toUpperCase())}
+                  onChange={(e) => { setCode(e.target.value.toUpperCase()); setFieldErrors((prev) => ({ ...prev, code: "" })); }}
                   placeholder="e.g. CS"
                   required
                   className="uppercase"
+                  aria-invalid={!!fieldErrors.code}
                 />
+                {fieldErrors.code && <FieldError>{fieldErrors.code}</FieldError>}
               </Field>
             </FieldGroup>
             <div className="flex gap-2">

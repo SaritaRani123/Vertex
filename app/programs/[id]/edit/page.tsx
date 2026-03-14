@@ -9,6 +9,7 @@ import {
   Field,
   FieldLabel,
   FieldGroup,
+  FieldError,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -33,6 +34,7 @@ export default function EditProgramPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const [departments, setDepartments] = useState<DepartmentResponse[]>([]);
   const [program, setProgram] = useState<ProgramResponse | null>(null);
@@ -79,16 +81,29 @@ export default function EditProgramPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!id || !departmentId) return;
+    if (!id) return;
     setError(null);
+    setFieldErrors({});
+    const trimmedName = name.trim();
+    const trimmedCode = code.trim().toUpperCase();
+    const errors: Record<string, string> = {};
+    if (!trimmedName) errors.name = "Name is required";
+    if (!trimmedCode) errors.code = "Code is required";
+    if (durationYears < 1) errors.duration_years = "Duration must be at least 1 year";
+    if (!departmentId) errors.department_id = "Please select a department";
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setError("Please fix the errors below.");
+      return;
+    }
     setIsSubmitting(true);
     try {
       const res = await fetch(`/api/programs/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: name.trim(),
-          code: code.trim().toUpperCase(),
+          name: trimmedName,
+          code: trimmedCode,
           duration_years: durationYears,
           status,
           department_id: Number(departmentId),
@@ -97,6 +112,15 @@ export default function EditProgramPage() {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(data?.error ?? "Failed to update program");
+        const details = data?.details as Array<{ path: (string | number)[]; message: string }> | undefined;
+        if (details?.length) {
+          const byField: Record<string, string> = {};
+          for (const d of details) {
+            const key = String(d.path[0] ?? "");
+            if (key && !byField[key]) byField[key] = d.message;
+          }
+          setFieldErrors(byField);
+        }
         return;
       }
       router.push("/programs");
@@ -152,28 +176,32 @@ export default function EditProgramPage() {
               <p className="text-sm text-destructive">{error}</p>
             )}
             <FieldGroup>
-              <Field>
+              <Field data-invalid={!!fieldErrors.name}>
                 <FieldLabel htmlFor="name">Name</FieldLabel>
                 <Input
                   id="name"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => { setName(e.target.value); setFieldErrors((p) => ({ ...p, name: "" })); }}
                   placeholder="e.g. B.Tech Computer Science"
                   required
+                  aria-invalid={!!fieldErrors.name}
                 />
+                {fieldErrors.name && <FieldError>{fieldErrors.name}</FieldError>}
               </Field>
-              <Field>
+              <Field data-invalid={!!fieldErrors.code}>
                 <FieldLabel htmlFor="code">Code</FieldLabel>
                 <Input
                   id="code"
                   value={code}
-                  onChange={(e) => setCode(e.target.value.toUpperCase())}
+                  onChange={(e) => { setCode(e.target.value.toUpperCase()); setFieldErrors((p) => ({ ...p, code: "" })); }}
                   placeholder="e.g. BTCS"
                   required
                   className="uppercase"
+                  aria-invalid={!!fieldErrors.code}
                 />
+                {fieldErrors.code && <FieldError>{fieldErrors.code}</FieldError>}
               </Field>
-              <Field>
+              <Field data-invalid={!!fieldErrors.duration_years}>
                 <FieldLabel htmlFor="duration">Duration (years)</FieldLabel>
                 <Input
                   id="duration"
@@ -181,16 +209,19 @@ export default function EditProgramPage() {
                   min={1}
                   max={6}
                   value={durationYears}
-                  onChange={(e) => setDurationYears(parseInt(e.target.value, 10) || 4)}
+                  onChange={(e) => { setDurationYears(parseInt(e.target.value, 10) || 4); setFieldErrors((p) => ({ ...p, duration_years: "" })); }}
                   required
+                  aria-invalid={!!fieldErrors.duration_years}
                 />
+                {fieldErrors.duration_years && <FieldError>{fieldErrors.duration_years}</FieldError>}
               </Field>
-              <Field>
+              <Field data-invalid={!!fieldErrors.department_id}>
                 <FieldLabel>Department</FieldLabel>
                 <Select value={departmentId} onValueChange={(value) => {
                   if (value !== null) setDepartmentId(value);
+                  setFieldErrors((p) => ({ ...p, department_id: "" }));
                 }} required>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full" aria-invalid={!!fieldErrors.department_id}>
                     <SelectValue placeholder="Select department">
                       {departmentId ? (
                         departments.find((d) => String(d.id) === departmentId) ? (
@@ -211,6 +242,7 @@ export default function EditProgramPage() {
                     ))}
                   </SelectContent>
                 </Select>
+                {fieldErrors.department_id && <FieldError>{fieldErrors.department_id}</FieldError>}
               </Field>
               <Field>
                 <FieldLabel>Status</FieldLabel>

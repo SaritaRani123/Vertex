@@ -127,13 +127,23 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
   try {
     const row = await prisma.programs.findUnique({ where: { Id: numericId } });
     if (!row) return notFound("Program not found");
+
+    const coursesCount = await prisma.courses.count({
+      where: { ProgramId: numericId },
+    });
+    if (coursesCount > 0) {
+      return validationError(
+        "Cannot delete this program because it has courses. Remove or reassign the courses first.",
+      );
+    }
+
     await prisma.programs.delete({ where: { Id: numericId } });
     return new Response(null, { status: 204 });
   } catch (e) {
     const message = e instanceof Error ? e.message : "";
     if (message.includes("Foreign key") || message.includes("restrict")) {
       return validationError(
-        "Cannot delete program while it has courses"
+        "Cannot delete this program because it has courses. Remove or reassign the courses first.",
       );
     }
     return internalError();

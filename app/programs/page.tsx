@@ -51,12 +51,18 @@ export default function ProgramsPage() {
 
   const handleDelete = async () => {
     if (deleteId === null) return;
+    setError(null);
     setIsDeleting(true);
     try {
       const res = await fetch(`/api/programs/${deleteId}`, {
         method: "DELETE",
       });
-      if (!res.ok) throw new Error("Failed to delete program");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data?.error ?? "Failed to delete program");
+        setIsDeleting(false);
+        return;
+      }
       setPrograms(programs.filter((p) => p.id !== deleteId));
       setDeleteId(null);
     } catch (e) {
@@ -64,7 +70,7 @@ export default function ProgramsPage() {
     } finally {
       setIsDeleting(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">

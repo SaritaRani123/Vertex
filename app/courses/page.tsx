@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Trash2 } from "lucide-react";
 import type { CourseResponse } from "@/lib/api-types";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<CourseResponse[]>([]);
@@ -47,6 +48,25 @@ export default function CoursesPage() {
     }
     fetchCourses();
   }, []);
+
+  function PrerequisiteTooltipContent({ c }: { c: CourseResponse }) {
+    return (
+      <div className="space-y-1.5">
+        <div className="font-medium">{c.name}</div>
+        <div className="text-muted-foreground text-xs">{c.code}</div>
+        {c.description != null && c.description !== "" && (
+          <p className="text-muted-foreground text-xs">{c.description}</p>
+        )}
+        <div className="text-muted-foreground flex flex-wrap gap-x-3 gap-y-0.5 text-xs">
+          <span>Credits: {c.credits}</span>
+          <span>Lecture: {c.lecture_hours}h</span>
+          <span>Lab: {c.lab_hours}h</span>
+          <span>Status: {c.status}</span>
+          {c.program_name !== "" && <span>Program: {c.program_name}</span>}
+        </div>
+      </div>
+    );
+  }
 
   const handleDelete = async () => {
     if (deleteId === null) return;
@@ -116,7 +136,36 @@ export default function CoursesPage() {
                       <TableCell className="font-medium">{course.code}</TableCell>
                       <TableCell>{course.name}</TableCell>
                       <TableCell>{course.description || "—"}</TableCell>
-                      <TableCell>{course.prerequisites?.join(", ") || "—"}</TableCell>
+                      <TableCell>
+                        {course.prerequisites && course.prerequisites.length > 0 ? (
+                          <span className="flex flex-wrap gap-1">
+                            {course.prerequisites.map((code) => {
+                              const prereqCourse = courses.find((c) => c.code === code);
+                              if (prereqCourse) {
+                                return (
+                                  <Tooltip key={code} delayMs={300}>
+                                    <TooltipTrigger>
+                                      <span className="text-muted-foreground cursor-default rounded bg-muted px-1.5 py-0.5 text-xs hover:bg-muted/80">
+                                        {code}
+                                      </span>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top" className="max-w-xs">
+                                      <PrerequisiteTooltipContent c={prereqCourse} />
+                                    </TooltipContent>
+                                  </Tooltip>
+                                );
+                              }
+                              return (
+                                <span key={code} className="text-muted-foreground rounded bg-muted px-1.5 py-0.5 text-xs">
+                                  {code}
+                                </span>
+                              );
+                            })}
+                          </span>
+                        ) : (
+                          "—"
+                        )}
+                      </TableCell>
                       <TableCell>{course.program_name}</TableCell>
                       <TableCell>{course.credits}</TableCell>
                       <TableCell>{course.lecture_hours}</TableCell>
