@@ -10,18 +10,18 @@ function parseId(id: string): number | null {
 }
 
 function toDepartmentResponse(row: {
-  id: number;
-  name: string;
-  code: string;
-  created_at: Date;
-  updated_at: Date;
+  Id: number;
+  Name: string;
+  Code: string;
+  CreatedAt: Date;
+  UpdatedAt: Date;
 }): DepartmentResponse {
   return {
-    id: row.id,
-    name: row.name,
-    code: row.code,
-    created_at: row.created_at.toISOString(),
-    updated_at: row.updated_at.toISOString(),
+    id: row.Id,
+    name: row.Name,
+    code: row.Code,
+    created_at: row.CreatedAt.toISOString(),
+    updated_at: row.UpdatedAt.toISOString(),
   };
 }
 
@@ -34,7 +34,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
   const numericId = parseId(id);
   if (numericId === null) return notFound("Department not found");
   try {
-    const row = await prisma.departments.findUnique({ where: { id: numericId } });
+    const row = await prisma.departments.findUnique({ where: { Id: numericId } });
     if (!row) return notFound("Department not found");
     return json(toDepartmentResponse(row));
   } catch {
@@ -47,7 +47,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   const numericId = parseId(id);
   if (numericId === null) return notFound("Department not found");
   try {
-    const row = await prisma.departments.findUnique({ where: { id: numericId } });
+    const row = await prisma.departments.findUnique({ where: { Id: numericId } });
     if (!row) return notFound("Department not found");
 
     const body = await request.json();
@@ -63,16 +63,16 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     if (parsed.data.code !== undefined || parsed.data.name !== undefined) {
       const existing = await prisma.departments.findFirst({
         where: {
-          id: { not: numericId },
+          Id: { not: numericId },
           OR: [
-            ...(parsed.data.code ? [{ code: parsed.data.code }] : []),
-            ...(parsed.data.name ? [{ name: parsed.data.name }] : []),
+            ...(parsed.data.code ? [{ Code: parsed.data.code }] : []),
+            ...(parsed.data.name ? [{ Name: parsed.data.name }] : []),
           ],
         },
       });
       if (existing) {
         return validationError(
-          existing.code === parsed.data.code
+          existing.Code === parsed.data.code
             ? "Another department already has this code"
             : "Another department already has this name"
         );
@@ -80,8 +80,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     const updated = await prisma.departments.update({
-      where: { id: numericId },
-      data: parsed.data,
+      where: { Id: numericId },
+      data: {
+        ...(parsed.data.name !== undefined && { Name: parsed.data.name }),
+        ...(parsed.data.code !== undefined && { Code: parsed.data.code }),
+      },
     });
     return json(toDepartmentResponse(updated));
   } catch {
@@ -94,14 +97,26 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
   const numericId = parseId(id);
   if (numericId === null) return notFound("Department not found");
   try {
-    const row = await prisma.departments.findUnique({ where: { id: numericId } });
+    const row = await prisma.departments.findUnique({ where: { Id: numericId } });
     if (!row) return notFound("Department not found");
-    await prisma.departments.delete({ where: { id: numericId } });
+
+    const programsCount = await prisma.programs.count({
+      where: { DepartmentId: numericId },
+    });
+    if (programsCount > 0) {
+      return validationError(
+        "Cannot delete this department because it has programs. Remove or reassign the programs first.",
+      );
+    }
+
+    await prisma.departments.delete({ where: { Id: numericId } });
     return new Response(null, { status: 204 });
   } catch (e) {
     const message = e instanceof Error ? e.message : "";
     if (message.includes("Foreign key") || message.includes("restrict")) {
-      return validationError("Cannot delete department while it has programs");
+      return validationError(
+        "Cannot delete this department because it has programs. Remove or reassign the programs first.",
+      );
     }
     return internalError();
   }

@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `terms` model and its related types.
+ * This file exports the `Terms` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,10 +13,10 @@ import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
 /**
- * Model terms
+ * Model Terms
  * 
  */
-export type termsModel = runtime.Types.Result.DefaultSelection<Prisma.$termsPayload>
+export type TermsModel = runtime.Types.Result.DefaultSelection<Prisma.$TermsPayload>
 
 export type AggregateTerms = {
   _count: TermsCountAggregateOutputType | null
@@ -27,107 +27,107 @@ export type AggregateTerms = {
 }
 
 export type TermsAvgAggregateOutputType = {
-  id: number | null
-  semester_id: number | null
-  course_id: number | null
+  Id: number | null
+  SemesterId: number | null
+  CourseId: number | null
 }
 
 export type TermsSumAggregateOutputType = {
-  id: number | null
-  semester_id: number | null
-  course_id: number | null
+  Id: number | null
+  SemesterId: number | null
+  CourseId: number | null
 }
 
 export type TermsMinAggregateOutputType = {
-  id: number | null
-  semester_id: number | null
-  course_id: number | null
-  created_at: Date | null
+  Id: number | null
+  SemesterId: number | null
+  CourseId: number | null
+  CreatedAt: Date | null
 }
 
 export type TermsMaxAggregateOutputType = {
-  id: number | null
-  semester_id: number | null
-  course_id: number | null
-  created_at: Date | null
+  Id: number | null
+  SemesterId: number | null
+  CourseId: number | null
+  CreatedAt: Date | null
 }
 
 export type TermsCountAggregateOutputType = {
-  id: number
-  semester_id: number
-  course_id: number
-  created_at: number
+  Id: number
+  SemesterId: number
+  CourseId: number
+  CreatedAt: number
   _all: number
 }
 
 
 export type TermsAvgAggregateInputType = {
-  id?: true
-  semester_id?: true
-  course_id?: true
+  Id?: true
+  SemesterId?: true
+  CourseId?: true
 }
 
 export type TermsSumAggregateInputType = {
-  id?: true
-  semester_id?: true
-  course_id?: true
+  Id?: true
+  SemesterId?: true
+  CourseId?: true
 }
 
 export type TermsMinAggregateInputType = {
-  id?: true
-  semester_id?: true
-  course_id?: true
-  created_at?: true
+  Id?: true
+  SemesterId?: true
+  CourseId?: true
+  CreatedAt?: true
 }
 
 export type TermsMaxAggregateInputType = {
-  id?: true
-  semester_id?: true
-  course_id?: true
-  created_at?: true
+  Id?: true
+  SemesterId?: true
+  CourseId?: true
+  CreatedAt?: true
 }
 
 export type TermsCountAggregateInputType = {
-  id?: true
-  semester_id?: true
-  course_id?: true
-  created_at?: true
+  Id?: true
+  SemesterId?: true
+  CourseId?: true
+  CreatedAt?: true
   _all?: true
 }
 
 export type TermsAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which terms to aggregate.
+   * Filter which Terms to aggregate.
    */
-  where?: Prisma.termsWhereInput
+  where?: Prisma.TermsWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of terms to fetch.
+   * Determine the order of Terms to fetch.
    */
-  orderBy?: Prisma.termsOrderByWithRelationInput | Prisma.termsOrderByWithRelationInput[]
+  orderBy?: Prisma.TermsOrderByWithRelationInput | Prisma.TermsOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.termsWhereUniqueInput
+  cursor?: Prisma.TermsWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` terms from the position of the cursor.
+   * Take `±n` Terms from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` terms.
+   * Skip the first `n` Terms.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned terms
+   * Count returned Terms
   **/
   _count?: true | TermsCountAggregateInputType
   /**
@@ -167,11 +167,11 @@ export type GetTermsAggregateType<T extends TermsAggregateArgs> = {
 
 
 
-export type termsGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.termsWhereInput
-  orderBy?: Prisma.termsOrderByWithAggregationInput | Prisma.termsOrderByWithAggregationInput[]
+export type TermsGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TermsWhereInput
+  orderBy?: Prisma.TermsOrderByWithAggregationInput | Prisma.TermsOrderByWithAggregationInput[]
   by: Prisma.TermsScalarFieldEnum[] | Prisma.TermsScalarFieldEnum
-  having?: Prisma.termsScalarWhereWithAggregatesInput
+  having?: Prisma.TermsScalarWhereWithAggregatesInput
   take?: number
   skip?: number
   _count?: TermsCountAggregateInputType | true
@@ -182,10 +182,10 @@ export type termsGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 }
 
 export type TermsGroupByOutputType = {
-  id: number
-  semester_id: number
-  course_id: number
-  created_at: Date
+  Id: number
+  SemesterId: number
+  CourseId: number
+  CreatedAt: Date
   _count: TermsCountAggregateOutputType | null
   _avg: TermsAvgAggregateOutputType | null
   _sum: TermsSumAggregateOutputType | null
@@ -193,7 +193,7 @@ export type TermsGroupByOutputType = {
   _max: TermsMaxAggregateOutputType | null
 }
 
-type GetTermsGroupByPayload<T extends termsGroupByArgs> = Prisma.PrismaPromise<
+type GetTermsGroupByPayload<T extends TermsGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<TermsGroupByOutputType, T['by']> &
       {
@@ -208,445 +208,445 @@ type GetTermsGroupByPayload<T extends termsGroupByArgs> = Prisma.PrismaPromise<
 
 
 
-export type termsWhereInput = {
-  AND?: Prisma.termsWhereInput | Prisma.termsWhereInput[]
-  OR?: Prisma.termsWhereInput[]
-  NOT?: Prisma.termsWhereInput | Prisma.termsWhereInput[]
-  id?: Prisma.IntFilter<"terms"> | number
-  semester_id?: Prisma.IntFilter<"terms"> | number
-  course_id?: Prisma.IntFilter<"terms"> | number
-  created_at?: Prisma.DateTimeFilter<"terms"> | Date | string
-  semester?: Prisma.XOR<Prisma.SemestersScalarRelationFilter, Prisma.semestersWhereInput>
-  course?: Prisma.XOR<Prisma.CoursesScalarRelationFilter, Prisma.coursesWhereInput>
+export type TermsWhereInput = {
+  AND?: Prisma.TermsWhereInput | Prisma.TermsWhereInput[]
+  OR?: Prisma.TermsWhereInput[]
+  NOT?: Prisma.TermsWhereInput | Prisma.TermsWhereInput[]
+  Id?: Prisma.IntFilter<"Terms"> | number
+  SemesterId?: Prisma.IntFilter<"Terms"> | number
+  CourseId?: Prisma.IntFilter<"Terms"> | number
+  CreatedAt?: Prisma.DateTimeFilter<"Terms"> | Date | string
+  Semester?: Prisma.XOR<Prisma.SemestersScalarRelationFilter, Prisma.SemestersWhereInput>
+  Course?: Prisma.XOR<Prisma.CoursesScalarRelationFilter, Prisma.CoursesWhereInput>
 }
 
-export type termsOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
-  semester_id?: Prisma.SortOrder
-  course_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  semester?: Prisma.semestersOrderByWithRelationInput
-  course?: Prisma.coursesOrderByWithRelationInput
+export type TermsOrderByWithRelationInput = {
+  Id?: Prisma.SortOrder
+  SemesterId?: Prisma.SortOrder
+  CourseId?: Prisma.SortOrder
+  CreatedAt?: Prisma.SortOrder
+  Semester?: Prisma.SemestersOrderByWithRelationInput
+  Course?: Prisma.CoursesOrderByWithRelationInput
 }
 
-export type termsWhereUniqueInput = Prisma.AtLeast<{
-  id?: number
-  semester_id_course_id?: Prisma.termsSemester_idCourse_idCompoundUniqueInput
-  AND?: Prisma.termsWhereInput | Prisma.termsWhereInput[]
-  OR?: Prisma.termsWhereInput[]
-  NOT?: Prisma.termsWhereInput | Prisma.termsWhereInput[]
-  semester_id?: Prisma.IntFilter<"terms"> | number
-  course_id?: Prisma.IntFilter<"terms"> | number
-  created_at?: Prisma.DateTimeFilter<"terms"> | Date | string
-  semester?: Prisma.XOR<Prisma.SemestersScalarRelationFilter, Prisma.semestersWhereInput>
-  course?: Prisma.XOR<Prisma.CoursesScalarRelationFilter, Prisma.coursesWhereInput>
-}, "id" | "semester_id_course_id">
+export type TermsWhereUniqueInput = Prisma.AtLeast<{
+  Id?: number
+  terms_semester_id_course_id_key?: Prisma.TermsTerms_semester_id_course_id_keyCompoundUniqueInput
+  AND?: Prisma.TermsWhereInput | Prisma.TermsWhereInput[]
+  OR?: Prisma.TermsWhereInput[]
+  NOT?: Prisma.TermsWhereInput | Prisma.TermsWhereInput[]
+  SemesterId?: Prisma.IntFilter<"Terms"> | number
+  CourseId?: Prisma.IntFilter<"Terms"> | number
+  CreatedAt?: Prisma.DateTimeFilter<"Terms"> | Date | string
+  Semester?: Prisma.XOR<Prisma.SemestersScalarRelationFilter, Prisma.SemestersWhereInput>
+  Course?: Prisma.XOR<Prisma.CoursesScalarRelationFilter, Prisma.CoursesWhereInput>
+}, "Id" | "terms_semester_id_course_id_key">
 
-export type termsOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
-  semester_id?: Prisma.SortOrder
-  course_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  _count?: Prisma.termsCountOrderByAggregateInput
-  _avg?: Prisma.termsAvgOrderByAggregateInput
-  _max?: Prisma.termsMaxOrderByAggregateInput
-  _min?: Prisma.termsMinOrderByAggregateInput
-  _sum?: Prisma.termsSumOrderByAggregateInput
+export type TermsOrderByWithAggregationInput = {
+  Id?: Prisma.SortOrder
+  SemesterId?: Prisma.SortOrder
+  CourseId?: Prisma.SortOrder
+  CreatedAt?: Prisma.SortOrder
+  _count?: Prisma.TermsCountOrderByAggregateInput
+  _avg?: Prisma.TermsAvgOrderByAggregateInput
+  _max?: Prisma.TermsMaxOrderByAggregateInput
+  _min?: Prisma.TermsMinOrderByAggregateInput
+  _sum?: Prisma.TermsSumOrderByAggregateInput
 }
 
-export type termsScalarWhereWithAggregatesInput = {
-  AND?: Prisma.termsScalarWhereWithAggregatesInput | Prisma.termsScalarWhereWithAggregatesInput[]
-  OR?: Prisma.termsScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.termsScalarWhereWithAggregatesInput | Prisma.termsScalarWhereWithAggregatesInput[]
-  id?: Prisma.IntWithAggregatesFilter<"terms"> | number
-  semester_id?: Prisma.IntWithAggregatesFilter<"terms"> | number
-  course_id?: Prisma.IntWithAggregatesFilter<"terms"> | number
-  created_at?: Prisma.DateTimeWithAggregatesFilter<"terms"> | Date | string
+export type TermsScalarWhereWithAggregatesInput = {
+  AND?: Prisma.TermsScalarWhereWithAggregatesInput | Prisma.TermsScalarWhereWithAggregatesInput[]
+  OR?: Prisma.TermsScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.TermsScalarWhereWithAggregatesInput | Prisma.TermsScalarWhereWithAggregatesInput[]
+  Id?: Prisma.IntWithAggregatesFilter<"Terms"> | number
+  SemesterId?: Prisma.IntWithAggregatesFilter<"Terms"> | number
+  CourseId?: Prisma.IntWithAggregatesFilter<"Terms"> | number
+  CreatedAt?: Prisma.DateTimeWithAggregatesFilter<"Terms"> | Date | string
 }
 
-export type termsCreateInput = {
-  created_at?: Date | string
-  semester: Prisma.semestersCreateNestedOneWithoutTermsInput
-  course: Prisma.coursesCreateNestedOneWithoutTermsInput
+export type TermsCreateInput = {
+  CreatedAt?: Date | string
+  Semester: Prisma.SemestersCreateNestedOneWithoutTermsInput
+  Course: Prisma.CoursesCreateNestedOneWithoutTermsInput
 }
 
-export type termsUncheckedCreateInput = {
-  id?: number
-  semester_id: number
-  course_id: number
-  created_at?: Date | string
+export type TermsUncheckedCreateInput = {
+  Id?: number
+  SemesterId: number
+  CourseId: number
+  CreatedAt?: Date | string
 }
 
-export type termsUpdateInput = {
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  semester?: Prisma.semestersUpdateOneRequiredWithoutTermsNestedInput
-  course?: Prisma.coursesUpdateOneRequiredWithoutTermsNestedInput
+export type TermsUpdateInput = {
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  Semester?: Prisma.SemestersUpdateOneRequiredWithoutTermsNestedInput
+  Course?: Prisma.CoursesUpdateOneRequiredWithoutTermsNestedInput
 }
 
-export type termsUncheckedUpdateInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  semester_id?: Prisma.IntFieldUpdateOperationsInput | number
-  course_id?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type TermsUncheckedUpdateInput = {
+  Id?: Prisma.IntFieldUpdateOperationsInput | number
+  SemesterId?: Prisma.IntFieldUpdateOperationsInput | number
+  CourseId?: Prisma.IntFieldUpdateOperationsInput | number
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type termsCreateManyInput = {
-  id?: number
-  semester_id: number
-  course_id: number
-  created_at?: Date | string
+export type TermsCreateManyInput = {
+  Id?: number
+  SemesterId: number
+  CourseId: number
+  CreatedAt?: Date | string
 }
 
-export type termsUpdateManyMutationInput = {
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type TermsUpdateManyMutationInput = {
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type termsUncheckedUpdateManyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  semester_id?: Prisma.IntFieldUpdateOperationsInput | number
-  course_id?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type TermsUncheckedUpdateManyInput = {
+  Id?: Prisma.IntFieldUpdateOperationsInput | number
+  SemesterId?: Prisma.IntFieldUpdateOperationsInput | number
+  CourseId?: Prisma.IntFieldUpdateOperationsInput | number
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type TermsListRelationFilter = {
-  every?: Prisma.termsWhereInput
-  some?: Prisma.termsWhereInput
-  none?: Prisma.termsWhereInput
+  every?: Prisma.TermsWhereInput
+  some?: Prisma.TermsWhereInput
+  none?: Prisma.TermsWhereInput
 }
 
-export type termsOrderByRelationAggregateInput = {
+export type TermsOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type termsSemester_idCourse_idCompoundUniqueInput = {
-  semester_id: number
-  course_id: number
+export type TermsTerms_semester_id_course_id_keyCompoundUniqueInput = {
+  SemesterId: number
+  CourseId: number
 }
 
-export type termsCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  semester_id?: Prisma.SortOrder
-  course_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
+export type TermsCountOrderByAggregateInput = {
+  Id?: Prisma.SortOrder
+  SemesterId?: Prisma.SortOrder
+  CourseId?: Prisma.SortOrder
+  CreatedAt?: Prisma.SortOrder
 }
 
-export type termsAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  semester_id?: Prisma.SortOrder
-  course_id?: Prisma.SortOrder
+export type TermsAvgOrderByAggregateInput = {
+  Id?: Prisma.SortOrder
+  SemesterId?: Prisma.SortOrder
+  CourseId?: Prisma.SortOrder
 }
 
-export type termsMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  semester_id?: Prisma.SortOrder
-  course_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
+export type TermsMaxOrderByAggregateInput = {
+  Id?: Prisma.SortOrder
+  SemesterId?: Prisma.SortOrder
+  CourseId?: Prisma.SortOrder
+  CreatedAt?: Prisma.SortOrder
 }
 
-export type termsMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  semester_id?: Prisma.SortOrder
-  course_id?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
+export type TermsMinOrderByAggregateInput = {
+  Id?: Prisma.SortOrder
+  SemesterId?: Prisma.SortOrder
+  CourseId?: Prisma.SortOrder
+  CreatedAt?: Prisma.SortOrder
 }
 
-export type termsSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  semester_id?: Prisma.SortOrder
-  course_id?: Prisma.SortOrder
+export type TermsSumOrderByAggregateInput = {
+  Id?: Prisma.SortOrder
+  SemesterId?: Prisma.SortOrder
+  CourseId?: Prisma.SortOrder
 }
 
-export type termsCreateNestedManyWithoutCourseInput = {
-  create?: Prisma.XOR<Prisma.termsCreateWithoutCourseInput, Prisma.termsUncheckedCreateWithoutCourseInput> | Prisma.termsCreateWithoutCourseInput[] | Prisma.termsUncheckedCreateWithoutCourseInput[]
-  connectOrCreate?: Prisma.termsCreateOrConnectWithoutCourseInput | Prisma.termsCreateOrConnectWithoutCourseInput[]
-  createMany?: Prisma.termsCreateManyCourseInputEnvelope
-  connect?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
+export type TermsCreateNestedManyWithoutCourseInput = {
+  create?: Prisma.XOR<Prisma.TermsCreateWithoutCourseInput, Prisma.TermsUncheckedCreateWithoutCourseInput> | Prisma.TermsCreateWithoutCourseInput[] | Prisma.TermsUncheckedCreateWithoutCourseInput[]
+  connectOrCreate?: Prisma.TermsCreateOrConnectWithoutCourseInput | Prisma.TermsCreateOrConnectWithoutCourseInput[]
+  createMany?: Prisma.TermsCreateManyCourseInputEnvelope
+  connect?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
 }
 
-export type termsUncheckedCreateNestedManyWithoutCourseInput = {
-  create?: Prisma.XOR<Prisma.termsCreateWithoutCourseInput, Prisma.termsUncheckedCreateWithoutCourseInput> | Prisma.termsCreateWithoutCourseInput[] | Prisma.termsUncheckedCreateWithoutCourseInput[]
-  connectOrCreate?: Prisma.termsCreateOrConnectWithoutCourseInput | Prisma.termsCreateOrConnectWithoutCourseInput[]
-  createMany?: Prisma.termsCreateManyCourseInputEnvelope
-  connect?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
+export type TermsUncheckedCreateNestedManyWithoutCourseInput = {
+  create?: Prisma.XOR<Prisma.TermsCreateWithoutCourseInput, Prisma.TermsUncheckedCreateWithoutCourseInput> | Prisma.TermsCreateWithoutCourseInput[] | Prisma.TermsUncheckedCreateWithoutCourseInput[]
+  connectOrCreate?: Prisma.TermsCreateOrConnectWithoutCourseInput | Prisma.TermsCreateOrConnectWithoutCourseInput[]
+  createMany?: Prisma.TermsCreateManyCourseInputEnvelope
+  connect?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
 }
 
-export type termsUpdateManyWithoutCourseNestedInput = {
-  create?: Prisma.XOR<Prisma.termsCreateWithoutCourseInput, Prisma.termsUncheckedCreateWithoutCourseInput> | Prisma.termsCreateWithoutCourseInput[] | Prisma.termsUncheckedCreateWithoutCourseInput[]
-  connectOrCreate?: Prisma.termsCreateOrConnectWithoutCourseInput | Prisma.termsCreateOrConnectWithoutCourseInput[]
-  upsert?: Prisma.termsUpsertWithWhereUniqueWithoutCourseInput | Prisma.termsUpsertWithWhereUniqueWithoutCourseInput[]
-  createMany?: Prisma.termsCreateManyCourseInputEnvelope
-  set?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  disconnect?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  delete?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  connect?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  update?: Prisma.termsUpdateWithWhereUniqueWithoutCourseInput | Prisma.termsUpdateWithWhereUniqueWithoutCourseInput[]
-  updateMany?: Prisma.termsUpdateManyWithWhereWithoutCourseInput | Prisma.termsUpdateManyWithWhereWithoutCourseInput[]
-  deleteMany?: Prisma.termsScalarWhereInput | Prisma.termsScalarWhereInput[]
+export type TermsUpdateManyWithoutCourseNestedInput = {
+  create?: Prisma.XOR<Prisma.TermsCreateWithoutCourseInput, Prisma.TermsUncheckedCreateWithoutCourseInput> | Prisma.TermsCreateWithoutCourseInput[] | Prisma.TermsUncheckedCreateWithoutCourseInput[]
+  connectOrCreate?: Prisma.TermsCreateOrConnectWithoutCourseInput | Prisma.TermsCreateOrConnectWithoutCourseInput[]
+  upsert?: Prisma.TermsUpsertWithWhereUniqueWithoutCourseInput | Prisma.TermsUpsertWithWhereUniqueWithoutCourseInput[]
+  createMany?: Prisma.TermsCreateManyCourseInputEnvelope
+  set?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  disconnect?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  delete?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  connect?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  update?: Prisma.TermsUpdateWithWhereUniqueWithoutCourseInput | Prisma.TermsUpdateWithWhereUniqueWithoutCourseInput[]
+  updateMany?: Prisma.TermsUpdateManyWithWhereWithoutCourseInput | Prisma.TermsUpdateManyWithWhereWithoutCourseInput[]
+  deleteMany?: Prisma.TermsScalarWhereInput | Prisma.TermsScalarWhereInput[]
 }
 
-export type termsUncheckedUpdateManyWithoutCourseNestedInput = {
-  create?: Prisma.XOR<Prisma.termsCreateWithoutCourseInput, Prisma.termsUncheckedCreateWithoutCourseInput> | Prisma.termsCreateWithoutCourseInput[] | Prisma.termsUncheckedCreateWithoutCourseInput[]
-  connectOrCreate?: Prisma.termsCreateOrConnectWithoutCourseInput | Prisma.termsCreateOrConnectWithoutCourseInput[]
-  upsert?: Prisma.termsUpsertWithWhereUniqueWithoutCourseInput | Prisma.termsUpsertWithWhereUniqueWithoutCourseInput[]
-  createMany?: Prisma.termsCreateManyCourseInputEnvelope
-  set?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  disconnect?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  delete?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  connect?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  update?: Prisma.termsUpdateWithWhereUniqueWithoutCourseInput | Prisma.termsUpdateWithWhereUniqueWithoutCourseInput[]
-  updateMany?: Prisma.termsUpdateManyWithWhereWithoutCourseInput | Prisma.termsUpdateManyWithWhereWithoutCourseInput[]
-  deleteMany?: Prisma.termsScalarWhereInput | Prisma.termsScalarWhereInput[]
+export type TermsUncheckedUpdateManyWithoutCourseNestedInput = {
+  create?: Prisma.XOR<Prisma.TermsCreateWithoutCourseInput, Prisma.TermsUncheckedCreateWithoutCourseInput> | Prisma.TermsCreateWithoutCourseInput[] | Prisma.TermsUncheckedCreateWithoutCourseInput[]
+  connectOrCreate?: Prisma.TermsCreateOrConnectWithoutCourseInput | Prisma.TermsCreateOrConnectWithoutCourseInput[]
+  upsert?: Prisma.TermsUpsertWithWhereUniqueWithoutCourseInput | Prisma.TermsUpsertWithWhereUniqueWithoutCourseInput[]
+  createMany?: Prisma.TermsCreateManyCourseInputEnvelope
+  set?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  disconnect?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  delete?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  connect?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  update?: Prisma.TermsUpdateWithWhereUniqueWithoutCourseInput | Prisma.TermsUpdateWithWhereUniqueWithoutCourseInput[]
+  updateMany?: Prisma.TermsUpdateManyWithWhereWithoutCourseInput | Prisma.TermsUpdateManyWithWhereWithoutCourseInput[]
+  deleteMany?: Prisma.TermsScalarWhereInput | Prisma.TermsScalarWhereInput[]
 }
 
-export type termsCreateNestedManyWithoutSemesterInput = {
-  create?: Prisma.XOR<Prisma.termsCreateWithoutSemesterInput, Prisma.termsUncheckedCreateWithoutSemesterInput> | Prisma.termsCreateWithoutSemesterInput[] | Prisma.termsUncheckedCreateWithoutSemesterInput[]
-  connectOrCreate?: Prisma.termsCreateOrConnectWithoutSemesterInput | Prisma.termsCreateOrConnectWithoutSemesterInput[]
-  createMany?: Prisma.termsCreateManySemesterInputEnvelope
-  connect?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
+export type TermsCreateNestedManyWithoutSemesterInput = {
+  create?: Prisma.XOR<Prisma.TermsCreateWithoutSemesterInput, Prisma.TermsUncheckedCreateWithoutSemesterInput> | Prisma.TermsCreateWithoutSemesterInput[] | Prisma.TermsUncheckedCreateWithoutSemesterInput[]
+  connectOrCreate?: Prisma.TermsCreateOrConnectWithoutSemesterInput | Prisma.TermsCreateOrConnectWithoutSemesterInput[]
+  createMany?: Prisma.TermsCreateManySemesterInputEnvelope
+  connect?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
 }
 
-export type termsUncheckedCreateNestedManyWithoutSemesterInput = {
-  create?: Prisma.XOR<Prisma.termsCreateWithoutSemesterInput, Prisma.termsUncheckedCreateWithoutSemesterInput> | Prisma.termsCreateWithoutSemesterInput[] | Prisma.termsUncheckedCreateWithoutSemesterInput[]
-  connectOrCreate?: Prisma.termsCreateOrConnectWithoutSemesterInput | Prisma.termsCreateOrConnectWithoutSemesterInput[]
-  createMany?: Prisma.termsCreateManySemesterInputEnvelope
-  connect?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
+export type TermsUncheckedCreateNestedManyWithoutSemesterInput = {
+  create?: Prisma.XOR<Prisma.TermsCreateWithoutSemesterInput, Prisma.TermsUncheckedCreateWithoutSemesterInput> | Prisma.TermsCreateWithoutSemesterInput[] | Prisma.TermsUncheckedCreateWithoutSemesterInput[]
+  connectOrCreate?: Prisma.TermsCreateOrConnectWithoutSemesterInput | Prisma.TermsCreateOrConnectWithoutSemesterInput[]
+  createMany?: Prisma.TermsCreateManySemesterInputEnvelope
+  connect?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
 }
 
-export type termsUpdateManyWithoutSemesterNestedInput = {
-  create?: Prisma.XOR<Prisma.termsCreateWithoutSemesterInput, Prisma.termsUncheckedCreateWithoutSemesterInput> | Prisma.termsCreateWithoutSemesterInput[] | Prisma.termsUncheckedCreateWithoutSemesterInput[]
-  connectOrCreate?: Prisma.termsCreateOrConnectWithoutSemesterInput | Prisma.termsCreateOrConnectWithoutSemesterInput[]
-  upsert?: Prisma.termsUpsertWithWhereUniqueWithoutSemesterInput | Prisma.termsUpsertWithWhereUniqueWithoutSemesterInput[]
-  createMany?: Prisma.termsCreateManySemesterInputEnvelope
-  set?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  disconnect?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  delete?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  connect?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  update?: Prisma.termsUpdateWithWhereUniqueWithoutSemesterInput | Prisma.termsUpdateWithWhereUniqueWithoutSemesterInput[]
-  updateMany?: Prisma.termsUpdateManyWithWhereWithoutSemesterInput | Prisma.termsUpdateManyWithWhereWithoutSemesterInput[]
-  deleteMany?: Prisma.termsScalarWhereInput | Prisma.termsScalarWhereInput[]
+export type TermsUpdateManyWithoutSemesterNestedInput = {
+  create?: Prisma.XOR<Prisma.TermsCreateWithoutSemesterInput, Prisma.TermsUncheckedCreateWithoutSemesterInput> | Prisma.TermsCreateWithoutSemesterInput[] | Prisma.TermsUncheckedCreateWithoutSemesterInput[]
+  connectOrCreate?: Prisma.TermsCreateOrConnectWithoutSemesterInput | Prisma.TermsCreateOrConnectWithoutSemesterInput[]
+  upsert?: Prisma.TermsUpsertWithWhereUniqueWithoutSemesterInput | Prisma.TermsUpsertWithWhereUniqueWithoutSemesterInput[]
+  createMany?: Prisma.TermsCreateManySemesterInputEnvelope
+  set?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  disconnect?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  delete?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  connect?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  update?: Prisma.TermsUpdateWithWhereUniqueWithoutSemesterInput | Prisma.TermsUpdateWithWhereUniqueWithoutSemesterInput[]
+  updateMany?: Prisma.TermsUpdateManyWithWhereWithoutSemesterInput | Prisma.TermsUpdateManyWithWhereWithoutSemesterInput[]
+  deleteMany?: Prisma.TermsScalarWhereInput | Prisma.TermsScalarWhereInput[]
 }
 
-export type termsUncheckedUpdateManyWithoutSemesterNestedInput = {
-  create?: Prisma.XOR<Prisma.termsCreateWithoutSemesterInput, Prisma.termsUncheckedCreateWithoutSemesterInput> | Prisma.termsCreateWithoutSemesterInput[] | Prisma.termsUncheckedCreateWithoutSemesterInput[]
-  connectOrCreate?: Prisma.termsCreateOrConnectWithoutSemesterInput | Prisma.termsCreateOrConnectWithoutSemesterInput[]
-  upsert?: Prisma.termsUpsertWithWhereUniqueWithoutSemesterInput | Prisma.termsUpsertWithWhereUniqueWithoutSemesterInput[]
-  createMany?: Prisma.termsCreateManySemesterInputEnvelope
-  set?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  disconnect?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  delete?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  connect?: Prisma.termsWhereUniqueInput | Prisma.termsWhereUniqueInput[]
-  update?: Prisma.termsUpdateWithWhereUniqueWithoutSemesterInput | Prisma.termsUpdateWithWhereUniqueWithoutSemesterInput[]
-  updateMany?: Prisma.termsUpdateManyWithWhereWithoutSemesterInput | Prisma.termsUpdateManyWithWhereWithoutSemesterInput[]
-  deleteMany?: Prisma.termsScalarWhereInput | Prisma.termsScalarWhereInput[]
+export type TermsUncheckedUpdateManyWithoutSemesterNestedInput = {
+  create?: Prisma.XOR<Prisma.TermsCreateWithoutSemesterInput, Prisma.TermsUncheckedCreateWithoutSemesterInput> | Prisma.TermsCreateWithoutSemesterInput[] | Prisma.TermsUncheckedCreateWithoutSemesterInput[]
+  connectOrCreate?: Prisma.TermsCreateOrConnectWithoutSemesterInput | Prisma.TermsCreateOrConnectWithoutSemesterInput[]
+  upsert?: Prisma.TermsUpsertWithWhereUniqueWithoutSemesterInput | Prisma.TermsUpsertWithWhereUniqueWithoutSemesterInput[]
+  createMany?: Prisma.TermsCreateManySemesterInputEnvelope
+  set?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  disconnect?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  delete?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  connect?: Prisma.TermsWhereUniqueInput | Prisma.TermsWhereUniqueInput[]
+  update?: Prisma.TermsUpdateWithWhereUniqueWithoutSemesterInput | Prisma.TermsUpdateWithWhereUniqueWithoutSemesterInput[]
+  updateMany?: Prisma.TermsUpdateManyWithWhereWithoutSemesterInput | Prisma.TermsUpdateManyWithWhereWithoutSemesterInput[]
+  deleteMany?: Prisma.TermsScalarWhereInput | Prisma.TermsScalarWhereInput[]
 }
 
-export type termsCreateWithoutCourseInput = {
-  created_at?: Date | string
-  semester: Prisma.semestersCreateNestedOneWithoutTermsInput
+export type TermsCreateWithoutCourseInput = {
+  CreatedAt?: Date | string
+  Semester: Prisma.SemestersCreateNestedOneWithoutTermsInput
 }
 
-export type termsUncheckedCreateWithoutCourseInput = {
-  id?: number
-  semester_id: number
-  created_at?: Date | string
+export type TermsUncheckedCreateWithoutCourseInput = {
+  Id?: number
+  SemesterId: number
+  CreatedAt?: Date | string
 }
 
-export type termsCreateOrConnectWithoutCourseInput = {
-  where: Prisma.termsWhereUniqueInput
-  create: Prisma.XOR<Prisma.termsCreateWithoutCourseInput, Prisma.termsUncheckedCreateWithoutCourseInput>
+export type TermsCreateOrConnectWithoutCourseInput = {
+  where: Prisma.TermsWhereUniqueInput
+  create: Prisma.XOR<Prisma.TermsCreateWithoutCourseInput, Prisma.TermsUncheckedCreateWithoutCourseInput>
 }
 
-export type termsCreateManyCourseInputEnvelope = {
-  data: Prisma.termsCreateManyCourseInput | Prisma.termsCreateManyCourseInput[]
+export type TermsCreateManyCourseInputEnvelope = {
+  data: Prisma.TermsCreateManyCourseInput | Prisma.TermsCreateManyCourseInput[]
   skipDuplicates?: boolean
 }
 
-export type termsUpsertWithWhereUniqueWithoutCourseInput = {
-  where: Prisma.termsWhereUniqueInput
-  update: Prisma.XOR<Prisma.termsUpdateWithoutCourseInput, Prisma.termsUncheckedUpdateWithoutCourseInput>
-  create: Prisma.XOR<Prisma.termsCreateWithoutCourseInput, Prisma.termsUncheckedCreateWithoutCourseInput>
+export type TermsUpsertWithWhereUniqueWithoutCourseInput = {
+  where: Prisma.TermsWhereUniqueInput
+  update: Prisma.XOR<Prisma.TermsUpdateWithoutCourseInput, Prisma.TermsUncheckedUpdateWithoutCourseInput>
+  create: Prisma.XOR<Prisma.TermsCreateWithoutCourseInput, Prisma.TermsUncheckedCreateWithoutCourseInput>
 }
 
-export type termsUpdateWithWhereUniqueWithoutCourseInput = {
-  where: Prisma.termsWhereUniqueInput
-  data: Prisma.XOR<Prisma.termsUpdateWithoutCourseInput, Prisma.termsUncheckedUpdateWithoutCourseInput>
+export type TermsUpdateWithWhereUniqueWithoutCourseInput = {
+  where: Prisma.TermsWhereUniqueInput
+  data: Prisma.XOR<Prisma.TermsUpdateWithoutCourseInput, Prisma.TermsUncheckedUpdateWithoutCourseInput>
 }
 
-export type termsUpdateManyWithWhereWithoutCourseInput = {
-  where: Prisma.termsScalarWhereInput
-  data: Prisma.XOR<Prisma.termsUpdateManyMutationInput, Prisma.termsUncheckedUpdateManyWithoutCourseInput>
+export type TermsUpdateManyWithWhereWithoutCourseInput = {
+  where: Prisma.TermsScalarWhereInput
+  data: Prisma.XOR<Prisma.TermsUpdateManyMutationInput, Prisma.TermsUncheckedUpdateManyWithoutCourseInput>
 }
 
-export type termsScalarWhereInput = {
-  AND?: Prisma.termsScalarWhereInput | Prisma.termsScalarWhereInput[]
-  OR?: Prisma.termsScalarWhereInput[]
-  NOT?: Prisma.termsScalarWhereInput | Prisma.termsScalarWhereInput[]
-  id?: Prisma.IntFilter<"terms"> | number
-  semester_id?: Prisma.IntFilter<"terms"> | number
-  course_id?: Prisma.IntFilter<"terms"> | number
-  created_at?: Prisma.DateTimeFilter<"terms"> | Date | string
+export type TermsScalarWhereInput = {
+  AND?: Prisma.TermsScalarWhereInput | Prisma.TermsScalarWhereInput[]
+  OR?: Prisma.TermsScalarWhereInput[]
+  NOT?: Prisma.TermsScalarWhereInput | Prisma.TermsScalarWhereInput[]
+  Id?: Prisma.IntFilter<"Terms"> | number
+  SemesterId?: Prisma.IntFilter<"Terms"> | number
+  CourseId?: Prisma.IntFilter<"Terms"> | number
+  CreatedAt?: Prisma.DateTimeFilter<"Terms"> | Date | string
 }
 
-export type termsCreateWithoutSemesterInput = {
-  created_at?: Date | string
-  course: Prisma.coursesCreateNestedOneWithoutTermsInput
+export type TermsCreateWithoutSemesterInput = {
+  CreatedAt?: Date | string
+  Course: Prisma.CoursesCreateNestedOneWithoutTermsInput
 }
 
-export type termsUncheckedCreateWithoutSemesterInput = {
-  id?: number
-  course_id: number
-  created_at?: Date | string
+export type TermsUncheckedCreateWithoutSemesterInput = {
+  Id?: number
+  CourseId: number
+  CreatedAt?: Date | string
 }
 
-export type termsCreateOrConnectWithoutSemesterInput = {
-  where: Prisma.termsWhereUniqueInput
-  create: Prisma.XOR<Prisma.termsCreateWithoutSemesterInput, Prisma.termsUncheckedCreateWithoutSemesterInput>
+export type TermsCreateOrConnectWithoutSemesterInput = {
+  where: Prisma.TermsWhereUniqueInput
+  create: Prisma.XOR<Prisma.TermsCreateWithoutSemesterInput, Prisma.TermsUncheckedCreateWithoutSemesterInput>
 }
 
-export type termsCreateManySemesterInputEnvelope = {
-  data: Prisma.termsCreateManySemesterInput | Prisma.termsCreateManySemesterInput[]
+export type TermsCreateManySemesterInputEnvelope = {
+  data: Prisma.TermsCreateManySemesterInput | Prisma.TermsCreateManySemesterInput[]
   skipDuplicates?: boolean
 }
 
-export type termsUpsertWithWhereUniqueWithoutSemesterInput = {
-  where: Prisma.termsWhereUniqueInput
-  update: Prisma.XOR<Prisma.termsUpdateWithoutSemesterInput, Prisma.termsUncheckedUpdateWithoutSemesterInput>
-  create: Prisma.XOR<Prisma.termsCreateWithoutSemesterInput, Prisma.termsUncheckedCreateWithoutSemesterInput>
+export type TermsUpsertWithWhereUniqueWithoutSemesterInput = {
+  where: Prisma.TermsWhereUniqueInput
+  update: Prisma.XOR<Prisma.TermsUpdateWithoutSemesterInput, Prisma.TermsUncheckedUpdateWithoutSemesterInput>
+  create: Prisma.XOR<Prisma.TermsCreateWithoutSemesterInput, Prisma.TermsUncheckedCreateWithoutSemesterInput>
 }
 
-export type termsUpdateWithWhereUniqueWithoutSemesterInput = {
-  where: Prisma.termsWhereUniqueInput
-  data: Prisma.XOR<Prisma.termsUpdateWithoutSemesterInput, Prisma.termsUncheckedUpdateWithoutSemesterInput>
+export type TermsUpdateWithWhereUniqueWithoutSemesterInput = {
+  where: Prisma.TermsWhereUniqueInput
+  data: Prisma.XOR<Prisma.TermsUpdateWithoutSemesterInput, Prisma.TermsUncheckedUpdateWithoutSemesterInput>
 }
 
-export type termsUpdateManyWithWhereWithoutSemesterInput = {
-  where: Prisma.termsScalarWhereInput
-  data: Prisma.XOR<Prisma.termsUpdateManyMutationInput, Prisma.termsUncheckedUpdateManyWithoutSemesterInput>
+export type TermsUpdateManyWithWhereWithoutSemesterInput = {
+  where: Prisma.TermsScalarWhereInput
+  data: Prisma.XOR<Prisma.TermsUpdateManyMutationInput, Prisma.TermsUncheckedUpdateManyWithoutSemesterInput>
 }
 
-export type termsCreateManyCourseInput = {
-  id?: number
-  semester_id: number
-  created_at?: Date | string
+export type TermsCreateManyCourseInput = {
+  Id?: number
+  SemesterId: number
+  CreatedAt?: Date | string
 }
 
-export type termsUpdateWithoutCourseInput = {
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  semester?: Prisma.semestersUpdateOneRequiredWithoutTermsNestedInput
+export type TermsUpdateWithoutCourseInput = {
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  Semester?: Prisma.SemestersUpdateOneRequiredWithoutTermsNestedInput
 }
 
-export type termsUncheckedUpdateWithoutCourseInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  semester_id?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type TermsUncheckedUpdateWithoutCourseInput = {
+  Id?: Prisma.IntFieldUpdateOperationsInput | number
+  SemesterId?: Prisma.IntFieldUpdateOperationsInput | number
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type termsUncheckedUpdateManyWithoutCourseInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  semester_id?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type TermsUncheckedUpdateManyWithoutCourseInput = {
+  Id?: Prisma.IntFieldUpdateOperationsInput | number
+  SemesterId?: Prisma.IntFieldUpdateOperationsInput | number
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type termsCreateManySemesterInput = {
-  id?: number
-  course_id: number
-  created_at?: Date | string
+export type TermsCreateManySemesterInput = {
+  Id?: number
+  CourseId: number
+  CreatedAt?: Date | string
 }
 
-export type termsUpdateWithoutSemesterInput = {
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  course?: Prisma.coursesUpdateOneRequiredWithoutTermsNestedInput
+export type TermsUpdateWithoutSemesterInput = {
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  Course?: Prisma.CoursesUpdateOneRequiredWithoutTermsNestedInput
 }
 
-export type termsUncheckedUpdateWithoutSemesterInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  course_id?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type TermsUncheckedUpdateWithoutSemesterInput = {
+  Id?: Prisma.IntFieldUpdateOperationsInput | number
+  CourseId?: Prisma.IntFieldUpdateOperationsInput | number
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type termsUncheckedUpdateManyWithoutSemesterInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  course_id?: Prisma.IntFieldUpdateOperationsInput | number
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type TermsUncheckedUpdateManyWithoutSemesterInput = {
+  Id?: Prisma.IntFieldUpdateOperationsInput | number
+  CourseId?: Prisma.IntFieldUpdateOperationsInput | number
+  CreatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
 
-export type termsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  semester_id?: boolean
-  course_id?: boolean
-  created_at?: boolean
-  semester?: boolean | Prisma.semestersDefaultArgs<ExtArgs>
-  course?: boolean | Prisma.coursesDefaultArgs<ExtArgs>
+export type TermsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  Id?: boolean
+  SemesterId?: boolean
+  CourseId?: boolean
+  CreatedAt?: boolean
+  Semester?: boolean | Prisma.SemestersDefaultArgs<ExtArgs>
+  Course?: boolean | Prisma.CoursesDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["terms"]>
 
-export type termsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  semester_id?: boolean
-  course_id?: boolean
-  created_at?: boolean
-  semester?: boolean | Prisma.semestersDefaultArgs<ExtArgs>
-  course?: boolean | Prisma.coursesDefaultArgs<ExtArgs>
+export type TermsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  Id?: boolean
+  SemesterId?: boolean
+  CourseId?: boolean
+  CreatedAt?: boolean
+  Semester?: boolean | Prisma.SemestersDefaultArgs<ExtArgs>
+  Course?: boolean | Prisma.CoursesDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["terms"]>
 
-export type termsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  semester_id?: boolean
-  course_id?: boolean
-  created_at?: boolean
-  semester?: boolean | Prisma.semestersDefaultArgs<ExtArgs>
-  course?: boolean | Prisma.coursesDefaultArgs<ExtArgs>
+export type TermsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  Id?: boolean
+  SemesterId?: boolean
+  CourseId?: boolean
+  CreatedAt?: boolean
+  Semester?: boolean | Prisma.SemestersDefaultArgs<ExtArgs>
+  Course?: boolean | Prisma.CoursesDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["terms"]>
 
-export type termsSelectScalar = {
-  id?: boolean
-  semester_id?: boolean
-  course_id?: boolean
-  created_at?: boolean
+export type TermsSelectScalar = {
+  Id?: boolean
+  SemesterId?: boolean
+  CourseId?: boolean
+  CreatedAt?: boolean
 }
 
-export type termsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "semester_id" | "course_id" | "created_at", ExtArgs["result"]["terms"]>
-export type termsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  semester?: boolean | Prisma.semestersDefaultArgs<ExtArgs>
-  course?: boolean | Prisma.coursesDefaultArgs<ExtArgs>
+export type TermsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"Id" | "SemesterId" | "CourseId" | "CreatedAt", ExtArgs["result"]["terms"]>
+export type TermsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  Semester?: boolean | Prisma.SemestersDefaultArgs<ExtArgs>
+  Course?: boolean | Prisma.CoursesDefaultArgs<ExtArgs>
 }
-export type termsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  semester?: boolean | Prisma.semestersDefaultArgs<ExtArgs>
-  course?: boolean | Prisma.coursesDefaultArgs<ExtArgs>
+export type TermsIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  Semester?: boolean | Prisma.SemestersDefaultArgs<ExtArgs>
+  Course?: boolean | Prisma.CoursesDefaultArgs<ExtArgs>
 }
-export type termsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  semester?: boolean | Prisma.semestersDefaultArgs<ExtArgs>
-  course?: boolean | Prisma.coursesDefaultArgs<ExtArgs>
+export type TermsIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  Semester?: boolean | Prisma.SemestersDefaultArgs<ExtArgs>
+  Course?: boolean | Prisma.CoursesDefaultArgs<ExtArgs>
 }
 
-export type $termsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "terms"
+export type $TermsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "Terms"
   objects: {
-    semester: Prisma.$semestersPayload<ExtArgs>
-    course: Prisma.$coursesPayload<ExtArgs>
+    Semester: Prisma.$SemestersPayload<ExtArgs>
+    Course: Prisma.$CoursesPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: number
-    semester_id: number
-    course_id: number
-    created_at: Date
+    Id: number
+    SemesterId: number
+    CourseId: number
+    CreatedAt: Date
   }, ExtArgs["result"]["terms"]>
   composites: {}
 }
 
-export type termsGetPayload<S extends boolean | null | undefined | termsDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$termsPayload, S>
+export type TermsGetPayload<S extends boolean | null | undefined | TermsDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$TermsPayload, S>
 
-export type termsCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<termsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+export type TermsCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<TermsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
     select?: TermsCountAggregateInputType | true
   }
 
-export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['terms'], meta: { name: 'terms' } }
+export interface TermsDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Terms'], meta: { name: 'Terms' } }
   /**
    * Find zero or one Terms that matches the filter.
-   * @param {termsFindUniqueArgs} args - Arguments to find a Terms
+   * @param {TermsFindUniqueArgs} args - Arguments to find a Terms
    * @example
    * // Get one Terms
    * const terms = await prisma.terms.findUnique({
@@ -655,12 +655,12 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   }
    * })
    */
-  findUnique<T extends termsFindUniqueArgs>(args: Prisma.SelectSubset<T, termsFindUniqueArgs<ExtArgs>>): Prisma.Prisma__termsClient<runtime.Types.Result.GetResult<Prisma.$termsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends TermsFindUniqueArgs>(args: Prisma.SelectSubset<T, TermsFindUniqueArgs<ExtArgs>>): Prisma.Prisma__TermsClient<runtime.Types.Result.GetResult<Prisma.$TermsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find one Terms that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {termsFindUniqueOrThrowArgs} args - Arguments to find a Terms
+   * @param {TermsFindUniqueOrThrowArgs} args - Arguments to find a Terms
    * @example
    * // Get one Terms
    * const terms = await prisma.terms.findUniqueOrThrow({
@@ -669,13 +669,13 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   }
    * })
    */
-  findUniqueOrThrow<T extends termsFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, termsFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__termsClient<runtime.Types.Result.GetResult<Prisma.$termsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends TermsFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, TermsFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__TermsClient<runtime.Types.Result.GetResult<Prisma.$TermsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Terms that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {termsFindFirstArgs} args - Arguments to find a Terms
+   * @param {TermsFindFirstArgs} args - Arguments to find a Terms
    * @example
    * // Get one Terms
    * const terms = await prisma.terms.findFirst({
@@ -684,14 +684,14 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   }
    * })
    */
-  findFirst<T extends termsFindFirstArgs>(args?: Prisma.SelectSubset<T, termsFindFirstArgs<ExtArgs>>): Prisma.Prisma__termsClient<runtime.Types.Result.GetResult<Prisma.$termsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends TermsFindFirstArgs>(args?: Prisma.SelectSubset<T, TermsFindFirstArgs<ExtArgs>>): Prisma.Prisma__TermsClient<runtime.Types.Result.GetResult<Prisma.$TermsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Terms that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {termsFindFirstOrThrowArgs} args - Arguments to find a Terms
+   * @param {TermsFindFirstOrThrowArgs} args - Arguments to find a Terms
    * @example
    * // Get one Terms
    * const terms = await prisma.terms.findFirstOrThrow({
@@ -700,13 +700,13 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   }
    * })
    */
-  findFirstOrThrow<T extends termsFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, termsFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__termsClient<runtime.Types.Result.GetResult<Prisma.$termsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends TermsFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, TermsFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__TermsClient<runtime.Types.Result.GetResult<Prisma.$TermsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find zero or more Terms that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {termsFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {TermsFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
    * // Get all Terms
    * const terms = await prisma.terms.findMany()
@@ -714,15 +714,15 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * // Get first 10 Terms
    * const terms = await prisma.terms.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const termsWithIdOnly = await prisma.terms.findMany({ select: { id: true } })
+   * // Only select the `Id`
+   * const termsWithIdOnly = await prisma.terms.findMany({ select: { Id: true } })
    * 
    */
-  findMany<T extends termsFindManyArgs>(args?: Prisma.SelectSubset<T, termsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$termsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends TermsFindManyArgs>(args?: Prisma.SelectSubset<T, TermsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TermsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
    * Create a Terms.
-   * @param {termsCreateArgs} args - Arguments to create a Terms.
+   * @param {TermsCreateArgs} args - Arguments to create a Terms.
    * @example
    * // Create one Terms
    * const Terms = await prisma.terms.create({
@@ -732,11 +732,11 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * })
    * 
    */
-  create<T extends termsCreateArgs>(args: Prisma.SelectSubset<T, termsCreateArgs<ExtArgs>>): Prisma.Prisma__termsClient<runtime.Types.Result.GetResult<Prisma.$termsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends TermsCreateArgs>(args: Prisma.SelectSubset<T, TermsCreateArgs<ExtArgs>>): Prisma.Prisma__TermsClient<runtime.Types.Result.GetResult<Prisma.$TermsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Create many Terms.
-   * @param {termsCreateManyArgs} args - Arguments to create many Terms.
+   * @param {TermsCreateManyArgs} args - Arguments to create many Terms.
    * @example
    * // Create many Terms
    * const terms = await prisma.terms.createMany({
@@ -746,11 +746,11 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * })
    *     
    */
-  createMany<T extends termsCreateManyArgs>(args?: Prisma.SelectSubset<T, termsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends TermsCreateManyArgs>(args?: Prisma.SelectSubset<T, TermsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Create many Terms and returns the data saved in the database.
-   * @param {termsCreateManyAndReturnArgs} args - Arguments to create many Terms.
+   * @param {TermsCreateManyAndReturnArgs} args - Arguments to create many Terms.
    * @example
    * // Create many Terms
    * const terms = await prisma.terms.createManyAndReturn({
@@ -759,9 +759,9 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   ]
    * })
    * 
-   * // Create many Terms and only return the `id`
+   * // Create many Terms and only return the `Id`
    * const termsWithIdOnly = await prisma.terms.createManyAndReturn({
-   *   select: { id: true },
+   *   select: { Id: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -770,11 +770,11 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * Read more here: https://pris.ly/d/null-undefined
    * 
    */
-  createManyAndReturn<T extends termsCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, termsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$termsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+  createManyAndReturn<T extends TermsCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, TermsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TermsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Delete a Terms.
-   * @param {termsDeleteArgs} args - Arguments to delete one Terms.
+   * @param {TermsDeleteArgs} args - Arguments to delete one Terms.
    * @example
    * // Delete one Terms
    * const Terms = await prisma.terms.delete({
@@ -784,11 +784,11 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * })
    * 
    */
-  delete<T extends termsDeleteArgs>(args: Prisma.SelectSubset<T, termsDeleteArgs<ExtArgs>>): Prisma.Prisma__termsClient<runtime.Types.Result.GetResult<Prisma.$termsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends TermsDeleteArgs>(args: Prisma.SelectSubset<T, TermsDeleteArgs<ExtArgs>>): Prisma.Prisma__TermsClient<runtime.Types.Result.GetResult<Prisma.$TermsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Update one Terms.
-   * @param {termsUpdateArgs} args - Arguments to update one Terms.
+   * @param {TermsUpdateArgs} args - Arguments to update one Terms.
    * @example
    * // Update one Terms
    * const terms = await prisma.terms.update({
@@ -801,11 +801,11 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * })
    * 
    */
-  update<T extends termsUpdateArgs>(args: Prisma.SelectSubset<T, termsUpdateArgs<ExtArgs>>): Prisma.Prisma__termsClient<runtime.Types.Result.GetResult<Prisma.$termsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends TermsUpdateArgs>(args: Prisma.SelectSubset<T, TermsUpdateArgs<ExtArgs>>): Prisma.Prisma__TermsClient<runtime.Types.Result.GetResult<Prisma.$TermsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Delete zero or more Terms.
-   * @param {termsDeleteManyArgs} args - Arguments to filter Terms to delete.
+   * @param {TermsDeleteManyArgs} args - Arguments to filter Terms to delete.
    * @example
    * // Delete a few Terms
    * const { count } = await prisma.terms.deleteMany({
@@ -815,13 +815,13 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * })
    * 
    */
-  deleteMany<T extends termsDeleteManyArgs>(args?: Prisma.SelectSubset<T, termsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends TermsDeleteManyArgs>(args?: Prisma.SelectSubset<T, TermsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Terms.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {termsUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {TermsUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
    * // Update many Terms
    * const terms = await prisma.terms.updateMany({
@@ -834,11 +834,11 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * })
    * 
    */
-  updateMany<T extends termsUpdateManyArgs>(args: Prisma.SelectSubset<T, termsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends TermsUpdateManyArgs>(args: Prisma.SelectSubset<T, TermsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Terms and returns the data updated in the database.
-   * @param {termsUpdateManyAndReturnArgs} args - Arguments to update many Terms.
+   * @param {TermsUpdateManyAndReturnArgs} args - Arguments to update many Terms.
    * @example
    * // Update many Terms
    * const terms = await prisma.terms.updateManyAndReturn({
@@ -850,9 +850,9 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   ]
    * })
    * 
-   * // Update zero or more Terms and only return the `id`
+   * // Update zero or more Terms and only return the `Id`
    * const termsWithIdOnly = await prisma.terms.updateManyAndReturn({
-   *   select: { id: true },
+   *   select: { Id: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -864,11 +864,11 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * Read more here: https://pris.ly/d/null-undefined
    * 
    */
-  updateManyAndReturn<T extends termsUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, termsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$termsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+  updateManyAndReturn<T extends TermsUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, TermsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TermsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Terms.
-   * @param {termsUpsertArgs} args - Arguments to update or create a Terms.
+   * @param {TermsUpsertArgs} args - Arguments to update or create a Terms.
    * @example
    * // Update or create a Terms
    * const terms = await prisma.terms.upsert({
@@ -883,14 +883,14 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   }
    * })
    */
-  upsert<T extends termsUpsertArgs>(args: Prisma.SelectSubset<T, termsUpsertArgs<ExtArgs>>): Prisma.Prisma__termsClient<runtime.Types.Result.GetResult<Prisma.$termsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends TermsUpsertArgs>(args: Prisma.SelectSubset<T, TermsUpsertArgs<ExtArgs>>): Prisma.Prisma__TermsClient<runtime.Types.Result.GetResult<Prisma.$TermsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
    * Count the number of Terms.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {termsCountArgs} args - Arguments to filter Terms to count.
+   * @param {TermsCountArgs} args - Arguments to filter Terms to count.
    * @example
    * // Count the number of Terms
    * const count = await prisma.terms.count({
@@ -899,8 +899,8 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   }
    * })
   **/
-  count<T extends termsCountArgs>(
-    args?: Prisma.Subset<T, termsCountArgs>,
+  count<T extends TermsCountArgs>(
+    args?: Prisma.Subset<T, TermsCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
@@ -939,7 +939,7 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * Group by Terms.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {termsGroupByArgs} args - Group by arguments.
+   * @param {TermsGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -954,14 +954,14 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * 
   **/
   groupBy<
-    T extends termsGroupByArgs,
+    T extends TermsGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: termsGroupByArgs['orderBy'] }
-      : { orderBy?: termsGroupByArgs['orderBy'] },
+      ? { orderBy: TermsGroupByArgs['orderBy'] }
+      : { orderBy?: TermsGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -1010,23 +1010,23 @@ export interface termsDelegate<ExtArgs extends runtime.Types.Extensions.Internal
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, termsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTermsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, TermsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTermsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the terms model
+ * Fields of the Terms model
  */
-readonly fields: termsFieldRefs;
+readonly fields: TermsFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for terms.
+ * The delegate class that acts as a "Promise-like" for Terms.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__termsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__TermsClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  semester<T extends Prisma.semestersDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.semestersDefaultArgs<ExtArgs>>): Prisma.Prisma__semestersClient<runtime.Types.Result.GetResult<Prisma.$semestersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  course<T extends Prisma.coursesDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.coursesDefaultArgs<ExtArgs>>): Prisma.Prisma__coursesClient<runtime.Types.Result.GetResult<Prisma.$coursesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  Semester<T extends Prisma.SemestersDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SemestersDefaultArgs<ExtArgs>>): Prisma.Prisma__SemestersClient<runtime.Types.Result.GetResult<Prisma.$SemestersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  Course<T extends Prisma.CoursesDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CoursesDefaultArgs<ExtArgs>>): Prisma.Prisma__CoursesClient<runtime.Types.Result.GetResult<Prisma.$CoursesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1053,422 +1053,422 @@ export interface Prisma__termsClient<T, Null = never, ExtArgs extends runtime.Ty
 
 
 /**
- * Fields of the terms model
+ * Fields of the Terms model
  */
-export interface termsFieldRefs {
-  readonly id: Prisma.FieldRef<"terms", 'Int'>
-  readonly semester_id: Prisma.FieldRef<"terms", 'Int'>
-  readonly course_id: Prisma.FieldRef<"terms", 'Int'>
-  readonly created_at: Prisma.FieldRef<"terms", 'DateTime'>
+export interface TermsFieldRefs {
+  readonly Id: Prisma.FieldRef<"Terms", 'Int'>
+  readonly SemesterId: Prisma.FieldRef<"Terms", 'Int'>
+  readonly CourseId: Prisma.FieldRef<"Terms", 'Int'>
+  readonly CreatedAt: Prisma.FieldRef<"Terms", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * terms findUnique
+ * Terms findUnique
  */
-export type termsFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the terms
+   * Select specific fields to fetch from the Terms
    */
-  select?: Prisma.termsSelect<ExtArgs> | null
+  select?: Prisma.TermsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the terms
+   * Omit specific fields from the Terms
    */
-  omit?: Prisma.termsOmit<ExtArgs> | null
+  omit?: Prisma.TermsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.termsInclude<ExtArgs> | null
+  include?: Prisma.TermsInclude<ExtArgs> | null
   /**
-   * Filter, which terms to fetch.
+   * Filter, which Terms to fetch.
    */
-  where: Prisma.termsWhereUniqueInput
+  where: Prisma.TermsWhereUniqueInput
 }
 
 /**
- * terms findUniqueOrThrow
+ * Terms findUniqueOrThrow
  */
-export type termsFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the terms
+   * Select specific fields to fetch from the Terms
    */
-  select?: Prisma.termsSelect<ExtArgs> | null
+  select?: Prisma.TermsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the terms
+   * Omit specific fields from the Terms
    */
-  omit?: Prisma.termsOmit<ExtArgs> | null
+  omit?: Prisma.TermsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.termsInclude<ExtArgs> | null
+  include?: Prisma.TermsInclude<ExtArgs> | null
   /**
-   * Filter, which terms to fetch.
+   * Filter, which Terms to fetch.
    */
-  where: Prisma.termsWhereUniqueInput
+  where: Prisma.TermsWhereUniqueInput
 }
 
 /**
- * terms findFirst
+ * Terms findFirst
  */
-export type termsFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the terms
+   * Select specific fields to fetch from the Terms
    */
-  select?: Prisma.termsSelect<ExtArgs> | null
+  select?: Prisma.TermsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the terms
+   * Omit specific fields from the Terms
    */
-  omit?: Prisma.termsOmit<ExtArgs> | null
+  omit?: Prisma.TermsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.termsInclude<ExtArgs> | null
+  include?: Prisma.TermsInclude<ExtArgs> | null
   /**
-   * Filter, which terms to fetch.
+   * Filter, which Terms to fetch.
    */
-  where?: Prisma.termsWhereInput
+  where?: Prisma.TermsWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of terms to fetch.
+   * Determine the order of Terms to fetch.
    */
-  orderBy?: Prisma.termsOrderByWithRelationInput | Prisma.termsOrderByWithRelationInput[]
+  orderBy?: Prisma.TermsOrderByWithRelationInput | Prisma.TermsOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for terms.
+   * Sets the position for searching for Terms.
    */
-  cursor?: Prisma.termsWhereUniqueInput
+  cursor?: Prisma.TermsWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` terms from the position of the cursor.
+   * Take `±n` Terms from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` terms.
+   * Skip the first `n` Terms.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of terms.
+   * Filter by unique combinations of Terms.
    */
   distinct?: Prisma.TermsScalarFieldEnum | Prisma.TermsScalarFieldEnum[]
 }
 
 /**
- * terms findFirstOrThrow
+ * Terms findFirstOrThrow
  */
-export type termsFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the terms
+   * Select specific fields to fetch from the Terms
    */
-  select?: Prisma.termsSelect<ExtArgs> | null
+  select?: Prisma.TermsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the terms
+   * Omit specific fields from the Terms
    */
-  omit?: Prisma.termsOmit<ExtArgs> | null
+  omit?: Prisma.TermsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.termsInclude<ExtArgs> | null
+  include?: Prisma.TermsInclude<ExtArgs> | null
   /**
-   * Filter, which terms to fetch.
+   * Filter, which Terms to fetch.
    */
-  where?: Prisma.termsWhereInput
+  where?: Prisma.TermsWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of terms to fetch.
+   * Determine the order of Terms to fetch.
    */
-  orderBy?: Prisma.termsOrderByWithRelationInput | Prisma.termsOrderByWithRelationInput[]
+  orderBy?: Prisma.TermsOrderByWithRelationInput | Prisma.TermsOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for terms.
+   * Sets the position for searching for Terms.
    */
-  cursor?: Prisma.termsWhereUniqueInput
+  cursor?: Prisma.TermsWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` terms from the position of the cursor.
+   * Take `±n` Terms from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` terms.
+   * Skip the first `n` Terms.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of terms.
+   * Filter by unique combinations of Terms.
    */
   distinct?: Prisma.TermsScalarFieldEnum | Prisma.TermsScalarFieldEnum[]
 }
 
 /**
- * terms findMany
+ * Terms findMany
  */
-export type termsFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the terms
+   * Select specific fields to fetch from the Terms
    */
-  select?: Prisma.termsSelect<ExtArgs> | null
+  select?: Prisma.TermsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the terms
+   * Omit specific fields from the Terms
    */
-  omit?: Prisma.termsOmit<ExtArgs> | null
+  omit?: Prisma.TermsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.termsInclude<ExtArgs> | null
+  include?: Prisma.TermsInclude<ExtArgs> | null
   /**
-   * Filter, which terms to fetch.
+   * Filter, which Terms to fetch.
    */
-  where?: Prisma.termsWhereInput
+  where?: Prisma.TermsWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of terms to fetch.
+   * Determine the order of Terms to fetch.
    */
-  orderBy?: Prisma.termsOrderByWithRelationInput | Prisma.termsOrderByWithRelationInput[]
+  orderBy?: Prisma.TermsOrderByWithRelationInput | Prisma.TermsOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing terms.
+   * Sets the position for listing Terms.
    */
-  cursor?: Prisma.termsWhereUniqueInput
+  cursor?: Prisma.TermsWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` terms from the position of the cursor.
+   * Take `±n` Terms from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` terms.
+   * Skip the first `n` Terms.
    */
   skip?: number
   distinct?: Prisma.TermsScalarFieldEnum | Prisma.TermsScalarFieldEnum[]
 }
 
 /**
- * terms create
+ * Terms create
  */
-export type termsCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the terms
+   * Select specific fields to fetch from the Terms
    */
-  select?: Prisma.termsSelect<ExtArgs> | null
+  select?: Prisma.TermsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the terms
+   * Omit specific fields from the Terms
    */
-  omit?: Prisma.termsOmit<ExtArgs> | null
+  omit?: Prisma.TermsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.termsInclude<ExtArgs> | null
+  include?: Prisma.TermsInclude<ExtArgs> | null
   /**
-   * The data needed to create a terms.
+   * The data needed to create a Terms.
    */
-  data: Prisma.XOR<Prisma.termsCreateInput, Prisma.termsUncheckedCreateInput>
+  data: Prisma.XOR<Prisma.TermsCreateInput, Prisma.TermsUncheckedCreateInput>
 }
 
 /**
- * terms createMany
+ * Terms createMany
  */
-export type termsCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many terms.
+   * The data used to create many Terms.
    */
-  data: Prisma.termsCreateManyInput | Prisma.termsCreateManyInput[]
+  data: Prisma.TermsCreateManyInput | Prisma.TermsCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * terms createManyAndReturn
+ * Terms createManyAndReturn
  */
-export type termsCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the terms
+   * Select specific fields to fetch from the Terms
    */
-  select?: Prisma.termsSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.TermsSelectCreateManyAndReturn<ExtArgs> | null
   /**
-   * Omit specific fields from the terms
+   * Omit specific fields from the Terms
    */
-  omit?: Prisma.termsOmit<ExtArgs> | null
+  omit?: Prisma.TermsOmit<ExtArgs> | null
   /**
-   * The data used to create many terms.
+   * The data used to create many Terms.
    */
-  data: Prisma.termsCreateManyInput | Prisma.termsCreateManyInput[]
+  data: Prisma.TermsCreateManyInput | Prisma.TermsCreateManyInput[]
   skipDuplicates?: boolean
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.termsIncludeCreateManyAndReturn<ExtArgs> | null
+  include?: Prisma.TermsIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
- * terms update
+ * Terms update
  */
-export type termsUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the terms
+   * Select specific fields to fetch from the Terms
    */
-  select?: Prisma.termsSelect<ExtArgs> | null
+  select?: Prisma.TermsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the terms
+   * Omit specific fields from the Terms
    */
-  omit?: Prisma.termsOmit<ExtArgs> | null
+  omit?: Prisma.TermsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.termsInclude<ExtArgs> | null
+  include?: Prisma.TermsInclude<ExtArgs> | null
   /**
-   * The data needed to update a terms.
+   * The data needed to update a Terms.
    */
-  data: Prisma.XOR<Prisma.termsUpdateInput, Prisma.termsUncheckedUpdateInput>
+  data: Prisma.XOR<Prisma.TermsUpdateInput, Prisma.TermsUncheckedUpdateInput>
   /**
-   * Choose, which terms to update.
+   * Choose, which Terms to update.
    */
-  where: Prisma.termsWhereUniqueInput
+  where: Prisma.TermsWhereUniqueInput
 }
 
 /**
- * terms updateMany
+ * Terms updateMany
  */
-export type termsUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update terms.
+   * The data used to update Terms.
    */
-  data: Prisma.XOR<Prisma.termsUpdateManyMutationInput, Prisma.termsUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.TermsUpdateManyMutationInput, Prisma.TermsUncheckedUpdateManyInput>
   /**
-   * Filter which terms to update
+   * Filter which Terms to update
    */
-  where?: Prisma.termsWhereInput
+  where?: Prisma.TermsWhereInput
   /**
-   * Limit how many terms to update.
+   * Limit how many Terms to update.
    */
   limit?: number
 }
 
 /**
- * terms updateManyAndReturn
+ * Terms updateManyAndReturn
  */
-export type termsUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the terms
+   * Select specific fields to fetch from the Terms
    */
-  select?: Prisma.termsSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.TermsSelectUpdateManyAndReturn<ExtArgs> | null
   /**
-   * Omit specific fields from the terms
+   * Omit specific fields from the Terms
    */
-  omit?: Prisma.termsOmit<ExtArgs> | null
+  omit?: Prisma.TermsOmit<ExtArgs> | null
   /**
-   * The data used to update terms.
+   * The data used to update Terms.
    */
-  data: Prisma.XOR<Prisma.termsUpdateManyMutationInput, Prisma.termsUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.TermsUpdateManyMutationInput, Prisma.TermsUncheckedUpdateManyInput>
   /**
-   * Filter which terms to update
+   * Filter which Terms to update
    */
-  where?: Prisma.termsWhereInput
+  where?: Prisma.TermsWhereInput
   /**
-   * Limit how many terms to update.
+   * Limit how many Terms to update.
    */
   limit?: number
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.termsIncludeUpdateManyAndReturn<ExtArgs> | null
+  include?: Prisma.TermsIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
- * terms upsert
+ * Terms upsert
  */
-export type termsUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the terms
+   * Select specific fields to fetch from the Terms
    */
-  select?: Prisma.termsSelect<ExtArgs> | null
+  select?: Prisma.TermsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the terms
+   * Omit specific fields from the Terms
    */
-  omit?: Prisma.termsOmit<ExtArgs> | null
+  omit?: Prisma.TermsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.termsInclude<ExtArgs> | null
+  include?: Prisma.TermsInclude<ExtArgs> | null
   /**
-   * The filter to search for the terms to update in case it exists.
+   * The filter to search for the Terms to update in case it exists.
    */
-  where: Prisma.termsWhereUniqueInput
+  where: Prisma.TermsWhereUniqueInput
   /**
-   * In case the terms found by the `where` argument doesn't exist, create a new terms with this data.
+   * In case the Terms found by the `where` argument doesn't exist, create a new Terms with this data.
    */
-  create: Prisma.XOR<Prisma.termsCreateInput, Prisma.termsUncheckedCreateInput>
+  create: Prisma.XOR<Prisma.TermsCreateInput, Prisma.TermsUncheckedCreateInput>
   /**
-   * In case the terms was found with the provided `where` argument, update it with this data.
+   * In case the Terms was found with the provided `where` argument, update it with this data.
    */
-  update: Prisma.XOR<Prisma.termsUpdateInput, Prisma.termsUncheckedUpdateInput>
+  update: Prisma.XOR<Prisma.TermsUpdateInput, Prisma.TermsUncheckedUpdateInput>
 }
 
 /**
- * terms delete
+ * Terms delete
  */
-export type termsDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the terms
+   * Select specific fields to fetch from the Terms
    */
-  select?: Prisma.termsSelect<ExtArgs> | null
+  select?: Prisma.TermsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the terms
+   * Omit specific fields from the Terms
    */
-  omit?: Prisma.termsOmit<ExtArgs> | null
+  omit?: Prisma.TermsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.termsInclude<ExtArgs> | null
+  include?: Prisma.TermsInclude<ExtArgs> | null
   /**
-   * Filter which terms to delete.
+   * Filter which Terms to delete.
    */
-  where: Prisma.termsWhereUniqueInput
+  where: Prisma.TermsWhereUniqueInput
 }
 
 /**
- * terms deleteMany
+ * Terms deleteMany
  */
-export type termsDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which terms to delete
+   * Filter which Terms to delete
    */
-  where?: Prisma.termsWhereInput
+  where?: Prisma.TermsWhereInput
   /**
-   * Limit how many terms to delete.
+   * Limit how many Terms to delete.
    */
   limit?: number
 }
 
 /**
- * terms without action
+ * Terms without action
  */
-export type termsDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type TermsDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the terms
+   * Select specific fields to fetch from the Terms
    */
-  select?: Prisma.termsSelect<ExtArgs> | null
+  select?: Prisma.TermsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the terms
+   * Omit specific fields from the Terms
    */
-  omit?: Prisma.termsOmit<ExtArgs> | null
+  omit?: Prisma.TermsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.termsInclude<ExtArgs> | null
+  include?: Prisma.TermsInclude<ExtArgs> | null
 }

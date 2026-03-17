@@ -1,0 +1,277 @@
+"use client";
+
+import { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+import { Plus, Trash2, Pencil, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import type { SemesterResponse } from "@/lib/api-types";
+
+type SortKey = "year" | "type" | null;
+type SortDir = "asc" | "desc";
+
+export default function SemestersPage() {
+  const [semesters, setSemesters] = useState<SemesterResponse[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: number; year: number; type: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const [search, setSearch] = useState("");
+  const [filterYear, setFilterYear] = useState("");
+  const [filterType, setFilterType] = useState("");
+  const [sortKey, setSortKey] = useState<SortKey>(null);
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  useEffect(() => {
+    async function fetchSemesters() {
+      try {
+        const res = await fetch("/api/semesters");
+        if (!res.ok) throw new Error("Failed to load semesters");
+        const json = await res.json();
+        setSemesters(json.data ?? []);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Something went wrong");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchSemesters();
+  }, []);
+
+  const filteredAndSorted = useMemo(() => {
+    let list = [...semesters];
+    const searchLower = search.trim().toLowerCase();
+    if (searchLower) {
+      list = list.filter(
+        (s) =>
+          String(s.year).includes(searchLower) ||
+          s.type.toLowerCase().includes(searchLower)
+      );
+    }
+    if (filterYear.trim()) {
+      const y = filterYear.trim();
+      list = list.filter((s) => String(s.year).includes(y));
+    }
+    if (filterType.trim()) {
+      list = list.filter((s) => s.type.toLowerCase().includes(filterType.trim().toLowerCase()));
+    }
+
+    if (sortKey) {
+      list.sort((a, b) => {
+        if (sortKey === "year") {
+          const cmp = a.year - b.year;
+          return sortDir === "asc" ? cmp : -cmp;
+        }
+        const cmp = a.type.localeCompare(b.type, undefined, { sensitivity: "base" });
+        return sortDir === "asc" ? cmp : -cmp;
+      });
+    }
+    return list;
+  }, [semesters, search, filterYear, filterType, sortKey, sortDir]);
+
+  const handleSort = (key: SortKey) => {
+    if (!key) return;
+    if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    else {
+      setSortKey(key);
+      setSortDir("asc");
+    }
+  };
+
+  const handleDelete = async () => {
+    if (deleteTarget === null) return;
+    setError(null);
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/semesters/${deleteTarget.id}`, { method: "DELETE" });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data?.error ?? "Failed to delete semester");
+        setIsDeleting(false);
+        return;
+      }
+      setSemesters(semesters.filter((s) => s.id !== deleteTarget.id));
+      setDeleteTarget(null);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to delete semester");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const SortIcon = ({ column }: { column: SortKey }) => {
+    if (sortKey !== column) return <ArrowUpDown className="size-3.5 opacity-50" aria-hidden />;
+    return sortDir === "asc" ? (
+      <ArrowUp className="size-3.5 text-[#3c096c]" aria-hidden />
+    ) : (
+      <ArrowDown className="size-3.5 text-[#3c096c]" aria-hidden />
+    );
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Semesters</h1>
+          <p className="text-muted-foreground">View and manage semester periods</p>
+        </div>
+        <Button asChild className="shrink-0 w-fit">
+          <Link href="/semesters/create" className="flex items-center gap-2">
+            <Plus className="size-4" />
+            Add Semester
+          </Link>
+        </Button>
+      </div>
+
+      <Card className="overflow-hidden border-[0.5px] border-border shadow-md shadow-black/5">
+        <CardHeader className="border-b border-border border-b-[0.5px] bg-muted/20 pb-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-lg font-bold text-foreground sm:text-xl">All Semesters</h2>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <div className="relative flex-1 sm:min-w-[200px]">
+                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
+                <Input
+                  type="search"
+                  placeholder="Search by Year or Type..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-[#3c096c] focus-visible:border-[#3c096c]/40"
+                  aria-label="Search semesters"
+                />
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Filter by Year"
+                  value={filterYear}
+                  onChange={(e) => setFilterYear(e.target.value)}
+                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-[#3c096c]"
+                  aria-label="Filter by year"
+                />
+                <Input
+                  placeholder="Filter by Type"
+                  value={filterType}
+                  onChange={(e) => setFilterType(e.target.value)}
+                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-[#3c096c]"
+                  aria-label="Filter by type"
+                />
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-0">
+          {loading && <p className="p-6 text-muted-foreground">Loading semesters…</p>}
+          {error && <p className="p-6 text-destructive">{error}</p>}
+          {!loading && !error && (
+            <div className="overflow-x-auto">
+              <Table className="min-w-[360px]">
+                <TableHeader>
+                  <TableRow className="border-b border-border border-b-[0.5px] bg-[#3c096c]/8 hover:bg-[#3c096c]/10">
+                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">
+                      <button
+                        type="button"
+                        onClick={() => handleSort("year")}
+                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3c096c] rounded"
+                      >
+                        Year
+                        <SortIcon column="year" />
+                      </button>
+                    </TableHead>
+                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">
+                      <button
+                        type="button"
+                        onClick={() => handleSort("type")}
+                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3c096c] rounded"
+                      >
+                        Type
+                        <SortIcon column="type" />
+                      </button>
+                    </TableHead>
+                    <TableHead className="h-12 px-4 w-[120px] text-base font-bold text-foreground text-right">
+                      Actions
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredAndSorted.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={3} className="py-8 text-center text-muted-foreground">
+                        {semesters.length === 0
+                          ? "No semesters yet. Create one to get started."
+                          : "No semesters match your filters."}
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    filteredAndSorted.map((semester, index) => (
+                      <TableRow
+                        key={semester.id}
+                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-[#3c096c]/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
+                      >
+                        <TableCell className="py-3 px-4 font-medium align-middle">{semester.year}</TableCell>
+                        <TableCell className="py-3 px-4 align-middle">{semester.type}</TableCell>
+                        <TableCell className="py-3 px-4 align-middle text-right">
+                          <div className="flex items-center justify-end gap-1">
+                            <Button variant="outline" size="icon" className="size-8 shrink-0" asChild>
+                              <Link href={`/semesters/${semester.id}/edit`} aria-label={`Edit ${semester.year} ${semester.type}`}>
+                                <Pencil className="size-4" />
+                              </Link>
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              className="size-8 shrink-0 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
+                              onClick={() => setDeleteTarget({ id: semester.id, year: semester.year, type: semester.type })}
+                              aria-label={`Delete ${semester.year} ${semester.type}`}
+                            >
+                              <Trash2 className="size-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Semester?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. Are you sure you want to delete {deleteTarget?.year} {deleteTarget?.type}?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
+              {isDeleting ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
+}

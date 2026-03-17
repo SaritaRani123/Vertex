@@ -5,25 +5,25 @@ import type { DepartmentResponse, DepartmentListResponse } from "@/lib/api-types
 import { safeValidateDepartmentCreate } from "@/lib/validations/departments";
 
 function toDepartmentResponse(row: {
-  id: number;
-  name: string;
-  code: string;
-  created_at: Date;
-  updated_at: Date;
+  Id: number;
+  Name: string;
+  Code: string;
+  CreatedAt: Date;
+  UpdatedAt: Date;
 }): DepartmentResponse {
   return {
-    id: row.id,
-    name: row.name,
-    code: row.code,
-    created_at: row.created_at.toISOString(),
-    updated_at: row.updated_at.toISOString(),
+    id: row.Id,
+    name: row.Name,
+    code: row.Code,
+    created_at: row.CreatedAt.toISOString(),
+    updated_at: row.UpdatedAt.toISOString(),
   };
 }
 
 export async function GET() {
   try {
     const list = await prisma.departments.findMany({
-      orderBy: { name: "asc" },
+      orderBy: { Name: "asc" },
     });
     const data: DepartmentListResponse = {
       data: list.map(toDepartmentResponse),
@@ -43,20 +43,20 @@ export async function POST(request: NextRequest) {
     }
     const existing = await prisma.departments.findFirst({
       where: {
-        OR: [{ code: parsed.data.code }, { name: parsed.data.name }],
+        OR: [{ Code: parsed.data.code }, { Name: parsed.data.name }],
       },
     });
     if (existing) {
       return validationError(
-        existing.code === parsed.data.code
+        existing.Code === parsed.data.code
           ? "A department with this code already exists"
           : "A department with this name already exists"
       );
     }
     const created = await prisma.departments.create({
       data: {
-        name: parsed.data.name,
-        code: parsed.data.code,
+        Name: parsed.data.name,
+        Code: parsed.data.code,
       },
     });
     return json(toDepartmentResponse(created), 201);

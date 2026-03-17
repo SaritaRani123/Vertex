@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { ProgramInput, ProgramStatus } from "@/lib/api-types";
+import type { ProgramInput } from "@/lib/api-types";
 
 const programStatusSchema = z.enum(["ACTIVE", "INACTIVE"]);
 
@@ -24,11 +24,11 @@ export function safeValidateProgramCreate(
 }
 
 export const programUpdateSchema = z.object({
-  name: z.string().min(1).trim().optional(),
-  code: z.string().min(1).trim().optional(),
-  duration_years: z.number().int().min(1).optional(),
+  name: z.string().min(1, "Name is required").trim().optional(),
+  code: z.string().min(1, "Code is required").trim().optional(),
+  duration_years: z.number().int().min(1, "Duration must be at least 1 year").optional(),
   status: programStatusSchema.optional(),
-  department_id: z.coerce.number().int().positive().optional(),
+  department_id: z.coerce.number().int().positive("Invalid department ID").optional(),
 });
 
 export type ProgramUpdateInput = z.infer<typeof programUpdateSchema>;

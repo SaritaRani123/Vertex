@@ -1,0 +1,30 @@
+import { z } from "zod";
+import type { TermInput } from "@/lib/api-types";
+
+const termSchema = z.object({
+  semester_id: z.coerce.number().int().positive("Please select a semester"),
+  course_id: z.coerce.number().int().positive("Please select a course"),
+});
+
+export type TermCreateInput = z.infer<typeof termSchema>;
+
+export function validateTermCreate(body: unknown): TermInput {
+  return termSchema.parse(body) as TermInput;
+}
+
+export function safeValidateTermCreate(
+  body: unknown
+): z.SafeParseReturnType<z.infer<typeof termSchema>, TermInput> {
+  return termSchema.safeParse(body);
+}
+
+export const termUpdateSchema = z.object({
+  semester_id: z.coerce.number().int().positive("Please select a semester").optional(),
+  course_id: z.coerce.number().int().positive("Please select a course").optional(),
+});
+
+export type TermUpdateInput = z.infer<typeof termUpdateSchema>;
+
+export function safeValidateTermUpdate(body: unknown) {
+  return termUpdateSchema.safeParse(body);
+}
