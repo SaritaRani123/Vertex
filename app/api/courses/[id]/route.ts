@@ -126,11 +126,35 @@ export async function DELETE(_request: NextRequest, { params }: RouteParams) {
   if (numericId === null) return notFound("Course not found");
 
   try {
-    const row = await prisma.courses.findUnique({ where: { Id: numericId } });
+    const row = await prisma.courses.findUnique({
+      where: { Id: numericId },
+      select: { Id: true, Code: true, Name: true },
+    });
     if (!row) return notFound("Course not found");
 
-    await prisma.courses.delete({ where: { Id: numericId } });
-    return new Response(null, { status: 204 });
+    // "Prerequisites" is stored as a String[] (course codes), so we must manually
+    // maintain referential integrity when deleting.
+    const dependents = await prisma.courses.findMany({
+      where: { Prerequisites: { has: row.Code } },
+      select: { Id: true, Name: true, Code: true, Prerequisites: true },
+    });
+
+    await prisma.$transaction([
+      ...dependents.map((dep) =>
+        prisma.courses.update({
+          where: { Id: dep.Id },
+          data: {
+            Prerequisites: dep.Prerequisites.filter((code) => code !== row.Code),
+          },
+        })
+      ),
+      prisma.courses.delete({ where: { Id: numericId } }),
+    ]);
+
+    return json({
+      message: "Course deleted",
+      cleaned_prerequisites: dependents.map((d) => ({ id: d.Id, code: d.Code, name: d.Name })),
+    });
   } catch (e) {
     const message = e instanceof Error ? e.message : "";
     if (message.includes("Foreign key") || message.includes("restrict")) {

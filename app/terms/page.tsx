@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
@@ -141,9 +141,9 @@ export default function TermsPage() {
   const SortIcon = ({ column }: { column: SortKey }) => {
     if (sortKey !== column) return <ArrowUpDown className="size-3.5 opacity-50" aria-hidden />;
     return sortDir === "asc" ? (
-      <ArrowUp className="size-3.5 text-[#3c096c]" aria-hidden />
+      <ArrowUp className="size-3.5 text-primary" aria-hidden />
     ) : (
-      <ArrowDown className="size-3.5 text-[#3c096c]" aria-hidden />
+      <ArrowDown className="size-3.5 text-primary" aria-hidden />
     );
   };
 
@@ -174,7 +174,7 @@ export default function TermsPage() {
                   placeholder="Search by Course, Year or Type..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-[#3c096c] focus-visible:border-[#3c096c]/40"
+                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary/40"
                   aria-label="Search terms"
                 />
               </div>
@@ -183,21 +183,21 @@ export default function TermsPage() {
                   placeholder="Filter by Course"
                   value={filterCourse}
                   onChange={(e) => setFilterCourse(e.target.value)}
-                  className="w-full sm:w-32 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-[#3c096c]"
+                  className="w-full sm:w-32 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
                   aria-label="Filter by course"
                 />
                 <Input
                   placeholder="Filter by Year"
                   value={filterYear}
                   onChange={(e) => setFilterYear(e.target.value)}
-                  className="w-full sm:w-24 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-[#3c096c]"
+                  className="w-full sm:w-24 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
                   aria-label="Filter by year"
                 />
                 <Input
                   placeholder="Filter by Type"
                   value={filterType}
                   onChange={(e) => setFilterType(e.target.value)}
-                  className="w-full sm:w-24 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-[#3c096c]"
+                  className="w-full sm:w-24 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
                   aria-label="Filter by type"
                 />
               </div>
@@ -205,18 +205,18 @@ export default function TermsPage() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          {loading && <p className="p-6 text-muted-foreground">Loading terms…</p>}
+          {loading && <p className="p-6 text-muted-foreground">Loading termsâ€¦</p>}
           {error && <p className="p-6 text-destructive">{error}</p>}
           {!loading && !error && (
             <div className="overflow-x-auto">
               <Table className="min-w-[480px]">
                 <TableHeader>
-                  <TableRow className="border-b border-border border-b-[0.5px] bg-[#3c096c]/8 hover:bg-[#3c096c]/10">
+                  <TableRow className="border-b border-border border-b-[0.5px] bg-primary/8 hover:bg-primary/10">
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">
                       <button
                         type="button"
                         onClick={() => handleSort("course_name")}
-                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3c096c] rounded"
+                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
                       >
                         Course
                         <SortIcon column="course_name" />
@@ -226,7 +226,7 @@ export default function TermsPage() {
                       <button
                         type="button"
                         onClick={() => handleSort("semester_year")}
-                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3c096c] rounded"
+                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
                       >
                         Semester Year
                         <SortIcon column="semester_year" />
@@ -236,7 +236,7 @@ export default function TermsPage() {
                       <button
                         type="button"
                         onClick={() => handleSort("semester_type")}
-                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3c096c] rounded"
+                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
                       >
                         Semester Type
                         <SortIcon column="semester_type" />
@@ -258,7 +258,7 @@ export default function TermsPage() {
                     filteredAndSorted.map((term, index) => (
                       <TableRow
                         key={term.id}
-                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-[#3c096c]/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
+                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-primary/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
                       >
                         <TableCell className="py-3 px-4 font-medium align-middle">
                           {term.course_name || term.course_code || `Course #${term.course_id}`}
@@ -312,3 +312,4 @@ export default function TermsPage() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 
@@ -23,7 +23,7 @@ export function Nav() {
           </Link>
           <Link
             href="/sign-in.html"
-            className="rounded-md bg-[#3c096c] px-4 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out hover:bg-[#5a189a] active:scale-[0.98] active:bg-[#450a6e]"
+            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out hover:bg-primary/90 active:scale-[0.98] active:bg-primary/80"
           >
             Sign in
           </Link>
@@ -32,3 +32,4 @@ export function Nav() {
     </header>
   );
 }
+

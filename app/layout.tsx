@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { LayoutWrapper } from "@/components/LayoutWrapper";
-import { Inter } from "next/font/google";
+import { Figtree } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const figtree = Figtree({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Programs Scheduling",
@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased min-h-screen bg-background text-foreground`}>
+      <body className={`${figtree.className} antialiased min-h-screen bg-background text-foreground`}>
         <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>

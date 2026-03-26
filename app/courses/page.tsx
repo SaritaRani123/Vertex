@@ -34,7 +34,7 @@ export default function CoursesPage() {
   const [courses, setCourses] = useState<CourseResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<{ id: number; name: string } | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: number; name: string; code: string } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [search, setSearch] = useState("");
@@ -100,19 +100,34 @@ export default function CoursesPage() {
     }
   };
 
+  const dependentCourses = useMemo(() => {
+    if (!deleteTarget) return [];
+    return courses.filter((c) => (c.prerequisites ?? []).includes(deleteTarget.code));
+  }, [deleteTarget, courses]);
+
   const handleDelete = async () => {
     if (deleteTarget === null) return;
+    const targetId = deleteTarget.id;
+    const targetCode = deleteTarget.code;
     setError(null);
     setIsDeleting(true);
     try {
-      const res = await fetch(`/api/courses/${deleteTarget.id}`, { method: "DELETE" });
+      const res = await fetch(`/api/courses/${targetId}`, { method: "DELETE" });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(data?.error ?? "Failed to delete course");
         setIsDeleting(false);
         return;
       }
-      setCourses(courses.filter((c) => c.id !== deleteTarget.id));
+      setCourses(
+        courses
+          .filter((c) => c.id !== targetId)
+          .map((c) =>
+            (c.prerequisites ?? []).includes(targetCode)
+              ? { ...c, prerequisites: c.prerequisites.filter((p) => p !== targetCode) }
+              : c
+          )
+      );
       setDeleteTarget(null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to delete course");
@@ -124,9 +139,9 @@ export default function CoursesPage() {
   const SortIcon = ({ column }: { column: SortKey }) => {
     if (sortKey !== column) return <ArrowUpDown className="size-3.5 opacity-50" aria-hidden />;
     return sortDir === "asc" ? (
-      <ArrowUp className="size-3.5 text-[#3c096c]" aria-hidden />
+      <ArrowUp className="size-3.5 text-primary" aria-hidden />
     ) : (
-      <ArrowDown className="size-3.5 text-[#3c096c]" aria-hidden />
+      <ArrowDown className="size-3.5 text-primary" aria-hidden />
     );
   };
 
@@ -154,7 +169,7 @@ export default function CoursesPage() {
       <button
         type="button"
         onClick={() => handleSort(sortKeyName)}
-        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3c096c] rounded"
+        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
       >
         {children}
         <SortIcon column={sortKeyName} />
@@ -189,7 +204,7 @@ export default function CoursesPage() {
                   placeholder="Search by Name, Code or Program..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-[#3c096c] focus-visible:border-[#3c096c]/40"
+                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary/40"
                   aria-label="Search courses"
                 />
               </div>
@@ -198,21 +213,21 @@ export default function CoursesPage() {
                   placeholder="Filter by Code"
                   value={filterCode}
                   onChange={(e) => setFilterCode(e.target.value)}
-                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-[#3c096c]"
+                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
                   aria-label="Filter by code"
                 />
                 <Input
                   placeholder="Filter by Name"
                   value={filterName}
                   onChange={(e) => setFilterName(e.target.value)}
-                  className="w-full sm:w-32 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-[#3c096c]"
+                  className="w-full sm:w-32 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
                   aria-label="Filter by name"
                 />
                 <Input
                   placeholder="Filter by Program"
                   value={filterProgram}
                   onChange={(e) => setFilterProgram(e.target.value)}
-                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-[#3c096c]"
+                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
                   aria-label="Filter by program"
                 />
               </div>
@@ -220,13 +235,13 @@ export default function CoursesPage() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          {loading && <p className="p-6 text-muted-foreground">Loading courses…</p>}
+          {loading && <p className="p-6 text-muted-foreground">Loading courses...</p>}
           {error && <p className="p-6 text-destructive">{error}</p>}
           {!loading && !error && (
             <div className="overflow-x-auto">
               <Table className="min-w-[800px]">
                 <TableHeader>
-                  <TableRow className="border-b border-border border-b-[0.5px] bg-[#3c096c]/8 hover:bg-[#3c096c]/10">
+                  <TableRow className="border-b border-border border-b-[0.5px] bg-primary/8 hover:bg-primary/10">
                     <Th sortKeyName="code">Code</Th>
                     <Th sortKeyName="name">Name</Th>
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">Description</TableHead>
@@ -252,12 +267,12 @@ export default function CoursesPage() {
                     filteredAndSorted.map((course, index) => (
                       <TableRow
                         key={course.id}
-                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-[#3c096c]/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
+                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-primary/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
                       >
                         <TableCell className="py-3 px-4 font-medium align-middle">{course.code}</TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.name}</TableCell>
                         <TableCell className="py-3 px-4 align-middle max-w-[180px] truncate" title={course.description ?? undefined}>
-                          {course.description || "—"}
+                          {course.description || "-"}
                         </TableCell>
                         <TableCell className="py-3 px-4 align-middle">
                           {course.prerequisites && course.prerequisites.length > 0 ? (
@@ -286,7 +301,7 @@ export default function CoursesPage() {
                               })}
                             </span>
                           ) : (
-                            "—"
+                            "-"
                           )}
                         </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.program_name}</TableCell>
@@ -297,10 +312,10 @@ export default function CoursesPage() {
                           <span
                             className={`inline-block min-w-[5.5rem] rounded-md px-2.5 py-1 text-center text-sm font-medium text-white ${
                               course.status === "ACTIVE"
-                                ? "bg-green-600"
+                                ? "bg-emerald-600"
                                 : course.status === "INACTIVE"
-                                  ? "bg-red-600"
-                                  : "bg-gray-500"
+                                  ? "bg-amber-600"
+                                  : "bg-slate-500"
                             }`}
                           >
                             {course.status}
@@ -317,7 +332,7 @@ export default function CoursesPage() {
                               variant="outline"
                               size="icon"
                               className="size-8 shrink-0 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
-                              onClick={() => setDeleteTarget({ id: course.id, name: course.name })}
+                              onClick={() => setDeleteTarget({ id: course.id, name: course.name, code: course.code })}
                               aria-label={`Delete ${course.name}`}
                             >
                               <Trash2 className="size-4" />
@@ -342,6 +357,21 @@ export default function CoursesPage() {
               This action cannot be undone. Are you sure you want to delete {deleteTarget?.name}?
             </AlertDialogDescription>
           </AlertDialogHeader>
+          {dependentCourses.length > 0 && (
+            <div className="rounded-md border border-destructive/30 bg-destructive/5 p-3 space-y-2">
+              <p className="text-sm font-medium text-destructive">
+                This course is a prerequisite for the following {dependentCourses.length === 1 ? "course" : "courses"}:
+              </p>
+              <ul className="list-disc pl-5 space-y-1">
+                {dependentCourses.map((c) => (
+                  <li key={c.id} className="text-sm text-foreground">
+                    {c.name} <span className="text-muted-foreground">({c.code})</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-sm text-muted-foreground">It will be removed from their prerequisites automatically.</p>
+            </div>
+          )}
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
@@ -353,3 +383,4 @@ export default function CoursesPage() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
@@ -122,9 +122,9 @@ export default function SemestersPage() {
   const SortIcon = ({ column }: { column: SortKey }) => {
     if (sortKey !== column) return <ArrowUpDown className="size-3.5 opacity-50" aria-hidden />;
     return sortDir === "asc" ? (
-      <ArrowUp className="size-3.5 text-[#3c096c]" aria-hidden />
+      <ArrowUp className="size-3.5 text-primary" aria-hidden />
     ) : (
-      <ArrowDown className="size-3.5 text-[#3c096c]" aria-hidden />
+      <ArrowDown className="size-3.5 text-primary" aria-hidden />
     );
   };
 
@@ -155,7 +155,7 @@ export default function SemestersPage() {
                   placeholder="Search by Year or Type..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-[#3c096c] focus-visible:border-[#3c096c]/40"
+                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary/40"
                   aria-label="Search semesters"
                 />
               </div>
@@ -164,14 +164,14 @@ export default function SemestersPage() {
                   placeholder="Filter by Year"
                   value={filterYear}
                   onChange={(e) => setFilterYear(e.target.value)}
-                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-[#3c096c]"
+                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
                   aria-label="Filter by year"
                 />
                 <Input
                   placeholder="Filter by Type"
                   value={filterType}
                   onChange={(e) => setFilterType(e.target.value)}
-                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-[#3c096c]"
+                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
                   aria-label="Filter by type"
                 />
               </div>
@@ -179,18 +179,18 @@ export default function SemestersPage() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          {loading && <p className="p-6 text-muted-foreground">Loading semesters…</p>}
+          {loading && <p className="p-6 text-muted-foreground">Loading semestersâ€¦</p>}
           {error && <p className="p-6 text-destructive">{error}</p>}
           {!loading && !error && (
             <div className="overflow-x-auto">
               <Table className="min-w-[360px]">
                 <TableHeader>
-                  <TableRow className="border-b border-border border-b-[0.5px] bg-[#3c096c]/8 hover:bg-[#3c096c]/10">
+                  <TableRow className="border-b border-border border-b-[0.5px] bg-primary/8 hover:bg-primary/10">
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">
                       <button
                         type="button"
                         onClick={() => handleSort("year")}
-                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3c096c] rounded"
+                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
                       >
                         Year
                         <SortIcon column="year" />
@@ -200,7 +200,7 @@ export default function SemestersPage() {
                       <button
                         type="button"
                         onClick={() => handleSort("type")}
-                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3c096c] rounded"
+                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
                       >
                         Type
                         <SortIcon column="type" />
@@ -224,7 +224,7 @@ export default function SemestersPage() {
                     filteredAndSorted.map((semester, index) => (
                       <TableRow
                         key={semester.id}
-                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-[#3c096c]/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
+                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-primary/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
                       >
                         <TableCell className="py-3 px-4 font-medium align-middle">{semester.year}</TableCell>
                         <TableCell className="py-3 px-4 align-middle">{semester.type}</TableCell>
@@ -275,3 +275,4 @@ export default function SemestersPage() {
     </div>
   );
 }
+

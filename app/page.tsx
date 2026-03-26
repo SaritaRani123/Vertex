@@ -1,13 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import {
-  ArrowRight,
-  BookOpen,
-  Building2,
-  CalendarDays,
-  GraduationCap,
-  Layers,
-} from "lucide-react";
+import { ArrowRight, BookOpen, Building2, CalendarDays, GraduationCap, Layers } from "lucide-react";
 
 export default async function DashboardPage() {
   const [departmentsCount, programsCount, coursesCount, semestersCount, termsCount] =
@@ -20,7 +13,7 @@ export default async function DashboardPage() {
     ]);
 
   const stats = [
-    { label: "Total Departments", value: departmentsCount, href: "/departments", accent: "bg-[#3c096c]" },
+    { label: "Total Departments", value: departmentsCount, href: "/departments", accent: "bg-primary" },
     { label: "Total Programs", value: programsCount, href: "/programs", accent: "bg-blue-400" },
     { label: "Total Courses", value: coursesCount, href: "/courses", accent: "bg-emerald-400" },
     { label: "Total Semesters", value: semestersCount, href: "/semesters", accent: "bg-amber-400" },
@@ -60,14 +53,6 @@ export default async function DashboardPage() {
     },
   ];
 
-  const hierarchy = [
-    "Department",
-    "Program",
-    "Course",
-    "Semester",
-    "Term",
-  ];
-
   return (
     <div className="space-y-10">
       <div>
@@ -104,37 +89,6 @@ export default async function DashboardPage() {
         </div>
       </section>
 
-      {/* Academic Structure Overview */}
-      <section className="rounded-xl bg-slate-50/80 px-4 py-5 sm:px-5 sm:py-6">
-        <h2 className="mb-4 text-lg font-semibold text-foreground">
-          Academic Structure Overview
-        </h2>
-        <div className="rounded-lg border border-border bg-card p-6 shadow-sm">
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            {hierarchy.map((item, i) => (
-              <span key={item} className="flex items-center gap-2 sm:gap-3">
-                <span className="rounded-md bg-[#3c096c]/10 px-3 py-1.5 text-sm font-medium text-foreground">
-                  {item}
-                </span>
-                {i < hierarchy.length - 1 && (
-                  <span
-                    className="text-muted-foreground"
-                    aria-hidden
-                  >
-                    →
-                  </span>
-                )}
-              </span>
-            ))}
-          </div>
-          <p className="mt-5 text-sm leading-relaxed text-muted-foreground">
-            This module maintains the official academic hierarchy used by the
-            Programs Scheduling System. All course assignment and term management
-            depend on this validated structure.
-          </p>
-        </div>
-      </section>
-
       {/* Quick Actions */}
       <section className="rounded-xl border border-border bg-white px-4 py-5 shadow-sm sm:px-5 sm:py-6">
         <div className="mb-4">
@@ -148,10 +102,10 @@ export default async function DashboardPage() {
             <Link
               key={href}
               href={href}
-              className="group relative flex h-full flex-col justify-between rounded-lg border border-border bg-card p-4 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#3c096c]/30 hover:bg-[#3c096c]/10 hover:shadow-md"
+              className="group relative flex h-full flex-col justify-between rounded-lg border border-border bg-card p-4 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:bg-primary/10 hover:shadow-md"
             >
               <div className="flex items-start gap-3">
-                <div className="rounded-md bg-[#3c096c]/10 p-2 text-[#3c096c]">
+                <div className="rounded-md bg-primary/10 p-2 text-primary">
                   <Icon className="h-4 w-4" aria-hidden />
                 </div>
                 <div>
@@ -163,7 +117,7 @@ export default async function DashboardPage() {
                   </p>
                 </div>
               </div>
-              <div className="mt-4 flex items-center text-xs font-medium text-[#3c096c]">
+              <div className="mt-4 flex items-center text-xs font-medium text-primary">
                 <span>Go to action</span>
                 <ArrowRight className="ml-1 h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
               </div>
@@ -174,3 +128,4 @@ export default async function DashboardPage() {
     </div>
   );
 }
+

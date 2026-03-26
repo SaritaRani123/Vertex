@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
@@ -125,9 +125,9 @@ export default function DepartmentsPage() {
   const SortIcon = ({ column }: { column: "name" | "code" }) => {
     if (sortKey !== column) return <ArrowUpDown className="size-3.5 opacity-50" aria-hidden />;
     return sortDir === "asc" ? (
-      <ArrowUp className="size-3.5 text-[#3c096c]" aria-hidden />
+      <ArrowUp className="size-3.5 text-primary" aria-hidden />
     ) : (
-      <ArrowDown className="size-3.5 text-[#3c096c]" aria-hidden />
+      <ArrowDown className="size-3.5 text-primary" aria-hidden />
     );
   };
 
@@ -160,7 +160,7 @@ export default function DepartmentsPage() {
                   placeholder="Search by Name or Code..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-[#3c096c] focus-visible:border-[#3c096c]/40"
+                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary/40"
                   aria-label="Search departments by name or code"
                 />
               </div>
@@ -170,7 +170,7 @@ export default function DepartmentsPage() {
                   placeholder="Filter by Code"
                   value={filterCode}
                   onChange={(e) => setFilterCode(e.target.value)}
-                  className="w-full sm:w-32 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-[#3c096c]"
+                  className="w-full sm:w-32 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
                   aria-label="Filter by code"
                 />
                 <Input
@@ -178,7 +178,7 @@ export default function DepartmentsPage() {
                   placeholder="Filter by Name"
                   value={filterName}
                   onChange={(e) => setFilterName(e.target.value)}
-                  className="w-full sm:w-36 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-[#3c096c]"
+                  className="w-full sm:w-36 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
                   aria-label="Filter by name"
                 />
               </div>
@@ -187,7 +187,7 @@ export default function DepartmentsPage() {
         </CardHeader>
         <CardContent className="p-0">
           {loading && (
-            <p className="p-6 text-muted-foreground">Loading departments…</p>
+            <p className="p-6 text-muted-foreground">Loading departmentsâ€¦</p>
           )}
           {error && (
             <p className="p-6 text-destructive">{error}</p>
@@ -196,12 +196,12 @@ export default function DepartmentsPage() {
             <div className="overflow-x-auto">
               <Table className="min-w-[400px]">
                 <TableHeader>
-                  <TableRow className="border-b border-border border-b-[0.5px] bg-[#3c096c]/8 hover:bg-[#3c096c]/10">
+                  <TableRow className="border-b border-border border-b-[0.5px] bg-primary/8 hover:bg-primary/10">
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">
                       <button
                         type="button"
                         onClick={() => handleSort("code")}
-                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3c096c] rounded"
+                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
                       >
                         Code
                         <SortIcon column="code" />
@@ -211,7 +211,7 @@ export default function DepartmentsPage() {
                       <button
                         type="button"
                         onClick={() => handleSort("name")}
-                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3c096c] rounded"
+                        className="inline-flex items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
                       >
                         Name
                         <SortIcon column="name" />
@@ -235,7 +235,7 @@ export default function DepartmentsPage() {
                     filteredAndSorted.map((dept, index) => (
                       <TableRow
                         key={dept.id}
-                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-[#3c096c]/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
+                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-primary/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
                       >
                         <TableCell className="py-3 px-4 font-medium align-middle">
                           {dept.code}
@@ -296,3 +296,4 @@ export default function DepartmentsPage() {
     </div>
   );
 }
+
