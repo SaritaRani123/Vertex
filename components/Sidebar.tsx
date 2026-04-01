@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { LayoutDashboard, Building2, GraduationCap, BookOpen, CalendarDays, Layers } from "lucide-react";
 
 const sidebarItems = [
-  { href: "/", label: "Dashboard", Icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
   { href: "/departments", label: "Departments", Icon: Building2 },
   { href: "/programs", label: "Programs", Icon: GraduationCap },
   { href: "/courses", label: "Courses", Icon: BookOpen },
@@ -31,8 +31,7 @@ export function Sidebar() {
         <nav className="flex flex-col gap-1">
           {sidebarItems.map((item) => {
             const isActive =
-              pathname === item.href ||
-              (item.href !== "/" && pathname.startsWith(item.href + "/"));
+              pathname === item.href || pathname.startsWith(item.href + "/");
             return (
               <Link
                 key={item.href}

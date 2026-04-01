@@ -1,9 +1,19 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { Nav } from "@/components/Nav";
 
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isLanding = pathname === "/";
+
+  if (isLanding) {
+    return (
+      <div className="min-h-screen bg-background text-foreground">{children}</div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen w-full">
       <Sidebar />

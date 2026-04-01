@@ -3,7 +3,7 @@ import { LayoutDashboard, Building2, GraduationCap, BookOpen, CalendarDays, Laye
 import { cn } from "@/lib/utils"
 
 const navItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/departments", label: "Departments", icon: Building2 },
   { href: "/programs", label: "Programs", icon: GraduationCap },
   { href: "/courses", label: "Courses", icon: BookOpen },
