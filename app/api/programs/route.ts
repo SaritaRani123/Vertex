@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { json, fromZodError, internalError, validationError } from "@/lib/api-utils";
 import type { ProgramResponse, ProgramListResponse, ProgramListItem, ProgramStatus } from "@/lib/api-types";
 import { safeValidateProgramCreate } from "@/lib/validations/programs";
+import { authorizeModuleRoute } from "@/lib/auth";
 
 function toProgramResponse(row: {
   Id: number;
@@ -44,6 +45,8 @@ function toProgramListItem(row: {
 }
 
 export async function GET(request: NextRequest) {
+  const auth = await authorizeModuleRoute(request);
+  if ("response" in auth) return auth.response;
   try {
     const { searchParams } = new URL(request.url);
     const departmentIdParam = searchParams.get("department_id");
@@ -63,6 +66,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await authorizeModuleRoute(request);
+  if ("response" in auth) return auth.response;
   try {
     const body = await request.json();
     const parsed = safeValidateProgramCreate(body);

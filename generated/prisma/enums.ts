@@ -33,3 +33,28 @@ export const SemesterType = {
 } as const
 
 export type SemesterType = (typeof SemesterType)[keyof typeof SemesterType]
+
+
+export const AuthRole = {
+  ADMIN: 'ADMIN',
+  STAFF: 'STAFF'
+} as const
+
+export type AuthRole = (typeof AuthRole)[keyof typeof AuthRole]
+
+
+export const PermissionAction = {
+  CREATE: 'CREATE',
+  DELETE: 'DELETE'
+} as const
+
+export type PermissionAction = (typeof PermissionAction)[keyof typeof PermissionAction]
+
+
+export const PermissionRequestStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type PermissionRequestStatus = (typeof PermissionRequestStatus)[keyof typeof PermissionRequestStatus]

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Trash2, Pencil, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { DepartmentResponse } from "@/lib/api-types";
+import { GuardedCreateButton } from "@/components/guarded-create-button";
+import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
 
 type SortKey = "name" | "code" | null;
 type SortDir = "asc" | "desc";
@@ -41,6 +43,8 @@ export default function DepartmentsPage() {
   const [filterName, setFilterName] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  const { guardAction, blockedDialog, sessionLoading } = useStaffActionGuard();
 
   useEffect(() => {
     async function fetchDepartments() {
@@ -140,12 +144,10 @@ export default function DepartmentsPage() {
             View and manage all departments
           </p>
         </div>
-        <Button asChild className="shrink-0 w-fit">
-          <Link href="/departments/create" className="flex items-center gap-2">
-            <Plus className="size-4" />
-            Add Department
-          </Link>
-        </Button>
+        <GuardedCreateButton href="/departments/create" className="shrink-0 w-fit flex items-center gap-2">
+          <Plus className="size-4" />
+          Add Department
+        </GuardedCreateButton>
       </div>
 
       <Card className="overflow-hidden border-[0.5px] border-border shadow-md shadow-black/5">
@@ -254,7 +256,10 @@ export default function DepartmentsPage() {
                               variant="outline"
                               size="icon"
                               className="size-8 shrink-0 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
-                              onClick={() => setDeleteTarget({ id: dept.id, name: dept.name })}
+                              disabled={sessionLoading}
+                              onClick={() =>
+                                guardAction(() => setDeleteTarget({ id: dept.id, name: dept.name }))
+                              }
                               aria-label={`Delete ${dept.name}`}
                             >
                               <Trash2 className="size-4" />
@@ -293,6 +298,7 @@ export default function DepartmentsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {blockedDialog}
     </div>
   );
 }

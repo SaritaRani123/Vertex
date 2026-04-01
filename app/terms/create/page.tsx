@@ -15,8 +15,17 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 import type { SemesterResponse, CourseResponse } from "@/lib/api-types";
+import { StaffCreateRouteGuard } from "@/components/staff-create-route-guard";
 
 export default function CreateTermPage() {
+  return (
+    <StaffCreateRouteGuard backHref="/terms">
+      <CreateTermForm />
+    </StaffCreateRouteGuard>
+  );
+}
+
+function CreateTermForm() {
   const router = useRouter();
   const [semesterYear, setSemesterYear] = useState<string>("");
   const [semesterType, setSemesterType] = useState<"FALL" | "WINTER" | "SUMMER" | "">("");

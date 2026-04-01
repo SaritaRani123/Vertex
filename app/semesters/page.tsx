@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Trash2, Pencil, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { SemesterResponse } from "@/lib/api-types";
+import { GuardedCreateButton } from "@/components/guarded-create-button";
+import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
 
 type SortKey = "year" | "type" | null;
 type SortDir = "asc" | "desc";
@@ -41,6 +43,8 @@ export default function SemestersPage() {
   const [filterType, setFilterType] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  const { guardAction, blockedDialog, sessionLoading } = useStaffActionGuard();
 
   useEffect(() => {
     async function fetchSemesters() {
@@ -135,12 +139,10 @@ export default function SemestersPage() {
           <h1 className="text-2xl font-bold text-foreground">Semesters</h1>
           <p className="text-muted-foreground">View and manage semester periods</p>
         </div>
-        <Button asChild className="shrink-0 w-fit">
-          <Link href="/semesters/create" className="flex items-center gap-2">
-            <Plus className="size-4" />
-            Add Semester
-          </Link>
-        </Button>
+        <GuardedCreateButton href="/semesters/create" className="shrink-0 w-fit flex items-center gap-2">
+          <Plus className="size-4" />
+          Add Semester
+        </GuardedCreateButton>
       </div>
 
       <Card className="overflow-hidden border-[0.5px] border-border shadow-md shadow-black/5">
@@ -239,7 +241,16 @@ export default function SemestersPage() {
                               variant="outline"
                               size="icon"
                               className="size-8 shrink-0 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
-                              onClick={() => setDeleteTarget({ id: semester.id, year: semester.year, type: semester.type })}
+                              disabled={sessionLoading}
+                              onClick={() =>
+                                guardAction(() =>
+                                  setDeleteTarget({
+                                    id: semester.id,
+                                    year: semester.year,
+                                    type: semester.type,
+                                  })
+                                )
+                              }
                               aria-label={`Delete ${semester.year} ${semester.type}`}
                             >
                               <Trash2 className="size-4" />
@@ -272,6 +283,7 @@ export default function SemestersPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {blockedDialog}
     </div>
   );
 }

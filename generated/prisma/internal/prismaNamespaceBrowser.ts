@@ -55,7 +55,10 @@ export const ModelName = {
   Programs: 'Programs',
   Courses: 'Courses',
   Semesters: 'Semesters',
-  Terms: 'Terms'
+  Terms: 'Terms',
+  ProgramsUsers: 'ProgramsUsers',
+  ProgramsSessions: 'ProgramsSessions',
+  ProgramsPermissionRequests: 'ProgramsPermissionRequests'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -136,6 +139,47 @@ export const TermsScalarFieldEnum = {
 } as const
 
 export type TermsScalarFieldEnum = (typeof TermsScalarFieldEnum)[keyof typeof TermsScalarFieldEnum]
+
+
+export const ProgramsUsersScalarFieldEnum = {
+  Id: 'Id',
+  Name: 'Name',
+  Email: 'Email',
+  PasswordHash: 'PasswordHash',
+  Role: 'Role',
+  IsActive: 'IsActive',
+  CreatedAt: 'CreatedAt',
+  UpdatedAt: 'UpdatedAt'
+} as const
+
+export type ProgramsUsersScalarFieldEnum = (typeof ProgramsUsersScalarFieldEnum)[keyof typeof ProgramsUsersScalarFieldEnum]
+
+
+export const ProgramsSessionsScalarFieldEnum = {
+  Id: 'Id',
+  TokenHash: 'TokenHash',
+  UserId: 'UserId',
+  ExpiresAt: 'ExpiresAt',
+  CreatedAt: 'CreatedAt'
+} as const
+
+export type ProgramsSessionsScalarFieldEnum = (typeof ProgramsSessionsScalarFieldEnum)[keyof typeof ProgramsSessionsScalarFieldEnum]
+
+
+export const ProgramsPermissionRequestsScalarFieldEnum = {
+  Id: 'Id',
+  RequesterId: 'RequesterId',
+  Module: 'Module',
+  Action: 'Action',
+  PayloadJson: 'PayloadJson',
+  Status: 'Status',
+  ReviewedById: 'ReviewedById',
+  ReviewNote: 'ReviewNote',
+  CreatedAt: 'CreatedAt',
+  UpdatedAt: 'UpdatedAt'
+} as const
+
+export type ProgramsPermissionRequestsScalarFieldEnum = (typeof ProgramsPermissionRequestsScalarFieldEnum)[keyof typeof ProgramsPermissionRequestsScalarFieldEnum]
 
 
 export const SortOrder = {

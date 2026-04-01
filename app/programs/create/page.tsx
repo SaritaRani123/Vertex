@@ -21,8 +21,17 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 import type { DepartmentResponse } from "@/lib/api-types";
+import { StaffCreateRouteGuard } from "@/components/staff-create-route-guard";
 
 export default function CreateProgramPage() {
+  return (
+    <StaffCreateRouteGuard backHref="/programs">
+      <CreateProgramForm />
+    </StaffCreateRouteGuard>
+  );
+}
+
+function CreateProgramForm() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [code, setCode] = useState("");

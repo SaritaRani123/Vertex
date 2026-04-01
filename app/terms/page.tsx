@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
@@ -25,6 +25,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Trash2, Pencil, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { SemesterType } from "@/lib/api-types";
+import { GuardedCreateButton } from "@/components/guarded-create-button";
+import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
 
 type TermWithDetail = {
   id: number;
@@ -53,6 +55,8 @@ export default function TermsPage() {
   const [filterType, setFilterType] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  const { guardAction, blockedDialog, sessionLoading } = useStaffActionGuard();
 
   useEffect(() => {
     async function fetchTerms() {
@@ -154,12 +158,10 @@ export default function TermsPage() {
           <h1 className="text-2xl font-bold text-foreground">Terms</h1>
           <p className="text-muted-foreground">Assign courses to semesters</p>
         </div>
-        <Button asChild className="shrink-0 w-fit">
-          <Link href="/terms/create" className="flex items-center gap-2">
-            <Plus className="size-4" />
-            Add Term
-          </Link>
-        </Button>
+        <GuardedCreateButton href="/terms/create" className="shrink-0 w-fit flex items-center gap-2">
+          <Plus className="size-4" />
+          Add Term
+        </GuardedCreateButton>
       </div>
 
       <Card className="overflow-hidden border-[0.5px] border-border shadow-md shadow-black/5">
@@ -276,7 +278,8 @@ export default function TermsPage() {
                               variant="outline"
                               size="icon"
                               className="size-8 shrink-0 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
-                              onClick={() => setDeleteTarget(term)}
+                              disabled={sessionLoading}
+                              onClick={() => guardAction(() => setDeleteTarget(term))}
                               aria-label="Remove term"
                             >
                               <Trash2 className="size-4" />
@@ -309,6 +312,7 @@ export default function TermsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {blockedDialog}
     </div>
   );
 }

@@ -66,3 +66,18 @@ export type Semesters = Prisma.SemestersModel
  * 
  */
 export type Terms = Prisma.TermsModel
+/**
+ * Model ProgramsUsers
+ * 
+ */
+export type ProgramsUsers = Prisma.ProgramsUsersModel
+/**
+ * Model ProgramsSessions
+ * 
+ */
+export type ProgramsSessions = Prisma.ProgramsSessionsModel
+/**
+ * Model ProgramsPermissionRequests
+ * 
+ */
+export type ProgramsPermissionRequests = Prisma.ProgramsPermissionRequestsModel

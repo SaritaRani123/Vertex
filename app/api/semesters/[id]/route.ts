@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { json, notFound, fromZodError, internalError, validationError } from "@/lib/api-utils";
 import type { SemesterResponse } from "@/lib/api-types";
 import { safeValidateSemesterUpdate } from "@/lib/validations/semesters";
+import { authorizeModuleRoute } from "@/lib/auth";
 
 function parseId(id: string): number | null {
   const n = parseInt(id, 10);
@@ -29,7 +30,9 @@ interface RouteParams {
   params: Promise<{ id: string }>;
 }
 
-export async function GET(_request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: RouteParams) {
+  const auth = await authorizeModuleRoute(request);
+  if ("response" in auth) return auth.response;
   const { id } = await params;
   const numericId = parseId(id);
   if (numericId === null) return notFound("Semester not found");
@@ -44,6 +47,8 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
 }
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
+  const auth = await authorizeModuleRoute(request);
+  if ("response" in auth) return auth.response;
   const { id } = await params;
   const numericId = parseId(id);
   if (numericId === null) return notFound("Semester not found");
@@ -87,7 +92,9 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(_request: NextRequest, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: RouteParams) {
+  const auth = await authorizeModuleRoute(request);
+  if ("response" in auth) return auth.response;
   const { id } = await params;
   const numericId = parseId(id);
   if (numericId === null) return notFound("Semester not found");

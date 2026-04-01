@@ -13,8 +13,17 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft } from "lucide-react";
+import { StaffCreateRouteGuard } from "@/components/staff-create-route-guard";
 
 export default function CreateDepartmentPage() {
+  return (
+    <StaffCreateRouteGuard backHref="/departments">
+      <CreateDepartmentForm />
+    </StaffCreateRouteGuard>
+  );
+}
+
+function CreateDepartmentForm() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [code, setCode] = useState("");

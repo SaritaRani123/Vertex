@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Plus, Trash2, Pencil, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { ProgramListItem } from "@/lib/api-types";
+import { GuardedCreateButton } from "@/components/guarded-create-button";
+import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
 
 type SortKey = "code" | "name" | "department_name" | "duration_years" | "status" | null;
 type SortDir = "asc" | "desc";
@@ -43,6 +45,8 @@ export default function ProgramsPage() {
   const [filterDept, setFilterDept] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  const { guardAction, blockedDialog, sessionLoading } = useStaffActionGuard();
 
   useEffect(() => {
     async function fetchPrograms() {
@@ -149,12 +153,10 @@ export default function ProgramsPage() {
           <h1 className="text-2xl font-bold text-foreground">Programs</h1>
           <p className="text-muted-foreground">View and manage academic programs</p>
         </div>
-        <Button asChild className="shrink-0 w-fit">
-          <Link href="/programs/create" className="flex items-center gap-2">
-            <Plus className="size-4" />
-            Add Program
-          </Link>
-        </Button>
+        <GuardedCreateButton href="/programs/create" className="shrink-0 w-fit flex items-center gap-2">
+          <Plus className="size-4" />
+          Add Program
+        </GuardedCreateButton>
       </div>
 
       <Card className="overflow-hidden border-[0.5px] border-border shadow-md shadow-black/5">
@@ -248,7 +250,10 @@ export default function ProgramsPage() {
                               variant="outline"
                               size="icon"
                               className="size-8 shrink-0 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
-                              onClick={() => setDeleteTarget({ id: prog.id, name: prog.name })}
+                              disabled={sessionLoading}
+                              onClick={() =>
+                                guardAction(() => setDeleteTarget({ id: prog.id, name: prog.name }))
+                              }
                               aria-label={`Delete ${prog.name}`}
                             >
                               <Trash2 className="size-4" />
@@ -281,6 +286,7 @@ export default function ProgramsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {blockedDialog}
     </div>
   );
 }

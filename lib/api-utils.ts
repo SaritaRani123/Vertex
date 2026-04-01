@@ -39,3 +39,17 @@ export function internalError(
     { status: 500 }
   );
 }
+
+export function unauthorized(message = "Unauthorized"): NextResponse<ApiErrorResponse> {
+  return NextResponse.json(
+    { error: message, code: "UNAUTHORIZED" } as ApiErrorResponse,
+    { status: 401 }
+  );
+}
+
+export function forbidden(message = "Forbidden"): NextResponse<ApiErrorResponse> {
+  return NextResponse.json(
+    { error: message, code: "FORBIDDEN" } as ApiErrorResponse,
+    { status: 403 }
+  );
+}

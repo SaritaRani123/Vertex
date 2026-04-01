@@ -18,8 +18,17 @@ import { ArrowLeft } from "lucide-react";
 import type { ProgramResponse } from "@/lib/api-types";
 import type { CourseOption } from "@/components/course-multi-select";
 import { CourseMultiSelect } from "@/components/course-multi-select";
+import { StaffCreateRouteGuard } from "@/components/staff-create-route-guard";
 
 export default function CreateCoursePage() {
+  return (
+    <StaffCreateRouteGuard backHref="/courses">
+      <CreateCourseForm />
+    </StaffCreateRouteGuard>
+  );
+}
+
+function CreateCourseForm() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [code, setCode] = useState("");

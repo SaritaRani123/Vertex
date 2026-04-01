@@ -1,8 +1,21 @@
-﻿"use client";
+"use client";
 
+import { useState } from "react";
 import Link from "next/link";
 
 export function Nav() {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } finally {
+      window.location.href = "/sign-in.html";
+    }
+  }
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-slate-50/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-slate-50/90">
       <div className="flex h-16 items-center justify-between px-4 lg:px-6">
@@ -27,6 +40,14 @@ export function Nav() {
           >
             Sign in
           </Link>
+          <button
+            type="button"
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="rounded-md border border-border px-3 py-2 text-sm font-medium text-foreground transition-all duration-200 ease-in-out hover:bg-muted disabled:opacity-60"
+          >
+            {isLoggingOut ? "Logging out..." : "Logout"}
+          </button>
         </div>
       </div>
     </header>

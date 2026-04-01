@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { json, validationError, fromZodError, internalError } from "@/lib/api-utils";
 import type { DepartmentResponse, DepartmentListResponse } from "@/lib/api-types";
 import { safeValidateDepartmentCreate } from "@/lib/validations/departments";
+import { authorizeModuleRoute } from "@/lib/auth";
 
 function toDepartmentResponse(row: {
   Id: number;
@@ -20,7 +21,9 @@ function toDepartmentResponse(row: {
   };
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const auth = await authorizeModuleRoute(request);
+  if ("response" in auth) return auth.response;
   try {
     const list = await prisma.departments.findMany({
       orderBy: { Name: "asc" },
@@ -35,6 +38,8 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await authorizeModuleRoute(request);
+  if ("response" in auth) return auth.response;
   try {
     const body = await request.json();
     const parsed = safeValidateDepartmentCreate(body);

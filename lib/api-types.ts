@@ -135,5 +135,5 @@ export interface ValidationErrorResponse {
 
 export interface ApiErrorResponse {
   error: string;
-  code: "NOT_FOUND" | "INTERNAL_ERROR";
+  code: "NOT_FOUND" | "INTERNAL_ERROR" | "UNAUTHORIZED" | "FORBIDDEN";
 }

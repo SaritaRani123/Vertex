@@ -29,6 +29,22 @@ enum SemesterType {
   SUMMER
 }
 
+enum AuthRole {
+  ADMIN
+  STAFF
+}
+
+enum PermissionAction {
+  CREATE
+  DELETE
+}
+
+enum PermissionRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 // ===============================
 // MODELS
 // ===============================
@@ -134,4 +150,55 @@ model Terms {
   @@index([SemesterId], name: "terms_semester_id_idx")
   @@index([CourseId], name: "terms_course_id_idx")
   @@map("terms")
+}
+
+model ProgramsUsers {
+  Id           Int      @id @default(autoincrement()) @map("id")
+  Name         String   @map("name")
+  Email        String   @unique @map("email")
+  PasswordHash String   @map("password_hash")
+  Role         AuthRole @default(STAFF) @map("role")
+  IsActive     Boolean  @default(true) @map("is_active")
+  CreatedAt    DateTime @default(now()) @map("created_at")
+  UpdatedAt    DateTime @updatedAt @map("updated_at")
+
+  Sessions           ProgramsSessions[]           @relation("UserSessions")
+  PermissionRequests ProgramsPermissionRequests[] @relation("RequesterRequests")
+  ReviewedRequests   ProgramsPermissionRequests[] @relation("ReviewerRequests")
+
+  @@index([Role], name: "programs_users_role_idx")
+  @@map("programs_users")
+}
+
+model ProgramsSessions {
+  Id        Int      @id @default(autoincrement()) @map("id")
+  TokenHash String   @unique @map("token_hash")
+  UserId    Int      @map("user_id")
+  User      ProgramsUsers @relation("UserSessions", fields: [UserId], references: [Id], onDelete: Cascade)
+  ExpiresAt DateTime @map("expires_at")
+  CreatedAt DateTime @default(now()) @map("created_at")
+
+  @@index([UserId], name: "programs_sessions_user_id_idx")
+  @@index([ExpiresAt], name: "programs_sessions_expires_at_idx")
+  @@map("programs_sessions")
+}
+
+model ProgramsPermissionRequests {
+  Id           Int                     @id @default(autoincrement()) @map("id")
+  RequesterId  Int                     @map("requester_id")
+  Requester    ProgramsUsers           @relation("RequesterRequests", fields: [RequesterId], references: [Id], onDelete: Cascade)
+  Module       String                  @map("module")
+  Action       PermissionAction        @map("action")
+  PayloadJson  String?                 @map("payload_json")
+  Status       PermissionRequestStatus @default(PENDING) @map("status")
+  ReviewedById Int?                    @map("reviewed_by_id")
+  ReviewedBy   ProgramsUsers?          @relation("ReviewerRequests", fields: [ReviewedById], references: [Id], onDelete: SetNull)
+  ReviewNote   String?                 @map("review_note")
+  CreatedAt    DateTime                @default(now()) @map("created_at")
+  UpdatedAt    DateTime                @updatedAt @map("updated_at")
+
+  @@index([RequesterId], name: "programs_permission_requests_requester_id_idx")
+  @@index([Status], name: "programs_permission_requests_status_idx")
+  @@index([Module], name: "programs_permission_requests_module_idx")
+  @@map("programs_permission_requests")
 }

@@ -15,8 +15,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
+import { StaffCreateRouteGuard } from "@/components/staff-create-route-guard";
 
 export default function CreateSemesterPage() {
+  return (
+    <StaffCreateRouteGuard backHref="/semesters">
+      <CreateSemesterForm />
+    </StaffCreateRouteGuard>
+  );
+}
+
+function CreateSemesterForm() {
   const router = useRouter();
   const [year, setYear] = useState(new Date().getFullYear());
   const [semesterType, setSemesterType] = useState<"FALL" | "WINTER" | "SUMMER">("FALL");

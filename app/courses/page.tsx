@@ -26,6 +26,8 @@ import {
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Plus, Trash2, Pencil, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { CourseResponse } from "@/lib/api-types";
+import { GuardedCreateButton } from "@/components/guarded-create-button";
+import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
 
 type SortKey = "code" | "name" | "program_name" | "credits" | "status" | null;
 type SortDir = "asc" | "desc";
@@ -43,6 +45,8 @@ export default function CoursesPage() {
   const [filterProgram, setFilterProgram] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  const { guardAction, blockedDialog, sessionLoading } = useStaffActionGuard();
 
   useEffect(() => {
     async function fetchCourses() {
@@ -184,12 +188,10 @@ export default function CoursesPage() {
           <h1 className="text-2xl font-bold text-foreground">Courses</h1>
           <p className="text-muted-foreground">View and manage all courses</p>
         </div>
-        <Button asChild className="shrink-0 w-fit">
-          <Link href="/courses/create" className="flex items-center gap-2">
-            <Plus className="size-4" />
-            Add Course
-          </Link>
-        </Button>
+        <GuardedCreateButton href="/courses/create" className="shrink-0 w-fit flex items-center gap-2">
+          <Plus className="size-4" />
+          Add Course
+        </GuardedCreateButton>
       </div>
 
       <Card className="overflow-hidden border-[0.5px] border-border shadow-md shadow-black/5">
@@ -332,7 +334,16 @@ export default function CoursesPage() {
                               variant="outline"
                               size="icon"
                               className="size-8 shrink-0 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
-                              onClick={() => setDeleteTarget({ id: course.id, name: course.name, code: course.code })}
+                              disabled={sessionLoading}
+                              onClick={() =>
+                                guardAction(() =>
+                                  setDeleteTarget({
+                                    id: course.id,
+                                    name: course.name,
+                                    code: course.code,
+                                  })
+                                )
+                              }
                               aria-label={`Delete ${course.name}`}
                             >
                               <Trash2 className="size-4" />
@@ -380,6 +391,7 @@ export default function CoursesPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {blockedDialog}
     </div>
   );
 }

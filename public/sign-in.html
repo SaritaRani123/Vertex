@@ -4,37 +4,134 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign in – Programs Scheduling</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/auth.css" />
 </head>
 <body>
   <div class="auth-page">
-    <div class="auth-card">
-      <!-- Left: Sign in form -->
-      <div class="auth-panel-white">
-        <h2>Sign in</h2>
-        <p class="subtitle">or use your account</p>
-        <form class="auth-form" action="/" method="get">
-          <div class="field">
-            <input type="email" name="email" placeholder="Email" required />
+    <div class="auth-shell">
+      <div class="auth-card">
+        <div class="auth-banner">
+          <div class="auth-brand">
+            <span class="brand-icon" aria-hidden>
+              <!-- Shield icon -->
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 2l8 4v6c0 5-3.4 9.4-8 10-4.6-.6-8-5-8-10V6l8-4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M9 12l2 2 4-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span>
+              Programs Scheduling
+              <small>Secure access portal</small>
+            </span>
           </div>
-          <div class="field">
-            <input type="password" name="password" placeholder="Password" required />
+        </div>
+        <div class="auth-content">
+          <div class="auth-header">
+            <h1>Sign in</h1>
+            <p>Use your college credentials to continue.</p>
           </div>
-          <button type="submit" class="btn">SIGN IN</button>
-          <p class="link-row">
-            Don't have an account? <a href="/sign-up.html">Sign up</a>
-          </p>
-        </form>
-      </div>
-      <!-- Right: Welcome Back -->
-      <div class="auth-panel-purple">
-        <h2>Welcome Back!</h2>
-        <p>To keep connected with us please login with your personal info</p>
+
+          <form id="signInForm" class="auth-form" novalidate>
+            <div class="field">
+              <label for="email">Email</label>
+              <div class="control">
+                <!-- Mail icon -->
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M4 6h16v12H4V6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                  <path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <input id="email" type="email" name="email" placeholder="name@college.edu" autocomplete="email" required />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="password">Password</label>
+              <div class="control">
+                <!-- Lock icon -->
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M7 11V8a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M6 11h12v10H6V11z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+                <input id="password" type="password" name="password" placeholder="••••••••" autocomplete="current-password" required />
+              </div>
+            </div>
+
+
+            <p id="signInMessage" class="form-message hidden" role="alert"></p>
+
+            <button id="signInButton" type="submit" class="btn">
+              <!-- Arrow icon -->
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path d="M5 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Sign in
+            </button>
+
+            <p class="link-row">
+              Don’t have an account? <a href="/sign-up.html">Sign up</a>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   </div>
+  <script>
+    (function () {
+      const form = document.getElementById("signInForm");
+      const button = document.getElementById("signInButton");
+      const message = document.getElementById("signInMessage");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+
+      function showMessage(text, type) {
+        message.textContent = text;
+        message.classList.remove("hidden", "error", "success");
+        message.classList.add(type);
+      }
+
+      function resetMessage() {
+        message.textContent = "";
+        message.classList.add("hidden");
+        message.classList.remove("error", "success");
+      }
+
+      form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        resetMessage();
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+        if (!email || !password) {
+          showMessage("Email and password are required.", "error");
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Signing in...";
+        try {
+          const response = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            showMessage(data.error || "Sign in failed.", "error");
+            return;
+          }
+
+          showMessage("Sign in successful. Redirecting...", "success");
+          window.location.href = "/";
+        } catch {
+          showMessage("Network error. Please try again.", "error");
+        } finally {
+          button.disabled = false;
+          button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" aria-hidden><path d="M5 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Sign in';
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

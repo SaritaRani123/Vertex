@@ -4,40 +4,158 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign up – Programs Scheduling</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/auth.css" />
 </head>
 <body>
   <div class="auth-page">
-    <div class="auth-card">
-      <!-- Left: Hello Friend -->
-      <div class="auth-panel-purple">
-        <h2>Hello, Friend!</h2>
-        <p>Enter your personal details and start your journey with us</p>
-      </div>
-      <!-- Right: Sign up form -->
-      <div class="auth-panel-white">
-        <h2>Create Account</h2>
-        <p class="subtitle">or use your email for registration</p>
-        <form class="auth-form" action="/sign-in.html" method="get">
-          <div class="field">
-            <input type="text" name="name" placeholder="Name" />
+    <div class="auth-shell">
+      <div class="auth-card">
+        <div class="auth-banner">
+          <div class="auth-brand">
+            <span class="brand-icon" aria-hidden>
+              <!-- Graduation cap icon -->
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 3l10 5-10 5L2 8l10-5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M6 10v5c0 2 3 4 6 4s6-2 6-4v-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M22 8v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span>
+              Programs Scheduling
+              <small>Create your account</small>
+            </span>
           </div>
-          <div class="field">
-            <input type="email" name="email" placeholder="Email" required />
+        </div>
+
+        <div class="auth-content">
+          <div class="auth-header">
+            <h1>Sign up</h1>
+            <p>Create an account to access scheduling tools.</p>
           </div>
-          <div class="field">
-            <input type="password" name="password" placeholder="Password" required minlength="6" />
-          </div>
-          <button type="submit" class="btn">SIGN UP</button>
-          <p class="link-row">
-            Already have an account? <a href="/sign-in.html">Sign in</a>
-          </p>
-        </form>
+
+          <form id="signUpForm" class="auth-form" novalidate>
+            <div class="field">
+              <label for="name">Full name</label>
+              <div class="control">
+                <!-- User icon -->
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M20 21a8 8 0 0 0-16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+                <input id="name" type="text" name="name" placeholder="Your name" autocomplete="name" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="email">Email</label>
+              <div class="control">
+                <!-- Mail icon -->
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M4 6h16v12H4V6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                  <path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <input id="email" type="email" name="email" placeholder="name@college.edu" autocomplete="email" required />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="password">Password</label>
+              <div class="control">
+                <!-- Lock icon -->
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                  <path d="M7 11V8a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M6 11h12v10H6V11z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+                <input id="password" type="password" name="password" placeholder="At least 6 characters" autocomplete="new-password" required minlength="6" />
+              </div>
+            </div>
+
+
+            <p id="signUpMessage" class="form-message hidden" role="alert"></p>
+
+            <button id="signUpButton" type="submit" class="btn">
+              <!-- Plus icon -->
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path d="M12 5v14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              Create account
+            </button>
+
+            <p class="link-row">
+              Already have an account? <a href="/sign-in.html">Sign in</a>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   </div>
+  <script>
+    (function () {
+      const form = document.getElementById("signUpForm");
+      const button = document.getElementById("signUpButton");
+      const message = document.getElementById("signUpMessage");
+
+      const nameInput = document.getElementById("name");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+
+      function showMessage(text, type) {
+        message.textContent = text;
+        message.classList.remove("hidden", "error", "success");
+        message.classList.add(type);
+      }
+
+      function resetMessage() {
+        message.textContent = "";
+        message.classList.add("hidden");
+        message.classList.remove("error", "success");
+      }
+
+      form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        resetMessage();
+
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+
+        if (!name || !email || !password) {
+          showMessage("Name, email, and password are required.", "error");
+          return;
+        }
+        if (password.length < 6) {
+          showMessage("Password must be at least 6 characters.", "error");
+          return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Creating account...";
+        try {
+          const response = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email, password }),
+          });
+
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            showMessage(data.error || "Sign up failed.", "error");
+            return;
+          }
+
+          showMessage("Account created successfully. Redirecting...", "success");
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 600);
+        } catch {
+          showMessage("Network error. Please try again.", "error");
+        } finally {
+          button.disabled = false;
+          button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 5v14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Create account';
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

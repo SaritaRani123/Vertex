@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { json, fromZodError, internalError, validationError } from "@/lib/api-utils";
 import type { TermListResponse, TermResponse } from "@/lib/api-types";
 import { safeValidateTermCreate } from "@/lib/validations/terms";
+import { authorizeModuleRoute } from "@/lib/auth";
 
 function toTermResponse(row: {
   Id: number;
@@ -24,7 +25,9 @@ function toTermResponse(row: {
   };
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const auth = await authorizeModuleRoute(request);
+  if ("response" in auth) return auth.response;
   try {
     const list = await prisma.terms.findMany({
       orderBy: [{ CreatedAt: "desc" }],
@@ -41,6 +44,8 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await authorizeModuleRoute(request);
+  if ("response" in auth) return auth.response;
   try {
     const body = await request.json();
     const parsed = safeValidateTermCreate(body);

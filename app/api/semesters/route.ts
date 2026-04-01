@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { json, fromZodError, internalError, validationError } from "@/lib/api-utils";
 import type { SemesterResponse, SemesterListResponse } from "@/lib/api-types";
 import { safeValidateSemesterCreate } from "@/lib/validations/semesters";
+import { authorizeModuleRoute } from "@/lib/auth";
 
 function toSemesterResponse(row: {
   Id: number;
@@ -20,7 +21,9 @@ function toSemesterResponse(row: {
   };
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const auth = await authorizeModuleRoute(request);
+  if ("response" in auth) return auth.response;
   try {
     const list = await prisma.semesters.findMany({ orderBy: [{ Year: "desc" }, { Type: "asc" }] });
     const data: SemesterListResponse = { data: list.map(toSemesterResponse) };
@@ -31,6 +34,8 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const auth = await authorizeModuleRoute(request);
+  if ("response" in auth) return auth.response;
   try {
     const body = await request.json();
     const parsed = safeValidateSemesterCreate(body);

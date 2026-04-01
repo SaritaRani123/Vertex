@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { ArrowRight, BookOpen, Building2, CalendarDays, GraduationCap, Layers } from "lucide-react";
+import { DashboardQuickActions } from "@/components/dashboard-quick-actions";
 
 export default async function DashboardPage() {
   const [departmentsCount, programsCount, coursesCount, semestersCount, termsCount] =
@@ -18,39 +18,6 @@ export default async function DashboardPage() {
     { label: "Total Courses", value: coursesCount, href: "/courses", accent: "bg-emerald-400" },
     { label: "Total Semesters", value: semestersCount, href: "/semesters", accent: "bg-amber-400" },
     { label: "Total Terms", value: termsCount, href: "/terms", accent: "bg-rose-400" },
-  ];
-
-  const quickActions = [
-    {
-      label: "Add Department",
-      href: "/departments/create",
-      description: "Add a new academic department.",
-      icon: Building2,
-    },
-    {
-      label: "Create Program",
-      href: "/programs/create",
-      description: "Create a program under a department.",
-      icon: GraduationCap,
-    },
-    {
-      label: "Add Course",
-      href: "/courses/create",
-      description: "Register a course within a program.",
-      icon: BookOpen,
-    },
-    {
-      label: "Add Semester",
-      href: "/semesters/create",
-      description: "Create a new semester period.",
-      icon: CalendarDays,
-    },
-    {
-      label: "Assign Term",
-      href: "/terms/create",
-      description: "Assign a course to a semester term.",
-      icon: Layers,
-    },
   ];
 
   return (
@@ -89,42 +56,7 @@ export default async function DashboardPage() {
         </div>
       </section>
 
-      {/* Quick Actions */}
-      <section className="rounded-xl border border-border bg-white px-4 py-5 shadow-sm sm:px-5 sm:py-6">
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold text-foreground">Quick Actions</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Perform common administrative tasks quickly.
-          </p>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {quickActions.map(({ label, href, description, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className="group relative flex h-full flex-col justify-between rounded-lg border border-border bg-card p-4 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/30 hover:bg-primary/10 hover:shadow-md"
-            >
-              <div className="flex items-start gap-3">
-                <div className="rounded-md bg-primary/10 p-2 text-primary">
-                  <Icon className="h-4 w-4" aria-hidden />
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground">
-                    {label}
-                  </h3>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {description}
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 flex items-center text-xs font-medium text-primary">
-                <span>Go to action</span>
-                <ArrowRight className="ml-1 h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      <DashboardQuickActions />
     </div>
   );
 }
