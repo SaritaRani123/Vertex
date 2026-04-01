@@ -3,10 +3,24 @@
 
 ---
 
+## App shell and authentication
+
+| Item | Description |
+|------|-------------|
+| **Layout** | `LayoutWrapper` wraps all pages: fixed **`Sidebar`** (left), top **`Nav`**, and **`main`** content (`components/LayoutWrapper.tsx`). |
+| **Sign in / Sign up** | Static pages **`/sign-in.html`** and **`/sign-up.html`** in `public/` (styles in `public/auth.css`). They call **`POST /api/auth/login`** and **`POST /api/auth/register`**; the server sets the **`programs_session`** cookie. |
+| **Session** | Client code can call **`GET /api/auth/me`** (`hooks/use-session-user.ts`) to read `id`, `email`, `name`, `role`. **401** when not logged in. |
+| **Logout** | **`Nav`** calls **`POST /api/auth/logout`** then redirects to **`/sign-in.html`**. |
+| **Staff vs create/delete** | **`StaffCreateRouteGuard`** wraps create pages: **STAFF** users see a dialog and are steered away from direct create (`components/staff-create-route-guard.tsx`). **`GuardedCreateButton`** / **`GuardedQuickActionCard`** block or explain create actions on lists and the dashboard for staff (`components/guarded-create-button.tsx`, `guarded-quick-action-card.tsx`). **Admins** proceed normally. Server-side, **POST/DELETE** on module APIs still enforce **403** for staff. |
+
+---
+
 ## Main Screens
 
 | # | Screen | Route | Purpose |
 |---|--------|-------|---------|
+| 0a | Sign in | `/sign-in.html` | Email/password login (static HTML) |
+| 0b | Sign up | `/sign-up.html` | Register; first user becomes ADMIN (static HTML) |
 | 1 | Dashboard | `/` | Overview with links to modules |
 | 2 | Departments List | `/departments` | View all departments in a table |
 | 3 | Create Department | `/departments/create` | Form to add a new department |
@@ -34,9 +48,9 @@
 |------|-------------|
 | **Layout** | Centered grid, 2 columns on desktop |
 | **Sections** | Hero section, navigation cards |
-| **Components** | `Card`, `CardHeader`, `CardTitle`, `CardContent`, `Button`, `Link` |
+| **Components** | `Card`, `CardHeader`, `CardTitle`, `CardContent`, `Button`, `Link`; quick actions may use **`GuardedQuickActionCard`** / **`dashboard-quick-actions`** for staff |
 | **Client/Server** | **Server Component** (default) — no interactivity |
-| **Data** | None (static links) |
+| **Data** | None (static links); authenticated API calls from other pages use `credentials: "include"` where needed so the session cookie is sent |
 
 ---
 
@@ -223,6 +237,12 @@
 
 | Component | Use | Client/Server |
 |-----------|-----|---------------|
+| **`LayoutWrapper`** | Sidebar + Nav + main content container | use client |
+| **`Sidebar`** | Primary nav links to modules | use client |
+| **`Nav`** | Header, auth links, logout | use client |
+| **`StaffCreateRouteGuard`** | Blocks STAFF from create pages with explanation | use client |
+| **`GuardedCreateButton`** | Create button that respects STAFF rules | use client |
+| **`GuardedQuickActionCard`** | Dashboard / quick actions gated for STAFF | use client |
 | `Button` | Actions, navigation, delete triggers | use client (shadcn) |
 | `Card` | Container for sections | Server |
 | `Input` | Text fields | use client (shadcn) |
@@ -283,9 +303,12 @@ Course delete (prerequisite flow)
 
 ## Navigation Structure
 
-- **Sidebar or top nav:** Dashboard, Departments, Programs, Courses, Semesters, Terms.
-- **List pages:** “Add” or “Create” button links to the create route; each row has **Edit** (edit route) and **Delete** (confirmation then API).
+- **Sidebar (`Sidebar.tsx`):** Dashboard (`/`), Departments, Programs, Courses, Semesters, Terms — same order as in code.
+- **Top bar (`Nav.tsx`):** App title, links to **Sign up** / **Sign in** (HTML pages), and **Logout**.
+- **List pages:** “Add” or “Create” may be **`GuardedCreateButton`** for staff; each row has **Edit** and **Delete** (confirmation then API). Delete remains **ADMIN**-only at the API; staff get **403** if they bypass the UI.
 - **Breadcrumbs:** e.g. Departments > Create, Courses > Edit.
+
+**Permission requests:** There is no dedicated Next.js page in the app router for listing or reviewing requests; staff and admins interact via **`/api/permission-requests`** and **`PUT /api/permission-requests/:id/review`** (e.g. Postman or a future admin UI).
 
 ---
 

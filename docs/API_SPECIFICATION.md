@@ -2,6 +2,8 @@
 
 This document defines all REST endpoints for the Vertex project. Use it to integrate with the API (e.g. from other dashboards, scripts, or frontends).
 
+**Quick route index (by category):** [API-endpoints.md](../API-endpoints.md)
+
 ---
 
 ## Base URL and testing
@@ -18,19 +20,85 @@ This document defines all REST endpoints for the Vertex project. Use it to integ
 
 **Example (curl):**
 ```bash
-# List departments
-curl http://localhost:3000/api/departments
+# List departments (requires session cookie — log in via browser or auth/login first)
+curl -b cookies.txt http://localhost:3000/api/departments
 
-# Create department
-curl -X POST http://localhost:3000/api/departments \
+# Create department (ADMIN only; same cookie jar)
+curl -b cookies.txt -X POST http://localhost:3000/api/departments \
   -H "Content-Type: application/json" \
   -d '{"name":"Computer Science","code":"CS"}'
 
 # Create course (prerequisites are course codes, e.g. ["CS101"])
-curl -X POST http://localhost:3000/api/courses \
+curl -b cookies.txt -X POST http://localhost:3000/api/courses \
   -H "Content-Type: application/json" \
   -d '{"name":"Data Structures","code":"CS201","program_id":1,"credits":3,"lecture_hours":2,"lab_hours":0,"prerequisites":["CS101"]}'
 ```
+
+---
+
+## Authentication and sessions
+
+The API uses an **HTTP-only cookie** named **`programs_session`**. It is set on successful **login** or **register** and cleared on **logout**. Clients that are not browser-based must send this cookie on subsequent requests (e.g. `Cookie: programs_session=...`).
+
+| Method | Endpoint | Auth | Purpose |
+|--------|----------|------|---------|
+| POST | `/api/auth/register` | No | Create user; **first user** in the DB becomes `ADMIN`, others default to `STAFF`. Body: `name`, `email`, `password` (min 6), optional `role` (`ADMIN` \| `STAFF`). Returns **201** with `id`, `name`, `email`, `role` and sets session cookie. |
+| POST | `/api/auth/login` | No | Body: `email`, `password`. Returns user JSON and sets session cookie; **401** if invalid/inactive. |
+| POST | `/api/auth/logout` | Optional | Invalidates the session server-side and clears the cookie. Returns `{ "success": true }`. |
+| GET | `/api/auth/me` | Yes | Current user: `id`, `email`, `name`, `role`. **401** if not signed in. |
+
+Static HTML sign-in and sign-up pages (same origin) live at **`/sign-in.html`** and **`/sign-up.html`** under `public/`.
+
+---
+
+## Scheduling APIs (departments, programs, courses, semesters, terms)
+
+All routes under:
+
+- `/api/departments`, `/api/departments/:id`
+- `/api/programs`, `/api/programs/:id`
+- `/api/courses`, `/api/courses/:id`
+- `/api/semesters`, `/api/semesters/:id`
+- `/api/terms`, `/api/terms/:id`
+
+require a **valid session**. Without it, the API returns **401** with `code: "UNAUTHORIZED"` (e.g. `"Please sign in"`).
+
+| HTTP method | Who may call |
+|-------------|----------------|
+| **GET** (list or single), **PUT** | Any signed-in user (`ADMIN` or `STAFF`) |
+| **POST**, **DELETE** | **`ADMIN` only** |
+
+If a **`STAFF`** user calls **POST** or **DELETE** on any of the routes above, the API returns **403** with `code: "FORBIDDEN"` and a message such as: *Staff cannot create/delete directly. Submit admin permission request.*
+
+---
+
+## Permission requests (staff → admin workflow)
+
+| Method | Endpoint | Who | Purpose |
+|--------|----------|-----|---------|
+| GET | `/api/permission-requests` | Signed in | **ADMIN**: all requests. **STAFF**: only their own. Returns `{ "data": [ ... ] }`. |
+| POST | `/api/permission-requests` | **STAFF** only | Submit a request. **403** if not STAFF. Body below. **201** on success. |
+| PUT | `/api/permission-requests/:id/review` | **ADMIN** only | Approve or reject a **PENDING** request. **403** if not ADMIN. Body below. |
+
+**POST body:**
+```json
+{
+  "module": "departments | programs | courses | semesters | terms",
+  "action": "CREATE | DELETE",
+  "payload": { }
+}
+```
+`payload` is optional JSON (stored as metadata for the admin).
+
+**PUT review body:**
+```json
+{
+  "status": "APPROVED | REJECTED",
+  "review_note": "optional string, max 500 chars"
+}
+```
+
+**GET list item shape (representative):** `id`, `module`, `action`, `status`, `payload`, `review_note`, `requester`, `reviewed_by` (when present), `created_at`, `updated_at`. Exact fields match the route handler and DB.
 
 ---
 
@@ -71,6 +139,8 @@ If the course was not a prerequisite elsewhere:
 | Status | When | Body shape |
 |--------|------|------------|
 | **400** | Validation error (invalid body or business rule) | `{ "error": "Message", "code": "VALIDATION_ERROR", "details": [{ "path": ["field"], "message": "Field error" }] }` |
+| **401** | Missing or invalid session | `{ "error": "Message", "code": "UNAUTHORIZED" }` |
+| **403** | Authenticated but not allowed (e.g. staff POST/DELETE on modules; wrong role on permission requests) | `{ "error": "Message", "code": "FORBIDDEN" }` |
 | **404** | Resource not found (invalid ID or missing record) | `{ "error": "Message", "code": "NOT_FOUND" }` |
 | **500** | Server error | `{ "error": "Message", "code": "INTERNAL_ERROR" }` |
 
@@ -151,7 +221,7 @@ All request bodies are validated with **Zod**. Validation errors return **400** 
 {
   "name": "string (required)",
   "code": "string (required)",
-  "description": "string | null (optional)",
+  "description": "string (optional); JSON may send null — treated like omitted",
   "prerequisites": "string[] (optional, default []) — array of course codes",
   "credits": "number (required, >= 0)",
   "lecture_hours": "number (required, >= 0)",
@@ -229,7 +299,7 @@ All request bodies are validated with **Zod**. Validation errors return **400** 
 
 ## Type definitions
 
-All request/response types are defined in **`lib/api-types.ts`** (e.g. `DepartmentInput`, `DepartmentResponse`, `CourseInput`, `CourseResponse`, `ValidationErrorResponse`). Use these for type-safe integration; the API does not use `any`.
+All request/response types for scheduling resources are defined in **`lib/api-types.ts`** (e.g. `DepartmentInput`, `DepartmentResponse`, `CourseInput`, `CourseResponse`, `ValidationErrorResponse`, `ApiErrorResponse`). Use these for type-safe integration; the API does not use `any`. Auth and permission-request JSON shapes are defined in the route handlers and Prisma models if you need exact fields beyond this document.
 
 ---
 
