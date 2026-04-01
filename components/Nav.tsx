@@ -12,21 +12,24 @@ export function Nav() {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
     } finally {
-      window.location.href = "/sign-in.html";
+      window.location.href = "/";
     }
   }
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200 bg-slate-50/95 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-slate-50/90">
       <div className="flex h-16 items-center justify-between px-4 lg:px-6">
-        <div className="flex flex-col justify-center gap-0.5">
+        <Link
+          href="/dashboard"
+          className="flex flex-col justify-center gap-0.5 transition-opacity hover:opacity-90"
+        >
           <span className="text-base font-semibold tracking-tight text-foreground sm:text-lg">
-            Programs Scheduling
+            Program Scheduling System
           </span>
           <span className="text-xs text-muted-foreground sm:text-sm">
             Dashboard
           </span>
-        </div>
+        </Link>
         <div className="flex items-center gap-3">
           <Link
             href="/sign-up.html"

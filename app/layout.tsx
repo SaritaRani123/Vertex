@@ -6,8 +6,12 @@ import "./globals.css";
 const figtree = Figtree({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Programs Scheduling",
-  description: "Programs Scheduling System - Dashboard",
+  title: {
+    default: "Program Scheduling System",
+    template: "%s | Program Scheduling System",
+  },
+  description:
+    "Manage departments, programs, courses, semesters, and term assignments.",
 };
 
 export default function RootLayout({

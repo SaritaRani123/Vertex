@@ -6,7 +6,11 @@ const courseStatusSchema = z.enum(["ACTIVE", "INACTIVE", "ARCHIVED"]);
 const courseSchema = z.object({
   name: z.string().min(1, "Name is required").trim(),
   code: z.string().min(1, "Code is required").trim(),
-  description: z.string().optional().nullable(),
+  description: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((v) => v ?? undefined),
   prerequisites: z.array(z.string().trim().min(1)).optional().default([]),
   credits: z.number().int().min(0, "Credits must be >= 0"),
   lecture_hours: z.number().int().min(0, "Lecture hours must be >= 0"),
@@ -30,7 +34,11 @@ export function safeValidateCourseCreate(
 export const courseUpdateSchema = z.object({
   name: z.string().min(1).trim().optional(),
   code: z.string().min(1).trim().optional(),
-  description: z.string().optional().nullable(),
+  description: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((v) => v ?? undefined),
   prerequisites: z.array(z.string().trim().min(1)).optional(),
   credits: z.number().int().min(0).optional(),
   lecture_hours: z.number().int().min(0).optional(),
