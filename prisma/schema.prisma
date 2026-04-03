@@ -6,6 +6,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  schemas  = ["course_schema"]
 }
 
 // ===============================
@@ -15,34 +16,46 @@ datasource db {
 enum ProgramStatus {
   ACTIVE
   INACTIVE
+
+  @@schema("course_schema")
 }
 
 enum CourseStatus {
   ACTIVE
   INACTIVE
   ARCHIVED
+
+  @@schema("course_schema")
 }
 
 enum SemesterType {
   FALL
   WINTER
   SUMMER
+
+  @@schema("course_schema")
 }
 
 enum AuthRole {
   ADMIN
   STAFF
+
+  @@schema("course_schema")
 }
 
 enum PermissionAction {
   CREATE
   DELETE
+
+  @@schema("course_schema")
 }
 
 enum PermissionRequestStatus {
   PENDING
   APPROVED
   REJECTED
+
+  @@schema("course_schema")
 }
 
 // ===============================
@@ -59,6 +72,7 @@ model Departments {
   CreatedAt DateTime @default(now()) @map("created_at")
   UpdatedAt DateTime @updatedAt @map("updated_at")
 
+  @@schema("course_schema")
   @@index([Code], name: "departments_code_idx")
   @@map("departments")
 }
@@ -80,6 +94,7 @@ model Programs {
   CreatedAt DateTime @default(now()) @map("created_at")
   UpdatedAt DateTime @updatedAt @map("updated_at")
 
+  @@schema("course_schema")
   @@unique([Name, DepartmentId], name: "programs_name_department_id_key")
   @@index([DepartmentId], name: "programs_department_id_idx")
   @@map("programs")
@@ -109,6 +124,7 @@ model Courses {
   CreatedAt DateTime @default(now()) @map("created_at")
   UpdatedAt DateTime @updatedAt @map("updated_at")
 
+  @@schema("course_schema")
   @@index([ProgramId], name: "courses_program_id_idx")
   @@index([Status], name: "courses_status_idx")
   @@map("courses")
@@ -126,6 +142,7 @@ model Semesters {
   CreatedAt DateTime @default(now()) @map("created_at")
   UpdatedAt DateTime @updatedAt @map("updated_at")
 
+  @@schema("course_schema")
   @@unique([Year, Type], name: "semesters_year_type_key")
   @@index([Year], name: "semesters_year_idx")
   @@map("semesters")
@@ -146,6 +163,7 @@ model Terms {
 
   CreatedAt DateTime @default(now()) @map("created_at")
 
+  @@schema("course_schema")
   @@unique([SemesterId, CourseId], name: "terms_semester_id_course_id_key")
   @@index([SemesterId], name: "terms_semester_id_idx")
   @@index([CourseId], name: "terms_course_id_idx")
@@ -166,6 +184,7 @@ model ProgramsUsers {
   PermissionRequests ProgramsPermissionRequests[] @relation("RequesterRequests")
   ReviewedRequests   ProgramsPermissionRequests[] @relation("ReviewerRequests")
 
+  @@schema("course_schema")
   @@index([Role], name: "programs_users_role_idx")
   @@map("programs_users")
 }
@@ -178,6 +197,7 @@ model ProgramsSessions {
   ExpiresAt DateTime @map("expires_at")
   CreatedAt DateTime @default(now()) @map("created_at")
 
+  @@schema("course_schema")
   @@index([UserId], name: "programs_sessions_user_id_idx")
   @@index([ExpiresAt], name: "programs_sessions_expires_at_idx")
   @@map("programs_sessions")
@@ -197,6 +217,7 @@ model ProgramsPermissionRequests {
   CreatedAt    DateTime                @default(now()) @map("created_at")
   UpdatedAt    DateTime                @updatedAt @map("updated_at")
 
+  @@schema("course_schema")
   @@index([RequesterId], name: "programs_permission_requests_requester_id_idx")
   @@index([Status], name: "programs_permission_requests_status_idx")
   @@index([Module], name: "programs_permission_requests_module_idx")
