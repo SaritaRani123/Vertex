@@ -202,7 +202,7 @@ export default function ProgramsPage() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          {loading && <p className="p-6 text-muted-foreground">Loading programsâ€¦</p>}
+          {loading && <p className="p-6 text-muted-foreground">Loading programs...</p>}
           {error && <p className="p-6 text-destructive">{error}</p>}
           {!loading && !error && (
             <div className="overflow-x-auto">

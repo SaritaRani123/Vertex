@@ -94,7 +94,7 @@ export default function EditSemesterPage() {
   };
 
   if (loading) {
-    return <p className="text-muted-foreground">Loading semester…</p>;
+    return <p className="text-muted-foreground">Loading semester...</p>;
   }
 
   if (error) {
@@ -163,7 +163,7 @@ export default function EditSemesterPage() {
             </FieldGroup>
             <div className="flex gap-2">
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Updating…" : "Update Semester"}
+                {isSubmitting ? "Updating..." : "Update Semester"}
               </Button>
               <Button type="button" variant="outline" asChild>
                 <Link href="/semesters">Cancel</Link>

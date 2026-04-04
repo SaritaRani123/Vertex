@@ -172,7 +172,7 @@ export function CourseMultiSelect({
           <CommandList>
             {loading ? (
               <div className="text-muted-foreground py-4 text-center text-sm">
-                Loading…
+                Loading...
               </div>
             ) : filteredCourses.length === 0 ? (
               <div className="text-muted-foreground py-4 text-center text-sm">

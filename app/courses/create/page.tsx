@@ -265,7 +265,7 @@ function CreateCourseForm() {
                   disabled={programsLoading}
                 >
                   <SelectTrigger className="w-full" aria-invalid={!!fieldErrors.program_id}>
-                    <SelectValue placeholder={programsLoading ? "Loading…" : "Select program"}>
+                    <SelectValue placeholder={programsLoading ? "Loading..." : "Select program"}>
                       {programId && !programsLoading
                         ? programs.find((p) => String(p.id) === programId)?.name
                         : null}
@@ -299,7 +299,7 @@ function CreateCourseForm() {
             </FieldGroup>
             <div className="flex gap-2">
               <Button type="submit" disabled={isSubmitting || programsLoading}>
-                {isSubmitting ? "Creating…" : "Create Course"}
+                {isSubmitting ? "Creating..." : "Create Course"}
               </Button>
               <Button type="button" variant="outline" asChild>
                 <Link href="/courses">Cancel</Link>

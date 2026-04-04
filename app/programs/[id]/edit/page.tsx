@@ -134,7 +134,7 @@ export default function EditProgramPage() {
   if (loading && !program) {
     return (
       <div className="mx-auto max-w-2xl space-y-6">
-        <p className="text-muted-foreground">Loading…</p>
+        <p className="text-muted-foreground">Loading...</p>
       </div>
     );
   }
@@ -261,7 +261,7 @@ export default function EditProgramPage() {
             </FieldGroup>
             <div className="flex gap-2">
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Saving…" : "Save changes"}
+                {isSubmitting ? "Saving..." : "Save changes"}
               </Button>
               <Button type="button" variant="outline" asChild>
                 <Link href="/programs">Cancel</Link>

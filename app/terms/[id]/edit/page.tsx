@@ -161,7 +161,7 @@ export default function EditTermPage() {
                 >
                   <SelectTrigger className="w-full" aria-invalid={!!fieldErrors.semester_year}>
                     <SelectValue>
-                      {semesterYear || (loading ? "Loading…" : "Select year")}
+                      {semesterYear || (loading ? "Loading..." : "Select year")}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
@@ -188,7 +188,7 @@ export default function EditTermPage() {
                 >
                   <SelectTrigger className="w-full" aria-invalid={!!fieldErrors.semester_type}>
                     <SelectValue>
-                      {semesterType || (loading ? "Loading…" : "Select type")}
+                      {semesterType || (loading ? "Loading..." : "Select type")}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
@@ -216,7 +216,7 @@ export default function EditTermPage() {
                       {courseId
                         ? `${courses.find((c) => String(c.id) === courseId)?.code ?? ""} - ${courses.find((c) => String(c.id) === courseId)?.name ?? ""}`
                         : loading
-                        ? "Loading…"
+                        ? "Loading..."
                         : "Select course"}
                     </SelectValue>
                   </SelectTrigger>
@@ -233,7 +233,7 @@ export default function EditTermPage() {
             </FieldGroup>
             <div className="flex gap-2">
               <Button type="submit" disabled={isSubmitting || loading}>
-                {isSubmitting ? "Updating…" : "Update Term"}
+                {isSubmitting ? "Updating..." : "Update Term"}
               </Button>
               <Button type="button" variant="outline" asChild>
                 <Link href="/terms">Cancel</Link>

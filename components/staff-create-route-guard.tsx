@@ -27,7 +27,7 @@ export function StaffCreateRouteGuard({
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-2xl py-16 text-center text-muted-foreground">Loading…</div>
+      <div className="mx-auto max-w-2xl py-16 text-center text-muted-foreground">Loading...</div>
     );
   }
 

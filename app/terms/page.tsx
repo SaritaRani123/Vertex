@@ -207,7 +207,7 @@ export default function TermsPage() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          {loading && <p className="p-6 text-muted-foreground">Loading termsâ€¦</p>}
+          {loading && <p className="p-6 text-muted-foreground">Loading terms...</p>}
           {error && <p className="p-6 text-destructive">{error}</p>}
           {!loading && !error && (
             <div className="overflow-x-auto">

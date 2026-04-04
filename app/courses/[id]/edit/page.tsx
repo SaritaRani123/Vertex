@@ -186,7 +186,7 @@ export default function EditCoursePage() {
   };
 
   if (loading) {
-    return <p className="text-muted-foreground">Loading course…</p>;
+    return <p className="text-muted-foreground">Loading course...</p>;
   }
 
   if (error && !course) {
@@ -306,7 +306,7 @@ export default function EditCoursePage() {
                   disabled={programsLoading}
                 >
                   <SelectTrigger className="w-full" aria-invalid={!!fieldErrors.program_id}>
-                    <SelectValue placeholder={programsLoading ? "Loading…" : "Select program"}>
+                    <SelectValue placeholder={programsLoading ? "Loading..." : "Select program"}>
                       {programId && !programsLoading
                         ? programs.find((p) => String(p.id) === programId)?.name
                         : null}
@@ -341,7 +341,7 @@ export default function EditCoursePage() {
             {error && <p className="text-sm text-destructive">{error}</p>}
             <div className="flex gap-2">
               <Button type="submit" disabled={isSubmitting || programsLoading}>
-                {isSubmitting ? "Updating…" : "Update Course"}
+                {isSubmitting ? "Updating..." : "Update Course"}
               </Button>
               <Button type="button" variant="outline" asChild>
                 <Link href="/courses">Cancel</Link>

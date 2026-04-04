@@ -189,7 +189,7 @@ export default function DepartmentsPage() {
         </CardHeader>
         <CardContent className="p-0">
           {loading && (
-            <p className="p-6 text-muted-foreground">Loading departmentsâ€¦</p>
+            <p className="p-6 text-muted-foreground">Loading departments...</p>
           )}
           {error && (
             <p className="p-6 text-destructive">{error}</p>

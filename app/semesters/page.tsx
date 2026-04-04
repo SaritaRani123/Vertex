@@ -181,7 +181,7 @@ export default function SemestersPage() {
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          {loading && <p className="p-6 text-muted-foreground">Loading semestersâ€¦</p>}
+          {loading && <p className="p-6 text-muted-foreground">Loading semesters...</p>}
           {error && <p className="p-6 text-destructive">{error}</p>}
           {!loading && !error && (
             <div className="overflow-x-auto">

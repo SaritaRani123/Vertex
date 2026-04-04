@@ -128,7 +128,7 @@ function CreateDepartmentForm() {
             </FieldGroup>
             <div className="flex gap-2">
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Creating…" : "Create Department"}
+                {isSubmitting ? "Creating..." : "Create Department"}
               </Button>
               <Button type="button" variant="outline" asChild>
                 <Link href="/departments">Cancel</Link>

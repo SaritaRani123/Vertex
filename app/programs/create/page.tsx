@@ -187,7 +187,7 @@ function CreateProgramForm() {
                   disabled={departmentsLoading}
                 >
                   <SelectTrigger className="w-full" aria-invalid={!!fieldErrors.department_id}>
-                    <SelectValue placeholder={departmentsLoading ? "Loading…" : "Select department"}>
+                    <SelectValue placeholder={departmentsLoading ? "Loading..." : "Select department"}>
                       {departmentId && !departmentsLoading ? (
                         departments.find((d) => String(d.id) === departmentId) ? (
                           <>{departments.find((d) => String(d.id) === departmentId)?.name}</>
@@ -224,7 +224,7 @@ function CreateProgramForm() {
             </FieldGroup>
             <div className="flex gap-2">
               <Button type="submit" disabled={isSubmitting || departmentsLoading}>
-                {isSubmitting ? "Creating…" : "Create Program"}
+                {isSubmitting ? "Creating..." : "Create Program"}
               </Button>
               <Button type="button" variant="outline" asChild>
                 <Link href="/programs">Cancel</Link>
