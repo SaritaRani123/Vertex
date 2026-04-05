@@ -4,6 +4,7 @@ import { json, notFound, fromZodError, internalError, validationError } from "@/
 import type { ProgramResponse, ProgramStatus } from "@/lib/api-types";
 import { safeValidateProgramUpdate } from "@/lib/validations/programs";
 import { authorizeModuleRoute } from "@/lib/auth";
+import { ensureProgramSemestersForDuration } from "@/lib/ensure-program-semesters";
 
 function parseId(id: string): number | null {
   const n = parseInt(id, 10);
@@ -19,6 +20,7 @@ function toProgramResponse(row: {
   DepartmentId: number;
   CreatedAt: Date;
   UpdatedAt: Date;
+  Department?: { Name: string };
 }): ProgramResponse {
   return {
     id: row.Id,
@@ -27,6 +29,7 @@ function toProgramResponse(row: {
     duration_years: row.DurationYears,
     status: row.Status as ProgramStatus,
     department_id: row.DepartmentId,
+    department_name: row.Department?.Name ?? "",
     created_at: row.CreatedAt.toISOString(),
     updated_at: row.UpdatedAt.toISOString(),
   };
@@ -43,7 +46,10 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   const numericId = parseId(id);
   if (numericId === null) return notFound("Program not found");
   try {
-    const row = await prisma.programs.findUnique({ where: { Id: numericId } });
+    const row = await prisma.programs.findUnique({
+      where: { Id: numericId },
+      include: { Department: { select: { Name: true } } },
+    });
     if (!row) return notFound("Program not found");
     return json(toProgramResponse(row));
   } catch {
@@ -68,7 +74,12 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     }
 
     if (Object.keys(parsed.data).length === 0) {
-      return json(toProgramResponse(row));
+      const full = await prisma.programs.findUnique({
+        where: { Id: numericId },
+        include: { Department: { select: { Name: true } } },
+      });
+      if (!full) return notFound("Program not found");
+      return json(toProgramResponse(full));
     }
 
     if (parsed.data.department_id !== undefined) {
@@ -118,7 +129,11 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
           DepartmentId: parsed.data.department_id,
         }),
       },
+      include: { Department: { select: { Name: true } } },
     });
+    if (parsed.data.duration_years !== undefined) {
+      await ensureProgramSemestersForDuration(prisma, numericId, updated.DurationYears);
+    }
     return json(toProgramResponse(updated));
   } catch {
     return internalError();

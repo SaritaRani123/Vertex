@@ -39,13 +39,13 @@ export interface ProgramResponse {
   duration_years: number;
   status: ProgramStatus;
   department_id: number;
+  department_name: string;
   created_at: string;
   updated_at: string;
 }
 
-export interface ProgramListItem extends ProgramResponse {
-  department_name: string;
-}
+/** List rows use the same shape as {@link ProgramResponse} (department name from the API join). */
+export type ProgramListItem = ProgramResponse;
 
 export interface ProgramListResponse {
   data: ProgramListItem[];

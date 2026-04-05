@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { Suspense, useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,8 +33,17 @@ import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
 type SortKey = "code" | "name" | "department_name" | "duration_years" | "status" | null;
 type SortDir = "asc" | "desc";
 
-export default function ProgramsPage() {
+function ProgramsPageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const departmentIdParam = searchParams.get("department_id");
+  const departmentIdFromUrl =
+    departmentIdParam != null && departmentIdParam !== ""
+      ? parseInt(departmentIdParam, 10)
+      : NaN;
+  const filterByDepartmentId =
+    Number.isFinite(departmentIdFromUrl) && departmentIdFromUrl > 0 ? departmentIdFromUrl : null;
+
   const [programs, setPrograms] = useState<ProgramListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,26 +54,63 @@ export default function ProgramsPage() {
   const [filterCode, setFilterCode] = useState("");
   const [filterName, setFilterName] = useState("");
   const [filterDept, setFilterDept] = useState("");
+  const [departmentFilterLabel, setDepartmentFilterLabel] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
 
   const { guardAction, blockedDialog, sessionLoading } = useStaffActionGuard();
 
   useEffect(() => {
-    async function fetchPrograms() {
+    if (filterByDepartmentId == null) {
+      setDepartmentFilterLabel(null);
+      setFilterDept("");
+      return;
+    }
+    let cancelled = false;
+    async function loadDeptName() {
       try {
-        const res = await fetch("/api/programs");
-        if (!res.ok) throw new Error("Failed to load programs");
-        const json = await res.json();
-        setPrograms(json.data ?? []);
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Something went wrong");
-      } finally {
-        setLoading(false);
+        const res = await fetch(`/api/departments/${filterByDepartmentId}`);
+        if (!res.ok) return;
+        const d = (await res.json()) as { name?: string };
+        if (!cancelled && d.name) {
+          setDepartmentFilterLabel(d.name);
+          setFilterDept(d.name);
+        }
+      } catch {
+        /* ignore */
       }
     }
-    fetchPrograms();
-  }, []);
+    void loadDeptName();
+    return () => {
+      cancelled = true;
+    };
+  }, [filterByDepartmentId]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchPrograms() {
+      setLoading(true);
+      setError(null);
+      try {
+        const url =
+          filterByDepartmentId != null
+            ? `/api/programs?department_id=${filterByDepartmentId}`
+            : "/api/programs";
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Failed to load programs");
+        const json = await res.json();
+        if (!cancelled) setPrograms(json.data ?? []);
+      } catch (e) {
+        if (!cancelled) setError(e instanceof Error ? e.message : "Something went wrong");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    void fetchPrograms();
+    return () => {
+      cancelled = true;
+    };
+  }, [filterByDepartmentId]);
 
   const filteredAndSorted = useMemo(() => {
     let list = [...programs];
@@ -163,6 +209,23 @@ export default function ProgramsPage() {
         </GuardedCreateButton>
       </div>
 
+      {filterByDepartmentId != null ? (
+        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm">
+          <span className="text-foreground">
+            {departmentFilterLabel ? (
+              <>
+                Showing programs in <span className="font-semibold">{departmentFilterLabel}</span>
+              </>
+            ) : (
+              "Applying department filter…"
+            )}
+          </span>
+          <Button variant="outline" size="sm" className="h-8" asChild>
+            <Link href="/programs">Show all programs</Link>
+          </Button>
+        </div>
+      ) : null}
+
       <Card className="overflow-hidden border-[0.5px] border-border shadow-md shadow-black/5">
         <CardHeader className="border-b border-border border-b-[0.5px] bg-muted/20 pb-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -249,7 +312,13 @@ export default function ProgramsPage() {
                           {prog.code}
                         </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{prog.name}</TableCell>
-                        <TableCell className="py-3 px-4 align-middle">{prog.department_name}</TableCell>
+                        <TableCell className="py-3 px-4 align-middle" onClick={(e) => e.stopPropagation()}>
+                          <Button variant="link" className="text-primary h-auto min-h-0 p-0 font-medium" asChild>
+                            <Link href={`/programs?department_id=${prog.department_id}`}>
+                              {prog.department_name || `Department #${prog.department_id}`}
+                            </Link>
+                          </Button>
+                        </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{prog.duration_years} years</TableCell>
                         <TableCell className="py-3 px-4 align-middle">
                           <Badge variant={prog.status === "ACTIVE" ? "default" : "secondary"}>{prog.status}</Badge>
@@ -311,3 +380,10 @@ export default function ProgramsPage() {
   );
 }
 
+export default function ProgramsPage() {
+  return (
+    <Suspense fallback={<p className="p-6 text-muted-foreground">Loading programs…</p>}>
+      <ProgramsPageInner />
+    </Suspense>
+  );
+}

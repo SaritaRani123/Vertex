@@ -141,7 +141,7 @@ export default function DepartmentsPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Departments</h1>
           <p className="text-muted-foreground">
-            View and manage all departments
+            View and manage all departments. Click a department name to see programs in that department.
           </p>
         </div>
         <GuardedCreateButton href="/departments/create" className="shrink-0 w-fit flex items-center gap-2">
@@ -243,7 +243,18 @@ export default function DepartmentsPage() {
                           {dept.code}
                         </TableCell>
                         <TableCell className="py-3 px-4 align-middle">
-                          {dept.name}
+                          <Button
+                            variant="link"
+                            className="text-primary h-auto min-h-0 max-w-full justify-start p-0 text-left font-medium"
+                            asChild
+                          >
+                            <Link
+                              href={`/programs?department_id=${dept.id}`}
+                              aria-label={`View programs in ${dept.name}`}
+                            >
+                              <span className="line-clamp-2">{dept.name}</span>
+                            </Link>
+                          </Button>
                         </TableCell>
                         <TableCell className="py-3 px-4 align-middle text-right">
                           <div className="flex items-center justify-end gap-1">

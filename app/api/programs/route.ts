@@ -15,6 +15,7 @@ function toProgramResponse(row: {
   DepartmentId: number;
   CreatedAt: Date;
   UpdatedAt: Date;
+  Department?: { Name: string };
 }): ProgramResponse {
   return {
     id: row.Id,
@@ -23,6 +24,7 @@ function toProgramResponse(row: {
     duration_years: row.DurationYears,
     status: row.Status as ProgramStatus,
     department_id: row.DepartmentId,
+    department_name: row.Department?.Name ?? "",
     created_at: row.CreatedAt.toISOString(),
     updated_at: row.UpdatedAt.toISOString(),
   };
@@ -39,10 +41,7 @@ function toProgramListItem(row: {
   UpdatedAt: Date;
   Department: { Name: string };
 }): ProgramListItem {
-  return {
-    ...toProgramResponse(row),
-    department_name: row.Department.Name,
-  };
+  return toProgramResponse(row);
 }
 
 export async function GET(request: NextRequest) {
@@ -123,7 +122,12 @@ export async function POST(request: NextRequest) {
       });
       return prog;
     });
-    return json(toProgramResponse(created), 201);
+    const withDept = await prisma.programs.findUnique({
+      where: { Id: created.Id },
+      include: { Department: { select: { Name: true } } },
+    });
+    if (!withDept) return internalError();
+    return json(toProgramResponse(withDept), 201);
   } catch {
     return internalError();
   }

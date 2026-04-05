@@ -9,6 +9,7 @@ import type {
 import { toCourseResponse } from "@/lib/to-course-response";
 import { authorizeModuleRoute } from "@/lib/auth";
 import { courseApiInclude } from "@/lib/course-api-include";
+import { ensureProgramSemestersForDuration } from "@/lib/ensure-program-semesters";
 
 function parseId(id: string): number | null {
   const n = parseInt(id, 10);
@@ -24,6 +25,7 @@ function toProgramResponse(row: {
   DepartmentId: number;
   CreatedAt: Date;
   UpdatedAt: Date;
+  Department?: { Name: string };
 }): ProgramResponse {
   return {
     id: row.Id,
@@ -32,6 +34,7 @@ function toProgramResponse(row: {
     duration_years: row.DurationYears,
     status: row.Status as ProgramStatus,
     department_id: row.DepartmentId,
+    department_name: row.Department?.Name ?? "",
     created_at: row.CreatedAt.toISOString(),
     updated_at: row.UpdatedAt.toISOString(),
   };
@@ -49,9 +52,18 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   if (numericId === null) return notFound("Program not found");
 
   try {
+    const base = await prisma.programs.findUnique({
+      where: { Id: numericId },
+      select: { Id: true, DurationYears: true },
+    });
+    if (!base) return notFound("Program not found");
+
+    await ensureProgramSemestersForDuration(prisma, base.Id, base.DurationYears);
+
     const row = await prisma.programs.findUnique({
       where: { Id: numericId },
       include: {
+        Department: { select: { Name: true } },
         ProgramSemesters: {
           orderBy: { Sequence: "asc" },
           include: {

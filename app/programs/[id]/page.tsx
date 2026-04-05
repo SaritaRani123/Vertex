@@ -95,12 +95,16 @@ export default function ProgramDetailPage() {
       ]);
       if (!progRes.ok) return;
       const progJson = (await progRes.json()) as ProgramResponse;
-      setProgram(progJson);
       if (currRes.ok) {
-        setCurriculum((await currRes.json()) as ProgramCurriculumResponse);
+        const currJson = (await currRes.json()) as ProgramCurriculumResponse;
+        if (!progJson.department_name?.trim() && currJson.program?.department_name?.trim()) {
+          progJson.department_name = currJson.program.department_name;
+        }
+        setCurriculum(currJson);
       } else {
         setCurriculum(null);
       }
+      setProgram(progJson);
     } catch {
       setPageError("Could not refresh curriculum.");
     }
@@ -129,12 +133,16 @@ export default function ProgramDetailPage() {
           return;
         }
         const progJson = (await progRes.json()) as ProgramResponse;
-        setProgram(progJson);
         if (currRes.ok) {
-          setCurriculum((await currRes.json()) as ProgramCurriculumResponse);
+          const currJson = (await currRes.json()) as ProgramCurriculumResponse;
+          if (!progJson.department_name?.trim() && currJson.program?.department_name?.trim()) {
+            progJson.department_name = currJson.program.department_name;
+          }
+          setCurriculum(currJson);
         } else {
           setCurriculum(null);
         }
+        setProgram(progJson);
       } catch {
         if (!cancelled) setError("Something went wrong.");
       } finally {
@@ -255,13 +263,19 @@ export default function ProgramDetailPage() {
           </Button>
           <div>
             <h1 className="text-2xl font-bold">{program.name}</h1>
-            <p className="text-muted-foreground mt-1 text-sm">
-              Program code{" "}
+            <div className="text-muted-foreground mt-1 flex flex-wrap items-center gap-x-1 text-sm">
+              <Button variant="link" className="text-primary h-auto p-0 font-medium underline-offset-4" asChild>
+                <Link href={`/programs?department_id=${program.department_id}`}>
+                  {program.department_name?.trim() || "View department programs"}
+                </Link>
+              </Button>
+              <span className="text-muted-foreground">· Program code </span>
               <span className="text-foreground font-mono font-medium uppercase">{program.code}</span>
-              {" · "}
-              {program.duration_years} year{program.duration_years === 1 ? "" : "s"} (
-              {program.duration_years * 2} semesters)
-            </p>
+              <span className="text-muted-foreground">
+                · {program.duration_years} year{program.duration_years === 1 ? "" : "s"} (
+                {program.duration_years * 2} semesters)
+              </span>
+            </div>
             <p className="text-muted-foreground mt-2 max-w-2xl text-sm">
               Manage courses below: edit full details, move to another semester, or remove from the program
               curriculum. Moving clears an elective pool assignment so you can reassign it on the edit screen if
@@ -298,8 +312,8 @@ export default function ProgramDetailPage() {
         <CardContent className="space-y-3 pt-6">
           {semesters.length === 0 ? (
             <p className="text-muted-foreground text-sm">
-              No curriculum semesters are linked yet. Programs created before this flow may need to be recreated, or
-              semesters may not have been generated.
+              No semesters returned for this program. Refresh the page; if this persists, check that duration (years) is
+              set and try editing the program to save again.
             </p>
           ) : (
             semesters.map((sem) => {
