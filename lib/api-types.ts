@@ -25,7 +25,8 @@ export type ProgramStatus = "ACTIVE" | "INACTIVE";
 
 export interface ProgramInput {
   name: string;
-  code: string;
+  /** Omit to auto-generate a unique code from the program name. */
+  code?: string;
   duration_years: number;
   status?: ProgramStatus;
   department_id: number;
@@ -38,21 +39,43 @@ export interface ProgramResponse {
   duration_years: number;
   status: ProgramStatus;
   department_id: number;
+  department_name: string;
   created_at: string;
   updated_at: string;
 }
 
-export interface ProgramListItem extends ProgramResponse {
-  department_name: string;
-}
+/** List rows use the same shape as {@link ProgramResponse} (department name from the API join). */
+export type ProgramListItem = ProgramResponse;
 
 export interface ProgramListResponse {
   data: ProgramListItem[];
 }
 
+/** Curriculum wizard: program-owned semesters (sequence 1..N) and nested courses. */
+export interface CurriculumElectiveGroupResponse {
+  id: number;
+  choose_count: number;
+  label: string | null;
+  course_count: number;
+}
+
+export interface CurriculumSemesterResponse {
+  id: number;
+  sequence: number;
+  elective_groups: CurriculumElectiveGroupResponse[];
+  courses: CourseResponse[];
+}
+
+export interface ProgramCurriculumResponse {
+  program: ProgramResponse;
+  semesters: CurriculumSemesterResponse[];
+}
+
 // Courses
 
 export type CourseStatus = "ACTIVE" | "INACTIVE" | "ARCHIVED";
+
+export type CourseKind = "COMPULSORY" | "ELECTIVE";
 
 export interface CourseInput {
   name: string;
@@ -60,10 +83,15 @@ export interface CourseInput {
   description?: string;
   prerequisites?: string[];
   credits: number;
-  lecture_hours: number;
-  lab_hours: number;
+  lecture_hours?: number;
+  lab_hours?: number;
   status?: CourseStatus;
-  program_id: number;
+  /** Required unless program_semester_id is set. */
+  program_id?: number;
+  /** When set, course is placed in this curriculum semester; program_id is derived from it. */
+  program_semester_id?: number;
+  course_kind?: CourseKind;
+  elective_group_id?: number | null;
 }
 
 export interface CourseResponse {
@@ -78,6 +106,15 @@ export interface CourseResponse {
   status: CourseStatus;
   program_id: number;
   program_name: string;
+  program_semester_id: number | null;
+  /** Curriculum semester number within the program (1…N), when assigned. */
+  program_semester_sequence: number | null;
+  course_kind: CourseKind;
+  elective_group_id: number | null;
+  /** Label from elective pool, when the course belongs to a pool. */
+  elective_group_label: string | null;
+  /** "Choose K" count for the elective pool, when applicable. */
+  elective_choose_count: number | null;
   created_at: string;
   updated_at: string;
 }

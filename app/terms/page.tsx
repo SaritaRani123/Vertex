@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ListSearchField } from "@/components/list-search-field";
 import {
   Table,
   TableHeader,
@@ -23,7 +23,7 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { Plus, Trash2, Pencil, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Trash2, Pencil, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { SemesterType } from "@/lib/api-types";
 import { GuardedCreateButton } from "@/components/guarded-create-button";
 import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
@@ -50,9 +50,6 @@ export default function TermsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [search, setSearch] = useState("");
-  const [filterCourse, setFilterCourse] = useState("");
-  const [filterYear, setFilterYear] = useState("");
-  const [filterType, setFilterType] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
 
@@ -86,18 +83,6 @@ export default function TermsPage() {
           t.semester_type.toLowerCase().includes(searchLower)
       );
     }
-    if (filterCourse.trim()) {
-      const c = filterCourse.trim().toLowerCase();
-      list = list.filter(
-        (t) =>
-          (t.course_name && t.course_name.toLowerCase().includes(c)) ||
-          (t.course_code && t.course_code.toLowerCase().includes(c))
-      );
-    }
-    if (filterYear.trim())
-      list = list.filter((t) => String(t.semester_year).includes(filterYear.trim()));
-    if (filterType.trim())
-      list = list.filter((t) => t.semester_type.toLowerCase().includes(filterType.trim().toLowerCase()));
 
     if (sortKey) {
       list.sort((a, b) => {
@@ -110,7 +95,7 @@ export default function TermsPage() {
       });
     }
     return list;
-  }, [terms, search, filterCourse, filterYear, filterType, sortKey, sortDir]);
+  }, [terms, search, sortKey, sortDir]);
 
   const handleSort = (key: SortKey) => {
     if (!key) return;
@@ -168,42 +153,12 @@ export default function TermsPage() {
         <CardHeader className="border-b border-border border-b-[0.5px] bg-muted/20 pb-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-lg font-bold text-foreground sm:text-xl">All Course-Term Assignments</h2>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <div className="relative flex-1 sm:min-w-[220px]">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
-                <Input
-                  type="search"
-                  placeholder="Search by Course, Year or Type..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary/40"
-                  aria-label="Search terms"
-                />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Input
-                  placeholder="Filter by Course"
-                  value={filterCourse}
-                  onChange={(e) => setFilterCourse(e.target.value)}
-                  className="w-full sm:w-32 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by course"
-                />
-                <Input
-                  placeholder="Filter by Year"
-                  value={filterYear}
-                  onChange={(e) => setFilterYear(e.target.value)}
-                  className="w-full sm:w-24 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by year"
-                />
-                <Input
-                  placeholder="Filter by Type"
-                  value={filterType}
-                  onChange={(e) => setFilterType(e.target.value)}
-                  className="w-full sm:w-24 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by type"
-                />
-              </div>
-            </div>
+            <ListSearchField
+              value={search}
+              onChange={setSearch}
+              placeholder="Search course name, code, semester year or type…"
+              ariaLabel="Search terms"
+            />
           </div>
         </CardHeader>
         <CardContent className="p-0">

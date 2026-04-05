@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ListSearchField } from "@/components/list-search-field";
 import {
   Table,
   TableHeader,
@@ -23,7 +23,7 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { Plus, Trash2, Pencil, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Trash2, Pencil, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { DepartmentResponse } from "@/lib/api-types";
 import { GuardedCreateButton } from "@/components/guarded-create-button";
 import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
@@ -39,8 +39,6 @@ export default function DepartmentsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [search, setSearch] = useState("");
-  const [filterCode, setFilterCode] = useState("");
-  const [filterName, setFilterName] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
 
@@ -73,15 +71,6 @@ export default function DepartmentsPage() {
           d.code.toLowerCase().includes(searchLower)
       );
     }
-    if (filterCode.trim()) {
-      const codeLower = filterCode.trim().toLowerCase();
-      list = list.filter((d) => d.code.toLowerCase().includes(codeLower));
-    }
-    if (filterName.trim()) {
-      const nameLower = filterName.trim().toLowerCase();
-      list = list.filter((d) => d.name.toLowerCase().includes(nameLower));
-    }
-
     if (sortKey) {
       list.sort((a, b) => {
         const aVal = sortKey === "name" ? a.name : a.code;
@@ -92,7 +81,7 @@ export default function DepartmentsPage() {
     }
 
     return list;
-  }, [departments, search, filterCode, filterName, sortKey, sortDir]);
+  }, [departments, search, sortKey, sortDir]);
 
   const handleSort = (key: "name" | "code") => {
     if (sortKey === key) {
@@ -141,7 +130,7 @@ export default function DepartmentsPage() {
         <div>
           <h1 className="text-2xl font-bold text-foreground">Departments</h1>
           <p className="text-muted-foreground">
-            View and manage all departments
+            View and manage all departments. Click a department name to see programs in that department.
           </p>
         </div>
         <GuardedCreateButton href="/departments/create" className="shrink-0 w-fit flex items-center gap-2">
@@ -154,37 +143,12 @@ export default function DepartmentsPage() {
         <CardHeader className="border-b border-border border-b-[0.5px] bg-muted/20 pb-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-lg font-bold text-foreground sm:text-xl">All Departments</h2>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <div className="relative flex-1 sm:min-w-[220px]">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
-                <Input
-                  type="search"
-                  placeholder="Search by Name or Code..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary/40"
-                  aria-label="Search departments by name or code"
-                />
-              </div>
-              <div className="flex gap-2">
-                <Input
-                  type="text"
-                  placeholder="Filter by Code"
-                  value={filterCode}
-                  onChange={(e) => setFilterCode(e.target.value)}
-                  className="w-full sm:w-32 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by code"
-                />
-                <Input
-                  type="text"
-                  placeholder="Filter by Name"
-                  value={filterName}
-                  onChange={(e) => setFilterName(e.target.value)}
-                  className="w-full sm:w-36 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by name"
-                />
-              </div>
-            </div>
+            <ListSearchField
+              value={search}
+              onChange={setSearch}
+              placeholder="Search by name or code…"
+              ariaLabel="Search departments by name or code"
+            />
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -243,7 +207,18 @@ export default function DepartmentsPage() {
                           {dept.code}
                         </TableCell>
                         <TableCell className="py-3 px-4 align-middle">
-                          {dept.name}
+                          <Button
+                            variant="link"
+                            className="text-primary h-auto min-h-0 max-w-full justify-start p-0 text-left font-medium"
+                            asChild
+                          >
+                            <Link
+                              href={`/programs?department_id=${dept.id}`}
+                              aria-label={`View programs in ${dept.name}`}
+                            >
+                              <span className="line-clamp-2">{dept.name}</span>
+                            </Link>
+                          </Button>
                         </TableCell>
                         <TableCell className="py-3 px-4 align-middle text-right">
                           <div className="flex items-center justify-end gap-1">

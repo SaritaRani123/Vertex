@@ -5,7 +5,7 @@ const programStatusSchema = z.enum(["ACTIVE", "INACTIVE"]);
 
 const programSchema = z.object({
   name: z.string().min(1, "Name is required").trim(),
-  code: z.string().min(1, "Code is required").trim(),
+  code: z.string().min(1, "Code is required").trim().optional(),
   duration_years: z.number().int().min(1, "Duration must be at least 1 year"),
   status: programStatusSchema.optional().default("ACTIVE"),
   department_id: z.coerce.number().int().positive("Invalid department ID"),

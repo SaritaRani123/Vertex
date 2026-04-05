@@ -53,6 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Departments: 'Departments',
   Programs: 'Programs',
+  ProgramSemesters: 'ProgramSemesters',
+  ElectiveGroups: 'ElectiveGroups',
   Courses: 'Courses',
   Semesters: 'Semesters',
   Terms: 'Terms',
@@ -102,6 +104,29 @@ export const ProgramsScalarFieldEnum = {
 export type ProgramsScalarFieldEnum = (typeof ProgramsScalarFieldEnum)[keyof typeof ProgramsScalarFieldEnum]
 
 
+export const ProgramSemestersScalarFieldEnum = {
+  Id: 'Id',
+  ProgramId: 'ProgramId',
+  Sequence: 'Sequence',
+  CreatedAt: 'CreatedAt',
+  UpdatedAt: 'UpdatedAt'
+} as const
+
+export type ProgramSemestersScalarFieldEnum = (typeof ProgramSemestersScalarFieldEnum)[keyof typeof ProgramSemestersScalarFieldEnum]
+
+
+export const ElectiveGroupsScalarFieldEnum = {
+  Id: 'Id',
+  ProgramSemesterId: 'ProgramSemesterId',
+  ChooseCount: 'ChooseCount',
+  Label: 'Label',
+  CreatedAt: 'CreatedAt',
+  UpdatedAt: 'UpdatedAt'
+} as const
+
+export type ElectiveGroupsScalarFieldEnum = (typeof ElectiveGroupsScalarFieldEnum)[keyof typeof ElectiveGroupsScalarFieldEnum]
+
+
 export const CoursesScalarFieldEnum = {
   Id: 'Id',
   Name: 'Name',
@@ -113,6 +138,9 @@ export const CoursesScalarFieldEnum = {
   LabHours: 'LabHours',
   Status: 'Status',
   ProgramId: 'ProgramId',
+  ProgramSemesterId: 'ProgramSemesterId',
+  CourseKind: 'CourseKind',
+  ElectiveGroupId: 'ElectiveGroupId',
   CreatedAt: 'CreatedAt',
   UpdatedAt: 'UpdatedAt'
 } as const

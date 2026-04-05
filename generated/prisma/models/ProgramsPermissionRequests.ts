@@ -574,14 +574,6 @@ export type EnumPermissionRequestStatusFieldUpdateOperationsInput = {
   set?: $Enums.PermissionRequestStatus
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type ProgramsPermissionRequestsCreateWithoutRequesterInput = {
   Module: string
   Action: $Enums.PermissionAction

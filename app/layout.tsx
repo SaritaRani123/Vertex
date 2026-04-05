@@ -21,7 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${figtree.className} antialiased min-h-screen bg-background text-foreground`}>
+      <body
+        className={`${figtree.className} antialiased min-h-screen overflow-x-hidden bg-background text-foreground`}
+      >
         <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>

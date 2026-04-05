@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ListSearchField } from "@/components/list-search-field";
 import {
   Table,
   TableHeader,
@@ -24,7 +24,7 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { Plus, Trash2, Pencil, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Trash2, Pencil, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { CourseResponse } from "@/lib/api-types";
 import { GuardedCreateButton } from "@/components/guarded-create-button";
 import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
@@ -40,9 +40,6 @@ export default function CoursesPage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [search, setSearch] = useState("");
-  const [filterCode, setFilterCode] = useState("");
-  const [filterName, setFilterName] = useState("");
-  const [filterProgram, setFilterProgram] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
 
@@ -68,19 +65,31 @@ export default function CoursesPage() {
     let list = [...courses];
     const searchLower = search.trim().toLowerCase();
     if (searchLower) {
-      list = list.filter(
-        (c) =>
+      list = list.filter((c) => {
+        const pool =
+          c.elective_group_id != null
+            ? (c.elective_group_label?.trim() || `pool ${c.elective_group_id}`).toLowerCase()
+            : "";
+        const sem = c.program_semester_sequence != null ? String(c.program_semester_sequence) : "";
+        const desc = (c.description ?? "").toLowerCase();
+        const kind = (c.course_kind === "ELECTIVE" ? "elective" : "compulsory").toLowerCase();
+        const prereqHit = (c.prerequisites ?? []).some((p) => p.toLowerCase().includes(searchLower));
+        return (
           c.name.toLowerCase().includes(searchLower) ||
           c.code.toLowerCase().includes(searchLower) ||
-          (c.program_name && c.program_name.toLowerCase().includes(searchLower))
-      );
+          (c.program_name && c.program_name.toLowerCase().includes(searchLower)) ||
+          c.status.toLowerCase().includes(searchLower) ||
+          desc.includes(searchLower) ||
+          sem.includes(searchLower) ||
+          kind.includes(searchLower) ||
+          (pool && pool.includes(searchLower)) ||
+          String(c.credits).includes(searchLower) ||
+          String(c.lecture_hours).includes(searchLower) ||
+          String(c.lab_hours).includes(searchLower) ||
+          prereqHit
+        );
+      });
     }
-    if (filterCode.trim())
-      list = list.filter((c) => c.code.toLowerCase().includes(filterCode.trim().toLowerCase()));
-    if (filterName.trim())
-      list = list.filter((c) => c.name.toLowerCase().includes(filterName.trim().toLowerCase()));
-    if (filterProgram.trim())
-      list = list.filter((c) => c.program_name?.toLowerCase().includes(filterProgram.trim().toLowerCase()));
 
     if (sortKey) {
       list.sort((a, b) => {
@@ -93,7 +102,7 @@ export default function CoursesPage() {
       });
     }
     return list;
-  }, [courses, search, filterCode, filterName, filterProgram, sortKey, sortDir]);
+  }, [courses, search, sortKey, sortDir]);
 
   const handleSort = (key: SortKey) => {
     if (!key) return;
@@ -149,11 +158,18 @@ export default function CoursesPage() {
     );
   };
 
+  function poolSummary(c: CourseResponse): string {
+    if (c.elective_group_id == null) return "—";
+    const label = c.elective_group_label?.trim() || `Pool #${c.elective_group_id}`;
+    const k = c.elective_choose_count;
+    return k != null ? `${label} (choose ${k})` : label;
+  }
+
   function PrerequisiteTooltipContent({ c }: { c: CourseResponse }) {
     return (
       <div className="space-y-1.5">
         <div className="font-medium">{c.name}</div>
-        <div className="text-muted-foreground text-xs">{c.code}</div>
+        <div className="text-muted-foreground font-mono text-xs uppercase">{c.code}</div>
         {c.description != null && c.description !== "" && (
           <p className="text-muted-foreground text-xs">{c.description}</p>
         )}
@@ -163,6 +179,9 @@ export default function CoursesPage() {
           <span>Lab: {c.lab_hours}h</span>
           <span>Status: {c.status}</span>
           {c.program_name !== "" && <span>Program: {c.program_name}</span>}
+          {c.program_semester_sequence != null && <span>Semester: {c.program_semester_sequence}</span>}
+          <span>Type: {c.course_kind === "ELECTIVE" ? "Elective" : "Compulsory"}</span>
+          {c.elective_group_id != null && <span>Pool: {poolSummary(c)}</span>}
         </div>
       </div>
     );
@@ -198,42 +217,12 @@ export default function CoursesPage() {
         <CardHeader className="border-b border-border border-b-[0.5px] bg-muted/20 pb-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-lg font-bold text-foreground sm:text-xl">All Courses</h2>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <div className="relative flex-1 sm:min-w-[220px]">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
-                <Input
-                  type="search"
-                  placeholder="Search by Name, Code or Program..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary/40"
-                  aria-label="Search courses"
-                />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Input
-                  placeholder="Filter by Code"
-                  value={filterCode}
-                  onChange={(e) => setFilterCode(e.target.value)}
-                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by code"
-                />
-                <Input
-                  placeholder="Filter by Name"
-                  value={filterName}
-                  onChange={(e) => setFilterName(e.target.value)}
-                  className="w-full sm:w-32 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by name"
-                />
-                <Input
-                  placeholder="Filter by Program"
-                  value={filterProgram}
-                  onChange={(e) => setFilterProgram(e.target.value)}
-                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by program"
-                />
-              </div>
-            </div>
+            <ListSearchField
+              value={search}
+              onChange={setSearch}
+              placeholder="Search code, name, program, status, semester, credits…"
+              ariaLabel="Search courses"
+            />
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -241,7 +230,7 @@ export default function CoursesPage() {
           {error && <p className="p-6 text-destructive">{error}</p>}
           {!loading && !error && (
             <div className="overflow-x-auto">
-              <Table className="min-w-[800px]">
+              <Table className="min-w-[1100px]">
                 <TableHeader>
                   <TableRow className="border-b border-border border-b-[0.5px] bg-primary/8 hover:bg-primary/10">
                     <Th sortKeyName="code">Code</Th>
@@ -249,6 +238,9 @@ export default function CoursesPage() {
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">Description</TableHead>
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">Prerequisites</TableHead>
                     <Th sortKeyName="program_name">Program</Th>
+                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">Sem</TableHead>
+                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">Type</TableHead>
+                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">Pool</TableHead>
                     <Th sortKeyName="credits">Credits</Th>
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">Lecture</TableHead>
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">Lab</TableHead>
@@ -261,7 +253,7 @@ export default function CoursesPage() {
                 <TableBody>
                   {filteredAndSorted.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={10} className="py-8 text-center text-muted-foreground">
+                      <TableCell colSpan={13} className="py-8 text-center text-muted-foreground">
                         {courses.length === 0 ? "No courses yet. Create one to get started." : "No courses match your filters."}
                       </TableCell>
                     </TableRow>
@@ -271,7 +263,9 @@ export default function CoursesPage() {
                         key={course.id}
                         className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-primary/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
                       >
-                        <TableCell className="py-3 px-4 font-medium align-middle">{course.code}</TableCell>
+                        <TableCell className="py-3 px-4 align-middle font-mono text-sm font-medium uppercase tracking-wide">
+                          {course.code}
+                        </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.name}</TableCell>
                         <TableCell className="py-3 px-4 align-middle max-w-[180px] truncate" title={course.description ?? undefined}>
                           {course.description || "-"}
@@ -307,6 +301,20 @@ export default function CoursesPage() {
                           )}
                         </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.program_name}</TableCell>
+                        <TableCell className="py-3 px-4 align-middle text-center text-sm">
+                          {course.program_semester_sequence != null ? course.program_semester_sequence : "—"}
+                        </TableCell>
+                        <TableCell className="py-3 px-4 align-middle">
+                          <span className="text-xs font-medium">
+                            {course.course_kind === "ELECTIVE" ? "Elective" : "Comp."}
+                          </span>
+                        </TableCell>
+                        <TableCell
+                          className="text-muted-foreground py-3 px-4 align-middle max-w-[140px] truncate text-xs"
+                          title={course.elective_group_id != null ? poolSummary(course) : undefined}
+                        >
+                          {course.elective_group_id != null ? poolSummary(course) : "—"}
+                        </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.credits}</TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.lecture_hours}</TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.lab_hours}</TableCell>

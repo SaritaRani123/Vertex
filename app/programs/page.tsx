@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { Suspense, useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableHeader,
@@ -24,15 +24,26 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { Plus, Trash2, Pencil, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Trash2, Pencil, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { ProgramListItem } from "@/lib/api-types";
 import { GuardedCreateButton } from "@/components/guarded-create-button";
 import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
+import { ListSearchField } from "@/components/list-search-field";
 
 type SortKey = "code" | "name" | "department_name" | "duration_years" | "status" | null;
 type SortDir = "asc" | "desc";
 
-export default function ProgramsPage() {
+function ProgramsPageInner() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const departmentIdParam = searchParams.get("department_id");
+  const departmentIdFromUrl =
+    departmentIdParam != null && departmentIdParam !== ""
+      ? parseInt(departmentIdParam, 10)
+      : NaN;
+  const filterByDepartmentId =
+    Number.isFinite(departmentIdFromUrl) && departmentIdFromUrl > 0 ? departmentIdFromUrl : null;
+
   const [programs, setPrograms] = useState<ProgramListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,29 +51,61 @@ export default function ProgramsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [search, setSearch] = useState("");
-  const [filterCode, setFilterCode] = useState("");
-  const [filterName, setFilterName] = useState("");
-  const [filterDept, setFilterDept] = useState("");
+  const [departmentFilterLabel, setDepartmentFilterLabel] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
 
   const { guardAction, blockedDialog, sessionLoading } = useStaffActionGuard();
 
   useEffect(() => {
-    async function fetchPrograms() {
+    if (filterByDepartmentId == null) {
+      setDepartmentFilterLabel(null);
+      return;
+    }
+    let cancelled = false;
+    async function loadDeptName() {
       try {
-        const res = await fetch("/api/programs");
-        if (!res.ok) throw new Error("Failed to load programs");
-        const json = await res.json();
-        setPrograms(json.data ?? []);
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Something went wrong");
-      } finally {
-        setLoading(false);
+        const res = await fetch(`/api/departments/${filterByDepartmentId}`);
+        if (!res.ok) return;
+        const d = (await res.json()) as { name?: string };
+        if (!cancelled && d.name) {
+          setDepartmentFilterLabel(d.name);
+        }
+      } catch {
+        /* ignore */
       }
     }
-    fetchPrograms();
-  }, []);
+    void loadDeptName();
+    return () => {
+      cancelled = true;
+    };
+  }, [filterByDepartmentId]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchPrograms() {
+      setLoading(true);
+      setError(null);
+      try {
+        const url =
+          filterByDepartmentId != null
+            ? `/api/programs?department_id=${filterByDepartmentId}`
+            : "/api/programs";
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Failed to load programs");
+        const json = await res.json();
+        if (!cancelled) setPrograms(json.data ?? []);
+      } catch (e) {
+        if (!cancelled) setError(e instanceof Error ? e.message : "Something went wrong");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    void fetchPrograms();
+    return () => {
+      cancelled = true;
+    };
+  }, [filterByDepartmentId]);
 
   const filteredAndSorted = useMemo(() => {
     let list = [...programs];
@@ -72,15 +115,11 @@ export default function ProgramsPage() {
         (p) =>
           p.name.toLowerCase().includes(searchLower) ||
           p.code.toLowerCase().includes(searchLower) ||
-          p.department_name.toLowerCase().includes(searchLower)
+          p.department_name.toLowerCase().includes(searchLower) ||
+          p.status.toLowerCase().includes(searchLower) ||
+          String(p.duration_years).includes(searchLower)
       );
     }
-    if (filterCode.trim())
-      list = list.filter((p) => p.code.toLowerCase().includes(filterCode.trim().toLowerCase()));
-    if (filterName.trim())
-      list = list.filter((p) => p.name.toLowerCase().includes(filterName.trim().toLowerCase()));
-    if (filterDept.trim())
-      list = list.filter((p) => p.department_name.toLowerCase().includes(filterDept.trim().toLowerCase()));
 
     if (sortKey) {
       list.sort((a, b) => {
@@ -92,7 +131,7 @@ export default function ProgramsPage() {
       });
     }
     return list;
-  }, [programs, search, filterCode, filterName, filterDept, sortKey, sortDir]);
+  }, [programs, search, sortKey, sortDir]);
 
   const handleSort = (key: SortKey) => {
     if (!key) return;
@@ -151,7 +190,9 @@ export default function ProgramsPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Programs</h1>
-          <p className="text-muted-foreground">View and manage academic programs</p>
+          <p className="text-muted-foreground">
+            View and manage academic programs. Click a row to open the semester-by-semester curriculum.
+          </p>
         </div>
         <GuardedCreateButton href="/programs/create" className="shrink-0 w-fit flex items-center gap-2">
           <Plus className="size-4" />
@@ -159,46 +200,38 @@ export default function ProgramsPage() {
         </GuardedCreateButton>
       </div>
 
+      {filterByDepartmentId != null ? (
+        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm">
+          <span className="text-foreground">
+            {departmentFilterLabel ? (
+              <>
+                Showing programs in <span className="font-semibold">{departmentFilterLabel}</span>
+              </>
+            ) : (
+              "Applying department filter…"
+            )}
+          </span>
+          <Button variant="outline" size="sm" className="h-8" asChild>
+            <Link href="/programs">Show all programs</Link>
+          </Button>
+        </div>
+      ) : null}
+
       <Card className="overflow-hidden border-[0.5px] border-border shadow-md shadow-black/5">
         <CardHeader className="border-b border-border border-b-[0.5px] bg-muted/20 pb-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-lg font-bold text-foreground sm:text-xl">All Programs</h2>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <div className="relative flex-1 sm:min-w-[220px]">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
-                <Input
-                  type="search"
-                  placeholder="Search by Name, Code or Department..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary/40"
-                  aria-label="Search programs"
-                />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Input
-                  placeholder="Filter by Code"
-                  value={filterCode}
-                  onChange={(e) => setFilterCode(e.target.value)}
-                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by code"
-                />
-                <Input
-                  placeholder="Filter by Name"
-                  value={filterName}
-                  onChange={(e) => setFilterName(e.target.value)}
-                  className="w-full sm:w-32 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by name"
-                />
-                <Input
-                  placeholder="Filter by Dept"
-                  value={filterDept}
-                  onChange={(e) => setFilterDept(e.target.value)}
-                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by department"
-                />
-              </div>
-            </div>
+            <ListSearchField
+              value={search}
+              onChange={setSearch}
+              placeholder="Search name, code, department, status, duration…"
+              ariaLabel="Search programs"
+              clearActive={filterByDepartmentId != null}
+              onClear={() => {
+                setSearch("");
+                if (filterByDepartmentId != null) router.push("/programs");
+              }}
+            />
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -230,11 +263,28 @@ export default function ProgramsPage() {
                     filteredAndSorted.map((prog, index) => (
                       <TableRow
                         key={prog.id}
-                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-primary/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
+                        role="link"
+                        tabIndex={0}
+                        className={`border-b border-border border-b-[0.5px] cursor-pointer transition-colors hover:bg-primary/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
+                        onClick={() => router.push(`/programs/${prog.id}`)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            router.push(`/programs/${prog.id}`);
+                          }
+                        }}
                       >
-                        <TableCell className="py-3 px-4 font-medium align-middle">{prog.code}</TableCell>
+                        <TableCell className="py-3 px-4 font-mono text-sm font-medium uppercase tracking-wide align-middle">
+                          {prog.code}
+                        </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{prog.name}</TableCell>
-                        <TableCell className="py-3 px-4 align-middle">{prog.department_name}</TableCell>
+                        <TableCell className="py-3 px-4 align-middle" onClick={(e) => e.stopPropagation()}>
+                          <Button variant="link" className="text-primary h-auto min-h-0 p-0 font-medium" asChild>
+                            <Link href={`/programs?department_id=${prog.department_id}`}>
+                              {prog.department_name || `Department #${prog.department_id}`}
+                            </Link>
+                          </Button>
+                        </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{prog.duration_years} years</TableCell>
                         <TableCell className="py-3 px-4 align-middle">
                           <Badge variant={prog.status === "ACTIVE" ? "default" : "secondary"}>{prog.status}</Badge>
@@ -242,7 +292,11 @@ export default function ProgramsPage() {
                         <TableCell className="py-3 px-4 align-middle text-right">
                           <div className="flex items-center justify-end gap-1">
                             <Button variant="outline" size="icon" className="size-8 shrink-0" asChild>
-                              <Link href={`/programs/${prog.id}/edit`} aria-label={`Edit ${prog.name}`}>
+                              <Link
+                                href={`/programs/${prog.id}/edit`}
+                                aria-label={`Edit ${prog.name}`}
+                                onClick={(e) => e.stopPropagation()}
+                              >
                                 <Pencil className="size-4" />
                               </Link>
                             </Button>
@@ -251,9 +305,10 @@ export default function ProgramsPage() {
                               size="icon"
                               className="size-8 shrink-0 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
                               disabled={sessionLoading}
-                              onClick={() =>
-                                guardAction(() => setDeleteTarget({ id: prog.id, name: prog.name }))
-                              }
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                guardAction(() => setDeleteTarget({ id: prog.id, name: prog.name }));
+                              }}
                               aria-label={`Delete ${prog.name}`}
                             >
                               <Trash2 className="size-4" />
@@ -291,3 +346,10 @@ export default function ProgramsPage() {
   );
 }
 
+export default function ProgramsPage() {
+  return (
+    <Suspense fallback={<p className="p-6 text-muted-foreground">Loading programs…</p>}>
+      <ProgramsPageInner />
+    </Suspense>
+  );
+}

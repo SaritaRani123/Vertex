@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 import type { SemesterResponse } from "@/lib/api-types";
+import { filterDigitsOnly, normalizeUnsignedIntString } from "@/lib/digits-input";
 
 export default function EditSemesterPage() {
   const router = useRouter();
@@ -26,7 +27,7 @@ export default function EditSemesterPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [year, setYear] = useState(new Date().getFullYear());
+  const [yearStr, setYearStr] = useState(String(new Date().getFullYear()));
   const [semesterType, setSemesterType] = useState<"FALL" | "WINTER" | "SUMMER">("FALL");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -39,7 +40,7 @@ export default function EditSemesterPage() {
         if (!res.ok) throw new Error("Failed to load semester");
         const data = await res.json();
         setSemester(data);
-        setYear(data.year);
+        setYearStr(String(data.year));
         setSemesterType(data.type);
       } catch (e) {
         setError(e instanceof Error ? e.message : "Failed to load semester");
@@ -57,7 +58,9 @@ export default function EditSemesterPage() {
     setFieldErrors({});
     if (!id) return;
     const errors: Record<string, string> = {};
-    if (year < 1900 || year > 3000) errors.year = "Year must be between 1900 and 3000";
+    const year = yearStr.trim() === "" ? NaN : parseInt(yearStr, 10);
+    if (Number.isNaN(year)) errors.year = "Enter a year";
+    else if (year < 1900 || year > 3000) errors.year = "Year must be between 1900 and 3000";
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
       setError("Please fix the errors below.");
@@ -131,11 +134,15 @@ export default function EditSemesterPage() {
                 <FieldLabel htmlFor="year">Year</FieldLabel>
                 <Input
                   id="year"
-                  type="number"
+                  inputMode="numeric"
                   min={1900}
                   max={3000}
-                  value={year}
-                  onChange={(e) => { setYear(parseInt(e.target.value, 10) || new Date().getFullYear()); setFieldErrors((p) => ({ ...p, year: "" })); }}
+                  value={yearStr}
+                  onChange={(e) => {
+                    setYearStr(filterDigitsOnly(e.target.value));
+                    setFieldErrors((p) => ({ ...p, year: "" }));
+                  }}
+                  onBlur={() => setYearStr((s) => normalizeUnsignedIntString(s))}
                   required
                   aria-invalid={!!fieldErrors.year}
                 />

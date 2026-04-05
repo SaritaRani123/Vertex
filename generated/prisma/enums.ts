@@ -58,3 +58,11 @@ export const PermissionRequestStatus = {
 } as const
 
 export type PermissionRequestStatus = (typeof PermissionRequestStatus)[keyof typeof PermissionRequestStatus]
+
+
+export const CourseKind = {
+  COMPULSORY: 'COMPULSORY',
+  ELECTIVE: 'ELECTIVE'
+} as const
+
+export type CourseKind = (typeof CourseKind)[keyof typeof CourseKind]

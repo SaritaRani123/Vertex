@@ -10,6 +10,8 @@
  */
 export type * from './models/Departments'
 export type * from './models/Programs'
+export type * from './models/ProgramSemesters'
+export type * from './models/ElectiveGroups'
 export type * from './models/Courses'
 export type * from './models/Semesters'
 export type * from './models/Terms'

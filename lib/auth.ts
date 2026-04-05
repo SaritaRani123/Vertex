@@ -118,3 +118,22 @@ export async function authorizeModuleRoute(
   return { user };
 }
 
+/**
+ * Course APIs: any signed-in user may list, create, and update courses (curriculum work).
+ * DELETE stays admin-only so removing catalog entries stays restricted.
+ */
+export async function authorizeCoursesApi(
+  request: NextRequest
+): Promise<{ user: SessionUser } | { response: NextResponse }> {
+  const session = await requireSession(request);
+  if ("response" in session) return session;
+  if (request.method === "DELETE" && session.user.role !== "ADMIN") {
+    return {
+      response: forbidden(
+        "Only administrators can delete courses. You can still add and edit courses."
+      ),
+    };
+  }
+  return session;
+}
+

@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 import type { DepartmentResponse, ProgramResponse } from "@/lib/api-types";
+import { filterDigitsOnly, normalizeUnsignedIntString } from "@/lib/digits-input";
 
 export default function EditProgramPage() {
   const router = useRouter();
@@ -28,7 +29,7 @@ export default function EditProgramPage() {
   const id = params?.id as string | undefined;
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
-  const [durationYears, setDurationYears] = useState(4);
+  const [durationYearsStr, setDurationYearsStr] = useState("4");
   const [departmentId, setDepartmentId] = useState("");
   const [status, setStatus] = useState<"ACTIVE" | "INACTIVE">("ACTIVE");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -67,7 +68,7 @@ export default function EditProgramPage() {
         setProgram(data);
         setName(data.name ?? "");
         setCode(data.code ?? "");
-        setDurationYears(data.duration_years ?? 4);
+        setDurationYearsStr(String(data.duration_years ?? 4));
         setDepartmentId(String(data.department_id));
         setStatus((data.status as "ACTIVE" | "INACTIVE") ?? "ACTIVE");
       } catch {
@@ -89,7 +90,10 @@ export default function EditProgramPage() {
     const errors: Record<string, string> = {};
     if (!trimmedName) errors.name = "Name is required";
     if (!trimmedCode) errors.code = "Code is required";
-    if (durationYears < 1) errors.duration_years = "Duration must be at least 1 year";
+    const durationYears =
+      durationYearsStr.trim() === "" ? NaN : parseInt(durationYearsStr, 10);
+    if (Number.isNaN(durationYears)) errors.duration_years = "Enter duration in years";
+    else if (durationYears < 1) errors.duration_years = "Duration must be at least 1 year";
     if (!departmentId) errors.department_id = "Please select a department";
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
@@ -205,11 +209,15 @@ export default function EditProgramPage() {
                 <FieldLabel htmlFor="duration">Duration (years)</FieldLabel>
                 <Input
                   id="duration"
-                  type="number"
+                  inputMode="numeric"
                   min={1}
                   max={6}
-                  value={durationYears}
-                  onChange={(e) => { setDurationYears(parseInt(e.target.value, 10) || 4); setFieldErrors((p) => ({ ...p, duration_years: "" })); }}
+                  value={durationYearsStr}
+                  onChange={(e) => {
+                    setDurationYearsStr(filterDigitsOnly(e.target.value));
+                    setFieldErrors((p) => ({ ...p, duration_years: "" }));
+                  }}
+                  onBlur={() => setDurationYearsStr((s) => normalizeUnsignedIntString(s))}
                   required
                   aria-invalid={!!fieldErrors.duration_years}
                 />
