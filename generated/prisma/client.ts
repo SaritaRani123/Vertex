@@ -52,6 +52,16 @@ export type Departments = Prisma.DepartmentsModel
  */
 export type Programs = Prisma.ProgramsModel
 /**
+ * Model ProgramSemesters
+ * 
+ */
+export type ProgramSemesters = Prisma.ProgramSemestersModel
+/**
+ * Model ElectiveGroups
+ * 
+ */
+export type ElectiveGroups = Prisma.ElectiveGroupsModel
+/**
  * Model Courses
  * 
  */

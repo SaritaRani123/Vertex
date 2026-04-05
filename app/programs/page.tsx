@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,6 +34,7 @@ type SortKey = "code" | "name" | "department_name" | "duration_years" | "status"
 type SortDir = "asc" | "desc";
 
 export default function ProgramsPage() {
+  const router = useRouter();
   const [programs, setPrograms] = useState<ProgramListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -151,7 +153,9 @@ export default function ProgramsPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Programs</h1>
-          <p className="text-muted-foreground">View and manage academic programs</p>
+          <p className="text-muted-foreground">
+            View and manage academic programs. Click a row to open the semester-by-semester curriculum.
+          </p>
         </div>
         <GuardedCreateButton href="/programs/create" className="shrink-0 w-fit flex items-center gap-2">
           <Plus className="size-4" />
@@ -230,9 +234,20 @@ export default function ProgramsPage() {
                     filteredAndSorted.map((prog, index) => (
                       <TableRow
                         key={prog.id}
-                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-primary/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
+                        role="link"
+                        tabIndex={0}
+                        className={`border-b border-border border-b-[0.5px] cursor-pointer transition-colors hover:bg-primary/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
+                        onClick={() => router.push(`/programs/${prog.id}`)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            router.push(`/programs/${prog.id}`);
+                          }
+                        }}
                       >
-                        <TableCell className="py-3 px-4 font-medium align-middle">{prog.code}</TableCell>
+                        <TableCell className="py-3 px-4 font-mono text-sm font-medium uppercase tracking-wide align-middle">
+                          {prog.code}
+                        </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{prog.name}</TableCell>
                         <TableCell className="py-3 px-4 align-middle">{prog.department_name}</TableCell>
                         <TableCell className="py-3 px-4 align-middle">{prog.duration_years} years</TableCell>
@@ -242,7 +257,11 @@ export default function ProgramsPage() {
                         <TableCell className="py-3 px-4 align-middle text-right">
                           <div className="flex items-center justify-end gap-1">
                             <Button variant="outline" size="icon" className="size-8 shrink-0" asChild>
-                              <Link href={`/programs/${prog.id}/edit`} aria-label={`Edit ${prog.name}`}>
+                              <Link
+                                href={`/programs/${prog.id}/edit`}
+                                aria-label={`Edit ${prog.name}`}
+                                onClick={(e) => e.stopPropagation()}
+                              >
                                 <Pencil className="size-4" />
                               </Link>
                             </Button>
@@ -251,9 +270,10 @@ export default function ProgramsPage() {
                               size="icon"
                               className="size-8 shrink-0 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
                               disabled={sessionLoading}
-                              onClick={() =>
-                                guardAction(() => setDeleteTarget({ id: prog.id, name: prog.name }))
-                              }
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                guardAction(() => setDeleteTarget({ id: prog.id, name: prog.name }));
+                              }}
                               aria-label={`Delete ${prog.name}`}
                             >
                               <Trash2 className="size-4" />

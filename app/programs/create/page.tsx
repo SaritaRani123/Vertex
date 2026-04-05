@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -20,8 +20,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
-import type { DepartmentResponse } from "@/lib/api-types";
+import type { DepartmentResponse, ProgramResponse } from "@/lib/api-types";
 import { StaffCreateRouteGuard } from "@/components/staff-create-route-guard";
+import { ProgramCurriculumWizard } from "@/components/program-curriculum-wizard";
 
 export default function CreateProgramPage() {
   return (
@@ -34,16 +35,19 @@ export default function CreateProgramPage() {
 function CreateProgramForm() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [code, setCode] = useState("");
   const [durationYears, setDurationYears] = useState(4);
   const [departmentId, setDepartmentId] = useState("");
-  const [status, setStatus] = useState<"ACTIVE" | "INACTIVE">("ACTIVE");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const [departments, setDepartments] = useState<DepartmentResponse[]>([]);
   const [departmentsLoading, setDepartmentsLoading] = useState(true);
+
+  const [wizardOpen, setWizardOpen] = useState(false);
+  const [createdProgram, setCreatedProgram] = useState<ProgramResponse | null>(null);
+
+  const semesterCount = useMemo(() => durationYears * 2, [durationYears]);
 
   useEffect(() => {
     async function fetchDepartments() {
@@ -64,10 +68,8 @@ function CreateProgramForm() {
     setError(null);
     setFieldErrors({});
     const trimmedName = name.trim();
-    const trimmedCode = code.trim().toUpperCase();
     const errors: Record<string, string> = {};
     if (!trimmedName) errors.name = "Name is required";
-    if (!trimmedCode) errors.code = "Code is required";
     if (durationYears < 1) errors.duration_years = "Duration must be at least 1 year";
     if (!departmentId) errors.department_id = "Please select a department";
     if (Object.keys(errors).length > 0) {
@@ -82,9 +84,8 @@ function CreateProgramForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: trimmedName,
-          code: trimmedCode,
           duration_years: durationYears,
-          status,
+          status: "ACTIVE",
           department_id: Number(departmentId),
         }),
       });
@@ -102,7 +103,8 @@ function CreateProgramForm() {
         }
         return;
       }
-      router.push("/programs");
+      setCreatedProgram(data as ProgramResponse);
+      setWizardOpen(true);
     } catch {
       setError("Something went wrong");
     } finally {
@@ -112,6 +114,13 @@ function CreateProgramForm() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
+      <ProgramCurriculumWizard
+        open={wizardOpen}
+        onOpenChange={setWizardOpen}
+        program={createdProgram}
+        onFinished={() => router.push("/programs")}
+      />
+
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="icon" asChild>
           <Link href="/programs">
@@ -120,46 +129,32 @@ function CreateProgramForm() {
         </Button>
         <div>
           <h1 className="text-2xl font-bold">Create Program</h1>
-          <p className="text-muted-foreground">
-            Add a new academic program
-          </p>
+          <p className="text-muted-foreground">Add a new academic program</p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Program Details</CardTitle>
+          <CardTitle>Program details</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <p className="text-sm text-destructive">{error}</p>
-            )}
+            {error ? <p className="text-sm text-destructive">{error}</p> : null}
             <FieldGroup>
               <Field data-invalid={!!fieldErrors.name}>
-                <FieldLabel htmlFor="name">Name</FieldLabel>
+                <FieldLabel htmlFor="name">Program name</FieldLabel>
                 <Input
                   id="name"
                   value={name}
-                  onChange={(e) => { setName(e.target.value); setFieldErrors((p) => ({ ...p, name: "" })); }}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    setFieldErrors((p) => ({ ...p, name: "" }));
+                  }}
                   placeholder="e.g. B.Tech Computer Science"
                   required
                   aria-invalid={!!fieldErrors.name}
                 />
-                {fieldErrors.name && <FieldError>{fieldErrors.name}</FieldError>}
-              </Field>
-              <Field data-invalid={!!fieldErrors.code}>
-                <FieldLabel htmlFor="code">Code</FieldLabel>
-                <Input
-                  id="code"
-                  value={code}
-                  onChange={(e) => { setCode(e.target.value.toUpperCase()); setFieldErrors((p) => ({ ...p, code: "" })); }}
-                  placeholder="e.g. BTCS"
-                  required
-                  className="uppercase"
-                  aria-invalid={!!fieldErrors.code}
-                />
-                {fieldErrors.code && <FieldError>{fieldErrors.code}</FieldError>}
+                {fieldErrors.name ? <FieldError>{fieldErrors.name}</FieldError> : null}
               </Field>
               <Field data-invalid={!!fieldErrors.duration_years}>
                 <FieldLabel htmlFor="duration">Duration (years)</FieldLabel>
@@ -167,13 +162,20 @@ function CreateProgramForm() {
                   id="duration"
                   type="number"
                   min={1}
-                  max={6}
+                  max={10}
                   value={durationYears}
-                  onChange={(e) => { setDurationYears(parseInt(e.target.value, 10) || 4); setFieldErrors((p) => ({ ...p, duration_years: "" })); }}
+                  onChange={(e) => {
+                    setDurationYears(parseInt(e.target.value, 10) || 1);
+                    setFieldErrors((p) => ({ ...p, duration_years: "" }));
+                  }}
                   required
                   aria-invalid={!!fieldErrors.duration_years}
                 />
-                {fieldErrors.duration_years && <FieldError>{fieldErrors.duration_years}</FieldError>}
+                <p className="text-muted-foreground mt-1 text-xs">
+                  This program will have <span className="text-foreground font-medium">{semesterCount}</span> semesters
+                  ({durationYears} year{durationYears === 1 ? "" : "s"} × 2).
+                </p>
+                {fieldErrors.duration_years ? <FieldError>{fieldErrors.duration_years}</FieldError> : null}
               </Field>
               <Field data-invalid={!!fieldErrors.department_id}>
                 <FieldLabel>Department</FieldLabel>
@@ -205,26 +207,12 @@ function CreateProgramForm() {
                     ))}
                   </SelectContent>
                 </Select>
-                {fieldErrors.department_id && <FieldError>{fieldErrors.department_id}</FieldError>}
-              </Field>
-              <Field>
-                <FieldLabel>Status</FieldLabel>
-                <Select value={status} onValueChange={(v) => {
-                  if (v === "ACTIVE" || v === "INACTIVE") setStatus(v);
-                }}>
-                  <SelectTrigger className="w-full">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ACTIVE">Active</SelectItem>
-                    <SelectItem value="INACTIVE">Inactive</SelectItem>
-                  </SelectContent>
-                </Select>
+                {fieldErrors.department_id ? <FieldError>{fieldErrors.department_id}</FieldError> : null}
               </Field>
             </FieldGroup>
             <div className="flex gap-2">
               <Button type="submit" disabled={isSubmitting || departmentsLoading}>
-                {isSubmitting ? "Creating..." : "Create Program"}
+                {isSubmitting ? "Creating…" : "Create program"}
               </Button>
               <Button type="button" variant="outline" asChild>
                 <Link href="/programs">Cancel</Link>

@@ -149,11 +149,18 @@ export default function CoursesPage() {
     );
   };
 
+  function poolSummary(c: CourseResponse): string {
+    if (c.elective_group_id == null) return "—";
+    const label = c.elective_group_label?.trim() || `Pool #${c.elective_group_id}`;
+    const k = c.elective_choose_count;
+    return k != null ? `${label} (choose ${k})` : label;
+  }
+
   function PrerequisiteTooltipContent({ c }: { c: CourseResponse }) {
     return (
       <div className="space-y-1.5">
         <div className="font-medium">{c.name}</div>
-        <div className="text-muted-foreground text-xs">{c.code}</div>
+        <div className="text-muted-foreground font-mono text-xs uppercase">{c.code}</div>
         {c.description != null && c.description !== "" && (
           <p className="text-muted-foreground text-xs">{c.description}</p>
         )}
@@ -163,6 +170,9 @@ export default function CoursesPage() {
           <span>Lab: {c.lab_hours}h</span>
           <span>Status: {c.status}</span>
           {c.program_name !== "" && <span>Program: {c.program_name}</span>}
+          {c.program_semester_sequence != null && <span>Semester: {c.program_semester_sequence}</span>}
+          <span>Type: {c.course_kind === "ELECTIVE" ? "Elective" : "Compulsory"}</span>
+          {c.elective_group_id != null && <span>Pool: {poolSummary(c)}</span>}
         </div>
       </div>
     );
@@ -241,7 +251,7 @@ export default function CoursesPage() {
           {error && <p className="p-6 text-destructive">{error}</p>}
           {!loading && !error && (
             <div className="overflow-x-auto">
-              <Table className="min-w-[800px]">
+              <Table className="min-w-[1100px]">
                 <TableHeader>
                   <TableRow className="border-b border-border border-b-[0.5px] bg-primary/8 hover:bg-primary/10">
                     <Th sortKeyName="code">Code</Th>
@@ -249,6 +259,9 @@ export default function CoursesPage() {
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">Description</TableHead>
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">Prerequisites</TableHead>
                     <Th sortKeyName="program_name">Program</Th>
+                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">Sem</TableHead>
+                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">Type</TableHead>
+                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">Pool</TableHead>
                     <Th sortKeyName="credits">Credits</Th>
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">Lecture</TableHead>
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">Lab</TableHead>
@@ -261,7 +274,7 @@ export default function CoursesPage() {
                 <TableBody>
                   {filteredAndSorted.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={10} className="py-8 text-center text-muted-foreground">
+                      <TableCell colSpan={13} className="py-8 text-center text-muted-foreground">
                         {courses.length === 0 ? "No courses yet. Create one to get started." : "No courses match your filters."}
                       </TableCell>
                     </TableRow>
@@ -271,7 +284,9 @@ export default function CoursesPage() {
                         key={course.id}
                         className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-primary/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
                       >
-                        <TableCell className="py-3 px-4 font-medium align-middle">{course.code}</TableCell>
+                        <TableCell className="py-3 px-4 align-middle font-mono text-sm font-medium uppercase tracking-wide">
+                          {course.code}
+                        </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.name}</TableCell>
                         <TableCell className="py-3 px-4 align-middle max-w-[180px] truncate" title={course.description ?? undefined}>
                           {course.description || "-"}
@@ -307,6 +322,20 @@ export default function CoursesPage() {
                           )}
                         </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.program_name}</TableCell>
+                        <TableCell className="py-3 px-4 align-middle text-center text-sm">
+                          {course.program_semester_sequence != null ? course.program_semester_sequence : "—"}
+                        </TableCell>
+                        <TableCell className="py-3 px-4 align-middle">
+                          <span className="text-xs font-medium">
+                            {course.course_kind === "ELECTIVE" ? "Elective" : "Comp."}
+                          </span>
+                        </TableCell>
+                        <TableCell
+                          className="text-muted-foreground py-3 px-4 align-middle max-w-[140px] truncate text-xs"
+                          title={course.elective_group_id != null ? poolSummary(course) : undefined}
+                        >
+                          {course.elective_group_id != null ? poolSummary(course) : "—"}
+                        </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.credits}</TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.lecture_hours}</TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.lab_hours}</TableCell>

@@ -4,6 +4,7 @@ import { json, fromZodError, internalError, validationError } from "@/lib/api-ut
 import type { ProgramResponse, ProgramListResponse, ProgramListItem, ProgramStatus } from "@/lib/api-types";
 import { safeValidateProgramCreate } from "@/lib/validations/programs";
 import { authorizeModuleRoute } from "@/lib/auth";
+import { allocateUniqueProgramCode } from "@/lib/program-code";
 
 function toProgramResponse(row: {
   Id: number;
@@ -80,8 +81,14 @@ export async function POST(request: NextRequest) {
     if (!department) {
       return validationError("Department not found");
     }
+    const codeRaw = parsed.data.code?.trim();
+    const code =
+      codeRaw && codeRaw.length > 0
+        ? codeRaw
+        : await allocateUniqueProgramCode(prisma, parsed.data.name);
+
     const existingCode = await prisma.programs.findUnique({
-      where: { Code: parsed.data.code },
+      where: { Code: code },
     });
     if (existingCode) {
       return validationError("A program with this code already exists");
@@ -97,14 +104,24 @@ export async function POST(request: NextRequest) {
         "A program with this name already exists in this department"
       );
     }
-    const created = await prisma.programs.create({
-      data: {
-        Name: parsed.data.name,
-        Code: parsed.data.code,
-        DurationYears: parsed.data.duration_years,
-        Status: parsed.data.status ?? "ACTIVE",
-        DepartmentId: parsed.data.department_id,
-      },
+    const semesterCount = parsed.data.duration_years * 2;
+    const created = await prisma.$transaction(async (tx) => {
+      const prog = await tx.programs.create({
+        data: {
+          Name: parsed.data.name,
+          Code: code,
+          DurationYears: parsed.data.duration_years,
+          Status: parsed.data.status ?? "ACTIVE",
+          DepartmentId: parsed.data.department_id,
+        },
+      });
+      await tx.programSemesters.createMany({
+        data: Array.from({ length: semesterCount }, (_, i) => ({
+          ProgramId: prog.Id,
+          Sequence: i + 1,
+        })),
+      });
+      return prog;
     });
     return json(toProgramResponse(created), 201);
   } catch {

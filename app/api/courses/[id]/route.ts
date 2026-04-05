@@ -1,47 +1,14 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/db";
 import { json, notFound, fromZodError, internalError, validationError } from "@/lib/api-utils";
-import type { CourseResponse } from "@/lib/api-types";
 import { safeValidateCourseUpdate } from "@/lib/validations/courses";
 import { authorizeModuleRoute } from "@/lib/auth";
+import { toCourseResponse } from "@/lib/to-course-response";
+import { courseApiInclude } from "@/lib/course-api-include";
 
 function parseId(id: string): number | null {
   const n = parseInt(id, 10);
   return Number.isNaN(n) || n < 1 ? null : n;
-}
-
-function toCourseResponse(row: {
-  Id: number;
-  Name: string;
-  Code: string;
-  Description: string | null;
-  Prerequisites: string[];
-  Credits: number;
-  LectureHours: number;
-  LabHours: number;
-  Status: string;
-  ProgramId: number;
-  Program: {
-    Name: string;
-  };
-  CreatedAt: Date;
-  UpdatedAt: Date;
-}): CourseResponse {
-  return {
-    id: row.Id,
-    name: row.Name,
-    code: row.Code,
-    description: row.Description,
-    prerequisites: row.Prerequisites,
-    credits: row.Credits,
-    lecture_hours: row.LectureHours,
-    lab_hours: row.LabHours,
-    status: row.Status as "ACTIVE" | "INACTIVE" | "ARCHIVED",
-    program_id: row.ProgramId,
-    program_name: row.Program.Name,
-    created_at: row.CreatedAt.toISOString(),
-    updated_at: row.UpdatedAt.toISOString(),
-  };
 }
 
 interface RouteParams {
@@ -58,7 +25,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const row = await prisma.courses.findUnique({
       where: { Id: numericId },
-      include: { Program: { select: { Name: true } } },
+      include: courseApiInclude,
     });
     if (!row) return notFound("Course not found");
     return json(toCourseResponse(row));
@@ -77,7 +44,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   try {
     const row = await prisma.courses.findUnique({
       where: { Id: numericId },
-      include: { Program: { select: { Name: true } } },
+      include: courseApiInclude,
     });
     if (!row) return notFound("Course not found");
 
@@ -91,9 +58,41 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       return json(toCourseResponse(row));
     }
 
+    const nextProgramId = parsed.data.program_id ?? row.ProgramId;
+
     if (parsed.data.program_id !== undefined) {
       const program = await prisma.programs.findUnique({ where: { Id: parsed.data.program_id } });
       if (!program) return validationError("Program not found");
+    }
+
+    if (parsed.data.program_semester_id !== undefined) {
+      if (parsed.data.program_semester_id !== null) {
+        const sem = await prisma.programSemesters.findUnique({
+          where: { Id: parsed.data.program_semester_id },
+          select: { ProgramId: true },
+        });
+        if (!sem || sem.ProgramId !== nextProgramId) {
+          return validationError("Semester does not belong to this course's program");
+        }
+      }
+    }
+
+    const effectiveSemesterId =
+      parsed.data.program_semester_id !== undefined
+        ? parsed.data.program_semester_id
+        : row.ProgramSemesterId;
+
+    if (parsed.data.elective_group_id != null) {
+      if (effectiveSemesterId == null) {
+        return validationError("Assign a curriculum semester before linking an elective pool");
+      }
+      const g = await prisma.electiveGroups.findUnique({
+        where: { Id: parsed.data.elective_group_id },
+        select: { ProgramSemesterId: true },
+      });
+      if (!g || g.ProgramSemesterId !== effectiveSemesterId) {
+        return validationError("Elective pool does not belong to this semester");
+      }
     }
 
     if (parsed.data.code !== undefined) {
@@ -101,6 +100,13 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         where: { Id: { not: numericId }, Code: parsed.data.code },
       });
       if (existing) return validationError("Another course already has this code");
+    }
+
+    const electivePatch: { ElectiveGroupId?: number | null } = {};
+    if (parsed.data.course_kind === "COMPULSORY") {
+      electivePatch.ElectiveGroupId = null;
+    } else if (parsed.data.elective_group_id !== undefined) {
+      electivePatch.ElectiveGroupId = parsed.data.elective_group_id;
     }
 
     const updated = await prisma.courses.update({
@@ -115,8 +121,13 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         ...(parsed.data.lab_hours !== undefined && { LabHours: parsed.data.lab_hours }),
         ...(parsed.data.status !== undefined && { Status: parsed.data.status }),
         ...(parsed.data.program_id !== undefined && { ProgramId: parsed.data.program_id }),
+        ...(parsed.data.program_semester_id !== undefined && {
+          ProgramSemesterId: parsed.data.program_semester_id,
+        }),
+        ...(parsed.data.course_kind !== undefined && { CourseKind: parsed.data.course_kind }),
+        ...electivePatch,
       },
-      include: { Program: { select: { Name: true } } },
+      include: courseApiInclude,
     });
 
     return json(toCourseResponse(updated));

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,13 +16,18 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 import type { CourseResponse, ProgramResponse } from "@/lib/api-types";
+import { Badge } from "@/components/ui/badge";
 import type { CourseOption } from "@/components/course-multi-select";
 import { CourseMultiSelect } from "@/components/course-multi-select";
+import { safeReturnTo } from "@/lib/safe-return-to";
 
 export default function EditCoursePage() {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const id = params?.id;
+  const returnTo = safeReturnTo(searchParams.get("returnTo"));
+  const backHref = returnTo ?? "/courses";
 
   const [course, setCourse] = useState<CourseResponse | null>(null);
   const [programs, setPrograms] = useState<ProgramResponse[]>([]);
@@ -177,7 +182,7 @@ export default function EditCoursePage() {
         setIsSubmitting(false);
         return;
       }
-      router.push("/courses");
+      router.push(backHref);
     } catch {
       setError("Something went wrong");
     } finally {
@@ -201,15 +206,69 @@ export default function EditCoursePage() {
     <div className="mx-auto max-w-2xl space-y-6">
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="icon" asChild>
-          <Link href="/courses">
+          <Link href={backHref}>
             <ArrowLeft className="size-4" />
           </Link>
         </Button>
         <div>
           <h1 className="text-2xl font-bold">Edit Course</h1>
-          <p className="text-muted-foreground">Update course details</p>
+          <p className="text-muted-foreground">
+            Update course details
+            {returnTo ? (
+              <span className="mt-1 block text-xs">
+                After saving you will return to the program you came from.
+              </span>
+            ) : null}
+          </p>
         </div>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Curriculum placement</CardTitle>
+          <p className="text-muted-foreground text-sm font-normal">
+            Same fields returned by <code className="text-xs">GET /api/courses/:id</code>. To move this course between
+            semesters without changing other details, use the program detail page (semester dropdown) or update{" "}
+            <code className="text-xs">program_semester_id</code> via the API.
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm">
+          <div>
+            <span className="text-muted-foreground">Course code (stored uppercase): </span>
+            <span className="font-mono font-medium uppercase">{course.code}</span>
+          </div>
+          <div>
+            <span className="text-muted-foreground">Curriculum semester: </span>
+            {course.program_semester_sequence != null ? (
+              <span>Semester {course.program_semester_sequence}</span>
+            ) : (
+              <span>Not assigned to a curriculum semester</span>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-muted-foreground">Type: </span>
+            <Badge variant={course.course_kind === "ELECTIVE" ? "outline" : "default"}>
+              {course.course_kind === "ELECTIVE" ? "Elective" : "Compulsory"}
+            </Badge>
+          </div>
+          <div>
+            <span className="text-muted-foreground">Elective pool: </span>
+            {course.elective_group_id != null ? (
+              <>
+                {course.elective_group_label?.trim() || `Pool #${course.elective_group_id}`}
+                {course.elective_choose_count != null && (
+                  <span className="text-muted-foreground"> (choose {course.elective_choose_count})</span>
+                )}
+              </>
+            ) : (
+              <span>—</span>
+            )}
+          </div>
+          <Button variant="link" className="h-auto p-0 text-sm" asChild>
+            <Link href={`/programs/${course.program_id}`}>View program curriculum</Link>
+          </Button>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
@@ -344,7 +403,7 @@ export default function EditCoursePage() {
                 {isSubmitting ? "Updating..." : "Update Course"}
               </Button>
               <Button type="button" variant="outline" asChild>
-                <Link href="/courses">Cancel</Link>
+                <Link href={backHref}>Cancel</Link>
               </Button>
             </div>
           </form>

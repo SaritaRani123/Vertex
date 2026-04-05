@@ -1,41 +1,11 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/db";
 import { json, fromZodError, internalError, validationError } from "@/lib/api-utils";
-import type { CourseResponse, CourseListResponse } from "@/lib/api-types";
+import type { CourseListResponse } from "@/lib/api-types";
 import { safeValidateCourseCreate } from "@/lib/validations/courses";
 import { authorizeModuleRoute } from "@/lib/auth";
-
-function toCourseResponse(row: {
-  Id: number;
-  Name: string;
-  Code: string;
-  Description: string | null;
-  Prerequisites: string[];
-  Credits: number;
-  LectureHours: number;
-  LabHours: number;
-  Status: string;
-  ProgramId: number;
-  Program?: { Name: string } | null;
-  CreatedAt: Date;
-  UpdatedAt: Date;
-}): CourseResponse {
-  return {
-    id: row.Id,
-    name: row.Name,
-    code: row.Code,
-    description: row.Description,
-    prerequisites: row.Prerequisites,
-    credits: row.Credits,
-    lecture_hours: row.LectureHours,
-    lab_hours: row.LabHours,
-    status: row.Status as "ACTIVE" | "INACTIVE" | "ARCHIVED",
-    program_id: row.ProgramId,
-    program_name: row.Program?.Name ?? "",
-    created_at: row.CreatedAt.toISOString(),
-    updated_at: row.UpdatedAt.toISOString(),
-  };
-}
+import { toCourseResponse } from "@/lib/to-course-response";
+import { courseApiInclude } from "@/lib/course-api-include";
 
 export async function GET(request: NextRequest) {
   const auth = await authorizeModuleRoute(request);
@@ -43,7 +13,7 @@ export async function GET(request: NextRequest) {
   try {
     const list = await prisma.courses.findMany({
       orderBy: [{ Code: "asc" }, { Name: "asc" }],
-      include: { Program: { select: { Name: true } } },
+      include: courseApiInclude,
     });
     const data: CourseListResponse = {
       data: list.map(toCourseResponse),
@@ -64,9 +34,43 @@ export async function POST(request: NextRequest) {
       return fromZodError(parsed.error);
     }
 
-    const program = await prisma.programs.findUnique({ where: { Id: parsed.data.program_id } });
-    if (!program) {
-      return validationError("Program not found");
+    let programId: number;
+    const programSemesterId = parsed.data.program_semester_id ?? null;
+
+    if (parsed.data.program_semester_id != null) {
+      const sem = await prisma.programSemesters.findUnique({
+        where: { Id: parsed.data.program_semester_id },
+        select: { Id: true, ProgramId: true },
+      });
+      if (!sem) {
+        return validationError("Program semester not found");
+      }
+      programId = sem.ProgramId;
+      if (parsed.data.program_id != null && parsed.data.program_id !== programId) {
+        return validationError("program_id does not match this curriculum semester");
+      }
+    } else {
+      if (parsed.data.program_id == null) {
+        return validationError("Program not found");
+      }
+      programId = parsed.data.program_id;
+      const program = await prisma.programs.findUnique({ where: { Id: programId } });
+      if (!program) {
+        return validationError("Program not found");
+      }
+    }
+
+    if (parsed.data.elective_group_id != null) {
+      const g = await prisma.electiveGroups.findUnique({
+        where: { Id: parsed.data.elective_group_id },
+        select: { Id: true, ProgramSemesterId: true },
+      });
+      if (!g) {
+        return validationError("Elective group not found");
+      }
+      if (g.ProgramSemesterId !== parsed.data.program_semester_id) {
+        return validationError("Elective group does not belong to this semester");
+      }
     }
 
     const existingCode = await prisma.courses.findUnique({
@@ -76,6 +80,12 @@ export async function POST(request: NextRequest) {
       return validationError("A course with this code already exists");
     }
 
+    const lectureHours = parsed.data.lecture_hours ?? 0;
+    const labHours = parsed.data.lab_hours ?? 0;
+    const courseKind = parsed.data.course_kind ?? "COMPULSORY";
+    const electiveGroupId =
+      courseKind === "ELECTIVE" ? (parsed.data.elective_group_id ?? null) : null;
+
     const created = await prisma.courses.create({
       data: {
         Name: parsed.data.name,
@@ -83,12 +93,15 @@ export async function POST(request: NextRequest) {
         Description: parsed.data.description ?? null,
         Prerequisites: parsed.data.prerequisites ?? [],
         Credits: parsed.data.credits,
-        LectureHours: parsed.data.lecture_hours,
-        LabHours: parsed.data.lab_hours,
+        LectureHours: lectureHours,
+        LabHours: labHours,
         Status: parsed.data.status ?? "ACTIVE",
-        ProgramId: parsed.data.program_id,
+        ProgramId: programId,
+        ProgramSemesterId: programSemesterId,
+        CourseKind: courseKind,
+        ElectiveGroupId: electiveGroupId,
       },
-      include: { Program: { select: { Name: true } } },
+      include: courseApiInclude,
     });
 
     return json(toCourseResponse(created), 201);

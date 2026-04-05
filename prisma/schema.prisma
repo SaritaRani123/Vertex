@@ -58,6 +58,13 @@ enum PermissionRequestStatus {
   @@schema("course_schema")
 }
 
+enum CourseKind {
+  COMPULSORY
+  ELECTIVE
+
+  @@schema("course_schema")
+}
+
 // ===============================
 // MODELS
 // ===============================
@@ -89,7 +96,8 @@ model Programs {
   DepartmentId Int         @map("department_id")
   Department   Departments @relation("DepartmentPrograms", fields: [DepartmentId], references: [Id], onDelete: Restrict)
 
-  Courses Courses[] @relation("ProgramCourses")
+  Courses          Courses[]          @relation("ProgramCourses")
+  ProgramSemesters ProgramSemesters[] @relation("ProgramCurriculumSemesters")
 
   CreatedAt DateTime @default(now()) @map("created_at")
   UpdatedAt DateTime @updatedAt @map("updated_at")
@@ -98,6 +106,47 @@ model Programs {
   @@unique([Name, DepartmentId], name: "programs_name_department_id_key")
   @@index([DepartmentId], name: "programs_department_id_idx")
   @@map("programs")
+}
+
+// --------------------------------
+// Program curriculum (Semester 1..N within a degree program)
+// --------------------------------
+
+model ProgramSemesters {
+  Id        Int @id @default(autoincrement()) @map("id")
+  ProgramId Int @map("program_id")
+  Program   Programs @relation("ProgramCurriculumSemesters", fields: [ProgramId], references: [Id], onDelete: Cascade)
+
+  Sequence Int @map("sequence")
+
+  Courses        Courses[]        @relation("SemesterCourses")
+  ElectiveGroups ElectiveGroups[] @relation("SemesterElectiveGroups")
+
+  CreatedAt DateTime @default(now()) @map("created_at")
+  UpdatedAt DateTime @updatedAt @map("updated_at")
+
+  @@schema("course_schema")
+  @@unique([ProgramId, Sequence], name: "program_semesters_program_id_sequence_key")
+  @@index([ProgramId], name: "program_semesters_program_id_idx")
+  @@map("program_semesters")
+}
+
+model ElectiveGroups {
+  Id                Int @id @default(autoincrement()) @map("id")
+  ProgramSemesterId Int @map("program_semester_id")
+  ProgramSemester   ProgramSemesters @relation("SemesterElectiveGroups", fields: [ProgramSemesterId], references: [Id], onDelete: Cascade)
+
+  ChooseCount Int     @map("choose_count")
+  Label       String? @map("label")
+
+  Courses Courses[] @relation("ElectiveGroupCourses")
+
+  CreatedAt DateTime @default(now()) @map("created_at")
+  UpdatedAt DateTime @updatedAt @map("updated_at")
+
+  @@schema("course_schema")
+  @@index([ProgramSemesterId], name: "elective_groups_program_semester_id_idx")
+  @@map("elective_groups")
 }
 
 // --------------------------------
@@ -119,6 +168,14 @@ model Courses {
   ProgramId Int      @map("program_id")
   Program   Programs @relation("ProgramCourses", fields: [ProgramId], references: [Id], onDelete: Restrict)
 
+  ProgramSemesterId Int?              @map("program_semester_id")
+  ProgramSemester   ProgramSemesters? @relation("SemesterCourses", fields: [ProgramSemesterId], references: [Id], onDelete: SetNull)
+
+  CourseKind CourseKind @default(COMPULSORY) @map("course_kind")
+
+  ElectiveGroupId Int?            @map("elective_group_id")
+  ElectiveGroup   ElectiveGroups? @relation("ElectiveGroupCourses", fields: [ElectiveGroupId], references: [Id], onDelete: SetNull)
+
   Terms Terms[] @relation("CourseTerms")
 
   CreatedAt DateTime @default(now()) @map("created_at")
@@ -126,6 +183,7 @@ model Courses {
 
   @@schema("course_schema")
   @@index([ProgramId], name: "courses_program_id_idx")
+  @@index([ProgramSemesterId], name: "courses_program_semester_id_idx")
   @@index([Status], name: "courses_status_idx")
   @@map("courses")
 }

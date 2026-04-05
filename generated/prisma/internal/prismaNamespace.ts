@@ -386,6 +386,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   Departments: 'Departments',
   Programs: 'Programs',
+  ProgramSemesters: 'ProgramSemesters',
+  ElectiveGroups: 'ElectiveGroups',
   Courses: 'Courses',
   Semesters: 'Semesters',
   Terms: 'Terms',
@@ -407,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "departments" | "programs" | "courses" | "semesters" | "terms" | "programsUsers" | "programsSessions" | "programsPermissionRequests"
+    modelProps: "departments" | "programs" | "programSemesters" | "electiveGroups" | "courses" | "semesters" | "terms" | "programsUsers" | "programsSessions" | "programsPermissionRequests"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -556,6 +558,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProgramsCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProgramsCountAggregateOutputType> | number
+        }
+      }
+    }
+    ProgramSemesters: {
+      payload: Prisma.$ProgramSemestersPayload<ExtArgs>
+      fields: Prisma.ProgramSemestersFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProgramSemestersFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSemestersPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProgramSemestersFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSemestersPayload>
+        }
+        findFirst: {
+          args: Prisma.ProgramSemestersFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSemestersPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProgramSemestersFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSemestersPayload>
+        }
+        findMany: {
+          args: Prisma.ProgramSemestersFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSemestersPayload>[]
+        }
+        create: {
+          args: Prisma.ProgramSemestersCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSemestersPayload>
+        }
+        createMany: {
+          args: Prisma.ProgramSemestersCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProgramSemestersCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSemestersPayload>[]
+        }
+        delete: {
+          args: Prisma.ProgramSemestersDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSemestersPayload>
+        }
+        update: {
+          args: Prisma.ProgramSemestersUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSemestersPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProgramSemestersDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProgramSemestersUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProgramSemestersUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSemestersPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProgramSemestersUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProgramSemestersPayload>
+        }
+        aggregate: {
+          args: Prisma.ProgramSemestersAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProgramSemesters>
+        }
+        groupBy: {
+          args: Prisma.ProgramSemestersGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProgramSemestersGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProgramSemestersCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProgramSemestersCountAggregateOutputType> | number
+        }
+      }
+    }
+    ElectiveGroups: {
+      payload: Prisma.$ElectiveGroupsPayload<ExtArgs>
+      fields: Prisma.ElectiveGroupsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ElectiveGroupsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectiveGroupsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ElectiveGroupsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectiveGroupsPayload>
+        }
+        findFirst: {
+          args: Prisma.ElectiveGroupsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectiveGroupsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ElectiveGroupsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectiveGroupsPayload>
+        }
+        findMany: {
+          args: Prisma.ElectiveGroupsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectiveGroupsPayload>[]
+        }
+        create: {
+          args: Prisma.ElectiveGroupsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectiveGroupsPayload>
+        }
+        createMany: {
+          args: Prisma.ElectiveGroupsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ElectiveGroupsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectiveGroupsPayload>[]
+        }
+        delete: {
+          args: Prisma.ElectiveGroupsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectiveGroupsPayload>
+        }
+        update: {
+          args: Prisma.ElectiveGroupsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectiveGroupsPayload>
+        }
+        deleteMany: {
+          args: Prisma.ElectiveGroupsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ElectiveGroupsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ElectiveGroupsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectiveGroupsPayload>[]
+        }
+        upsert: {
+          args: Prisma.ElectiveGroupsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ElectiveGroupsPayload>
+        }
+        aggregate: {
+          args: Prisma.ElectiveGroupsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateElectiveGroups>
+        }
+        groupBy: {
+          args: Prisma.ElectiveGroupsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ElectiveGroupsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ElectiveGroupsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ElectiveGroupsCountAggregateOutputType> | number
         }
       }
     }
@@ -1067,6 +1217,29 @@ export const ProgramsScalarFieldEnum = {
 export type ProgramsScalarFieldEnum = (typeof ProgramsScalarFieldEnum)[keyof typeof ProgramsScalarFieldEnum]
 
 
+export const ProgramSemestersScalarFieldEnum = {
+  Id: 'Id',
+  ProgramId: 'ProgramId',
+  Sequence: 'Sequence',
+  CreatedAt: 'CreatedAt',
+  UpdatedAt: 'UpdatedAt'
+} as const
+
+export type ProgramSemestersScalarFieldEnum = (typeof ProgramSemestersScalarFieldEnum)[keyof typeof ProgramSemestersScalarFieldEnum]
+
+
+export const ElectiveGroupsScalarFieldEnum = {
+  Id: 'Id',
+  ProgramSemesterId: 'ProgramSemesterId',
+  ChooseCount: 'ChooseCount',
+  Label: 'Label',
+  CreatedAt: 'CreatedAt',
+  UpdatedAt: 'UpdatedAt'
+} as const
+
+export type ElectiveGroupsScalarFieldEnum = (typeof ElectiveGroupsScalarFieldEnum)[keyof typeof ElectiveGroupsScalarFieldEnum]
+
+
 export const CoursesScalarFieldEnum = {
   Id: 'Id',
   Name: 'Name',
@@ -1078,6 +1251,9 @@ export const CoursesScalarFieldEnum = {
   LabHours: 'LabHours',
   Status: 'Status',
   ProgramId: 'ProgramId',
+  ProgramSemesterId: 'ProgramSemesterId',
+  CourseKind: 'CourseKind',
+  ElectiveGroupId: 'ElectiveGroupId',
   CreatedAt: 'CreatedAt',
   UpdatedAt: 'UpdatedAt'
 } as const
@@ -1244,6 +1420,20 @@ export type EnumCourseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'CourseStatus[]'
  */
 export type ListEnumCourseStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CourseStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CourseKind'
+ */
+export type EnumCourseKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CourseKind'>
+    
+
+
+/**
+ * Reference to a field of type 'CourseKind[]'
+ */
+export type ListEnumCourseKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CourseKind[]'>
     
 
 
@@ -1420,6 +1610,8 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   departments?: Prisma.DepartmentsOmit
   programs?: Prisma.ProgramsOmit
+  programSemesters?: Prisma.ProgramSemestersOmit
+  electiveGroups?: Prisma.ElectiveGroupsOmit
   courses?: Prisma.CoursesOmit
   semesters?: Prisma.SemestersOmit
   terms?: Prisma.TermsOmit
