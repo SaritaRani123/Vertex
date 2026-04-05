@@ -156,6 +156,12 @@ export default function ProgramDetailPage() {
   }, [id]);
 
   const semesters = curriculum?.semesters ?? [];
+  /** Fresh semester from curriculum so new elective pools appear after reload (dialog was holding a stale snapshot). */
+  const addCourseSemesterLive = useMemo(() => {
+    if (!addCourseSemester || !curriculum?.semesters?.length) return addCourseSemester;
+    return curriculum.semesters.find((s) => s.id === addCourseSemester.id) ?? addCourseSemester;
+  }, [curriculum, addCourseSemester]);
+
   const totalCourses = semesters.reduce((n, s) => n + s.courses.length, 0);
   const allProgramCourses = useMemo(() => flattenProgramCourses(semesters), [semesters]);
 
@@ -416,8 +422,15 @@ export default function ProgramDetailPage() {
                                         if (v != null) void handleMoveSemester(c, v);
                                       }}
                                     >
-                                      <SelectTrigger className="h-9 w-[150px]" aria-label="Move to semester">
-                                        <SelectValue placeholder="Semester" />
+                                      <SelectTrigger className="h-9 min-w-[9.5rem] max-w-[11rem]" aria-label="Move to semester">
+                                        <SelectValue placeholder="Semester">
+                                          {(val) => {
+                                            if (val == null || val === "__none__") return "Not on timeline";
+                                            const sid = Number(val);
+                                            const sem = semesters.find((s) => s.id === sid);
+                                            return sem ? `Semester ${sem.sequence}` : "Semester";
+                                          }}
+                                        </SelectValue>
                                       </SelectTrigger>
                                       <SelectContent>
                                         <SelectItem value="__none__">Not on timeline</SelectItem>
@@ -469,14 +482,14 @@ export default function ProgramDetailPage() {
         </CardContent>
       </Card>
 
-      {program && addCourseSemester ? (
+      {program && addCourseSemesterLive ? (
         <AddProgramCourseDialog
           open
           onOpenChange={(open) => {
             if (!open) setAddCourseSemester(null);
           }}
           program={program}
-          semester={addCourseSemester}
+          semester={addCourseSemesterLive}
           onReloadCurriculum={reloadData}
         />
       ) : null}

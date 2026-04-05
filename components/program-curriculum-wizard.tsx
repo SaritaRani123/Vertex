@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { ProgramSemesterCourseForm } from "@/components/program-semester-course-form";
+import { ProgramSemesterAddCoursePanel } from "@/components/program-semester-add-course-panel";
 
 type ProgramCurriculumWizardProps = {
   open: boolean;
@@ -23,7 +23,7 @@ type ProgramCurriculumWizardProps = {
   onFinished: () => void;
 };
 
-/** Step through semesters and add courses using the same form as Create course + curriculum placement. */
+/** Step through semesters; add courses by linking existing or creating new (same flow as program detail). */
 export function ProgramCurriculumWizard({
   open,
   onOpenChange,
@@ -78,8 +78,8 @@ export function ProgramCurriculumWizard({
         <DialogHeader>
           <DialogTitle>Set up curriculum</DialogTitle>
           <DialogDescription>
-            Add courses for each semester. The form matches <strong>Create course</strong>, plus curriculum type and
-            elective pools for this semester.
+            For each semester, link an existing course from the catalog or create a new one—same options as on the
+            program page—including type and elective pools.
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
@@ -136,14 +136,17 @@ export function ProgramCurriculumWizard({
 
               <Separator />
 
-              <ProgramSemesterCourseForm
-                key={current.id}
-                program={program}
-                semesterId={current.id}
-                electiveGroups={current.elective_groups}
-                onReloadCurriculum={loadCurriculum}
-                fieldIdPrefix={`cw-${current.id}`}
-              />
+              <div>
+                <h3 className="mb-2 font-medium">Add a course</h3>
+                <ProgramSemesterAddCoursePanel
+                  key={current.id}
+                  active={open}
+                  program={program}
+                  semester={current}
+                  onReloadCurriculum={loadCurriculum}
+                  fieldIdPrefix={`cw-${current.id}`}
+                />
+              </div>
             </div>
           ) : null}
         </DialogBody>

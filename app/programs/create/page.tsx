@@ -23,6 +23,7 @@ import { ArrowLeft } from "lucide-react";
 import type { DepartmentResponse, ProgramResponse } from "@/lib/api-types";
 import { StaffCreateRouteGuard } from "@/components/staff-create-route-guard";
 import { ProgramCurriculumWizard } from "@/components/program-curriculum-wizard";
+import { filterDigitsOnly, normalizeUnsignedIntString } from "@/lib/digits-input";
 
 export default function CreateProgramPage() {
   return (
@@ -35,7 +36,7 @@ export default function CreateProgramPage() {
 function CreateProgramForm() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [durationYears, setDurationYears] = useState(4);
+  const [durationYearsStr, setDurationYearsStr] = useState("4");
   const [departmentId, setDepartmentId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +48,11 @@ function CreateProgramForm() {
   const [wizardOpen, setWizardOpen] = useState(false);
   const [createdProgram, setCreatedProgram] = useState<ProgramResponse | null>(null);
 
-  const semesterCount = useMemo(() => durationYears * 2, [durationYears]);
+  const durationYearsPreview = useMemo(() => {
+    const n = parseInt(durationYearsStr, 10);
+    return Number.isNaN(n) || n < 1 ? 1 : n;
+  }, [durationYearsStr]);
+  const semesterCount = durationYearsPreview * 2;
 
   useEffect(() => {
     async function fetchDepartments() {
@@ -70,7 +75,10 @@ function CreateProgramForm() {
     const trimmedName = name.trim();
     const errors: Record<string, string> = {};
     if (!trimmedName) errors.name = "Name is required";
-    if (durationYears < 1) errors.duration_years = "Duration must be at least 1 year";
+    const durationYears =
+      durationYearsStr.trim() === "" ? NaN : parseInt(durationYearsStr, 10);
+    if (Number.isNaN(durationYears)) errors.duration_years = "Enter duration in years";
+    else if (durationYears < 1) errors.duration_years = "Duration must be at least 1 year";
     if (!departmentId) errors.department_id = "Please select a department";
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
@@ -160,20 +168,21 @@ function CreateProgramForm() {
                 <FieldLabel htmlFor="duration">Duration (years)</FieldLabel>
                 <Input
                   id="duration"
-                  type="number"
+                  inputMode="numeric"
                   min={1}
                   max={10}
-                  value={durationYears}
+                  value={durationYearsStr}
                   onChange={(e) => {
-                    setDurationYears(parseInt(e.target.value, 10) || 1);
+                    setDurationYearsStr(filterDigitsOnly(e.target.value));
                     setFieldErrors((p) => ({ ...p, duration_years: "" }));
                   }}
+                  onBlur={() => setDurationYearsStr((s) => normalizeUnsignedIntString(s))}
                   required
                   aria-invalid={!!fieldErrors.duration_years}
                 />
                 <p className="text-muted-foreground mt-1 text-xs">
                   This program will have <span className="text-foreground font-medium">{semesterCount}</span> semesters
-                  ({durationYears} year{durationYears === 1 ? "" : "s"} × 2).
+                  ({durationYearsPreview} year{durationYearsPreview === 1 ? "" : "s"} × 2).
                 </p>
                 {fieldErrors.duration_years ? <FieldError>{fieldErrors.duration_years}</FieldError> : null}
               </Field>

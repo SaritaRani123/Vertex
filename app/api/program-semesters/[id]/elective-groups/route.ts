@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/db";
 import { json, notFound, fromZodError, internalError } from "@/lib/api-utils";
 import { safeValidateElectiveGroupCreate } from "@/lib/validations/elective-groups";
-import { authorizeModuleRoute } from "@/lib/auth";
+import { authorizeCoursesApi } from "@/lib/auth";
 
 function parseId(id: string): number | null {
   const n = parseInt(id, 10);
@@ -14,7 +14,7 @@ interface RouteParams {
 }
 
 export async function POST(request: NextRequest, { params }: RouteParams) {
-  const auth = await authorizeModuleRoute(request);
+  const auth = await authorizeCoursesApi(request);
   if ("response" in auth) return auth.response;
   const { id } = await params;
   const numericId = parseId(id);

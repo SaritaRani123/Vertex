@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 import { StaffCreateRouteGuard } from "@/components/staff-create-route-guard";
+import { filterDigitsOnly, normalizeUnsignedIntString } from "@/lib/digits-input";
 
 export default function CreateSemesterPage() {
   return (
@@ -27,7 +28,7 @@ export default function CreateSemesterPage() {
 
 function CreateSemesterForm() {
   const router = useRouter();
-  const [year, setYear] = useState(new Date().getFullYear());
+  const [yearStr, setYearStr] = useState(String(new Date().getFullYear()));
   const [semesterType, setSemesterType] = useState<"FALL" | "WINTER" | "SUMMER">("FALL");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +39,9 @@ function CreateSemesterForm() {
     setError(null);
     setFieldErrors({});
     const errors: Record<string, string> = {};
-    if (year < 1900 || year > 3000) errors.year = "Year must be between 1900 and 3000";
+    const year = yearStr.trim() === "" ? NaN : parseInt(yearStr, 10);
+    if (Number.isNaN(year)) errors.year = "Enter a year";
+    else if (year < 1900 || year > 3000) errors.year = "Year must be between 1900 and 3000";
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
       setError("Please fix the errors below.");
@@ -100,11 +103,15 @@ function CreateSemesterForm() {
                 <FieldLabel htmlFor="year">Year</FieldLabel>
                 <Input
                   id="year"
-                  type="number"
+                  inputMode="numeric"
                   min={1900}
                   max={3000}
-                  value={year}
-                  onChange={(e) => { setYear(parseInt(e.target.value, 10) || 2024); setFieldErrors((p) => ({ ...p, year: "" })); }}
+                  value={yearStr}
+                  onChange={(e) => {
+                    setYearStr(filterDigitsOnly(e.target.value));
+                    setFieldErrors((p) => ({ ...p, year: "" }));
+                  }}
+                  onBlur={() => setYearStr((s) => normalizeUnsignedIntString(s))}
                   required
                   aria-invalid={!!fieldErrors.year}
                 />

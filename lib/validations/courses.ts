@@ -14,7 +14,7 @@ const courseSchema = z
       .nullable()
       .transform((v) => v ?? undefined),
     prerequisites: z.array(z.string().trim().min(1)).optional().default([]),
-    credits: z.number().int().min(0, "Credits must be >= 0"),
+    credits: z.coerce.number().int().min(0, "Credits must be >= 0"),
     lecture_hours: z.coerce.number().int().min(0, "Lecture hours must be >= 0").optional(),
     lab_hours: z.coerce.number().int().min(0, "Lab hours must be >= 0").optional(),
     status: courseStatusSchema.optional().default("ACTIVE"),

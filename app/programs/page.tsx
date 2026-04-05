@@ -6,7 +6,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableHeader,
@@ -25,10 +24,11 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { Plus, Trash2, Pencil, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Trash2, Pencil, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { ProgramListItem } from "@/lib/api-types";
 import { GuardedCreateButton } from "@/components/guarded-create-button";
 import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
+import { ListSearchField } from "@/components/list-search-field";
 
 type SortKey = "code" | "name" | "department_name" | "duration_years" | "status" | null;
 type SortDir = "asc" | "desc";
@@ -51,9 +51,6 @@ function ProgramsPageInner() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [search, setSearch] = useState("");
-  const [filterCode, setFilterCode] = useState("");
-  const [filterName, setFilterName] = useState("");
-  const [filterDept, setFilterDept] = useState("");
   const [departmentFilterLabel, setDepartmentFilterLabel] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
@@ -63,7 +60,6 @@ function ProgramsPageInner() {
   useEffect(() => {
     if (filterByDepartmentId == null) {
       setDepartmentFilterLabel(null);
-      setFilterDept("");
       return;
     }
     let cancelled = false;
@@ -74,7 +70,6 @@ function ProgramsPageInner() {
         const d = (await res.json()) as { name?: string };
         if (!cancelled && d.name) {
           setDepartmentFilterLabel(d.name);
-          setFilterDept(d.name);
         }
       } catch {
         /* ignore */
@@ -120,15 +115,11 @@ function ProgramsPageInner() {
         (p) =>
           p.name.toLowerCase().includes(searchLower) ||
           p.code.toLowerCase().includes(searchLower) ||
-          p.department_name.toLowerCase().includes(searchLower)
+          p.department_name.toLowerCase().includes(searchLower) ||
+          p.status.toLowerCase().includes(searchLower) ||
+          String(p.duration_years).includes(searchLower)
       );
     }
-    if (filterCode.trim())
-      list = list.filter((p) => p.code.toLowerCase().includes(filterCode.trim().toLowerCase()));
-    if (filterName.trim())
-      list = list.filter((p) => p.name.toLowerCase().includes(filterName.trim().toLowerCase()));
-    if (filterDept.trim())
-      list = list.filter((p) => p.department_name.toLowerCase().includes(filterDept.trim().toLowerCase()));
 
     if (sortKey) {
       list.sort((a, b) => {
@@ -140,7 +131,7 @@ function ProgramsPageInner() {
       });
     }
     return list;
-  }, [programs, search, filterCode, filterName, filterDept, sortKey, sortDir]);
+  }, [programs, search, sortKey, sortDir]);
 
   const handleSort = (key: SortKey) => {
     if (!key) return;
@@ -230,42 +221,17 @@ function ProgramsPageInner() {
         <CardHeader className="border-b border-border border-b-[0.5px] bg-muted/20 pb-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-lg font-bold text-foreground sm:text-xl">All Programs</h2>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <div className="relative flex-1 sm:min-w-[220px]">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
-                <Input
-                  type="search"
-                  placeholder="Search by Name, Code or Department..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary/40"
-                  aria-label="Search programs"
-                />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Input
-                  placeholder="Filter by Code"
-                  value={filterCode}
-                  onChange={(e) => setFilterCode(e.target.value)}
-                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by code"
-                />
-                <Input
-                  placeholder="Filter by Name"
-                  value={filterName}
-                  onChange={(e) => setFilterName(e.target.value)}
-                  className="w-full sm:w-32 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by name"
-                />
-                <Input
-                  placeholder="Filter by Dept"
-                  value={filterDept}
-                  onChange={(e) => setFilterDept(e.target.value)}
-                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by department"
-                />
-              </div>
-            </div>
+            <ListSearchField
+              value={search}
+              onChange={setSearch}
+              placeholder="Search name, code, department, status, duration…"
+              ariaLabel="Search programs"
+              clearActive={filterByDepartmentId != null}
+              onClear={() => {
+                setSearch("");
+                if (filterByDepartmentId != null) router.push("/programs");
+              }}
+            />
           </div>
         </CardHeader>
         <CardContent className="p-0">

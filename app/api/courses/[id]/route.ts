@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/db";
 import { json, notFound, fromZodError, internalError, validationError } from "@/lib/api-utils";
 import { safeValidateCourseUpdate } from "@/lib/validations/courses";
-import { authorizeModuleRoute } from "@/lib/auth";
+import { authorizeCoursesApi } from "@/lib/auth";
 import { toCourseResponse } from "@/lib/to-course-response";
 import { courseApiInclude } from "@/lib/course-api-include";
 
@@ -16,7 +16,7 @@ interface RouteParams {
 }
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
-  const auth = await authorizeModuleRoute(request);
+  const auth = await authorizeCoursesApi(request);
   if ("response" in auth) return auth.response;
   const { id } = await params;
   const numericId = parseId(id);
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
-  const auth = await authorizeModuleRoute(request);
+  const auth = await authorizeCoursesApi(request);
   if ("response" in auth) return auth.response;
   const { id } = await params;
   const numericId = parseId(id);
@@ -137,7 +137,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 }
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
-  const auth = await authorizeModuleRoute(request);
+  const auth = await authorizeCoursesApi(request);
   if ("response" in auth) return auth.response;
   const { id } = await params;
   const numericId = parseId(id);

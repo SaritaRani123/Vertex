@@ -3,12 +3,12 @@ import { prisma } from "@/lib/db";
 import { json, fromZodError, internalError, validationError } from "@/lib/api-utils";
 import type { CourseListResponse } from "@/lib/api-types";
 import { safeValidateCourseCreate } from "@/lib/validations/courses";
-import { authorizeModuleRoute } from "@/lib/auth";
+import { authorizeCoursesApi } from "@/lib/auth";
 import { toCourseResponse } from "@/lib/to-course-response";
 import { courseApiInclude } from "@/lib/course-api-include";
 
 export async function GET(request: NextRequest) {
-  const auth = await authorizeModuleRoute(request);
+  const auth = await authorizeCoursesApi(request);
   if ("response" in auth) return auth.response;
   try {
     const list = await prisma.courses.findMany({
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await authorizeModuleRoute(request);
+  const auth = await authorizeCoursesApi(request);
   if ("response" in auth) return auth.response;
   try {
     const body = await request.json();

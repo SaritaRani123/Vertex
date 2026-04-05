@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ListSearchField } from "@/components/list-search-field";
 import {
   Table,
   TableHeader,
@@ -23,7 +23,7 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { Plus, Trash2, Pencil, Search, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Trash2, Pencil, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { SemesterResponse } from "@/lib/api-types";
 import { GuardedCreateButton } from "@/components/guarded-create-button";
 import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
@@ -39,8 +39,6 @@ export default function SemestersPage() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const [search, setSearch] = useState("");
-  const [filterYear, setFilterYear] = useState("");
-  const [filterType, setFilterType] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
 
@@ -72,13 +70,6 @@ export default function SemestersPage() {
           s.type.toLowerCase().includes(searchLower)
       );
     }
-    if (filterYear.trim()) {
-      const y = filterYear.trim();
-      list = list.filter((s) => String(s.year).includes(y));
-    }
-    if (filterType.trim()) {
-      list = list.filter((s) => s.type.toLowerCase().includes(filterType.trim().toLowerCase()));
-    }
 
     if (sortKey) {
       list.sort((a, b) => {
@@ -91,7 +82,7 @@ export default function SemestersPage() {
       });
     }
     return list;
-  }, [semesters, search, filterYear, filterType, sortKey, sortDir]);
+  }, [semesters, search, sortKey, sortDir]);
 
   const handleSort = (key: SortKey) => {
     if (!key) return;
@@ -149,35 +140,12 @@ export default function SemestersPage() {
         <CardHeader className="border-b border-border border-b-[0.5px] bg-muted/20 pb-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="text-lg font-bold text-foreground sm:text-xl">All Semesters</h2>
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <div className="relative flex-1 sm:min-w-[200px]">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
-                <Input
-                  type="search"
-                  placeholder="Search by Year or Type..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="pl-9 border-[0.5px] border-border bg-background focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary/40"
-                  aria-label="Search semesters"
-                />
-              </div>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Filter by Year"
-                  value={filterYear}
-                  onChange={(e) => setFilterYear(e.target.value)}
-                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by year"
-                />
-                <Input
-                  placeholder="Filter by Type"
-                  value={filterType}
-                  onChange={(e) => setFilterType(e.target.value)}
-                  className="w-full sm:w-28 border-[0.5px] border-border text-sm focus-visible:ring-1 focus-visible:ring-primary"
-                  aria-label="Filter by type"
-                />
-              </div>
-            </div>
+            <ListSearchField
+              value={search}
+              onChange={setSearch}
+              placeholder="Search by year or type (e.g. 2024, fall)…"
+              ariaLabel="Search semesters"
+            />
           </div>
         </CardHeader>
         <CardContent className="p-0">

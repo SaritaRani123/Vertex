@@ -19,6 +19,7 @@ import type { ProgramResponse } from "@/lib/api-types";
 import type { CourseOption } from "@/components/course-multi-select";
 import { CourseMultiSelect } from "@/components/course-multi-select";
 import { StaffCreateRouteGuard } from "@/components/staff-create-route-guard";
+import { filterDigitsOnly, normalizeUnsignedIntString } from "@/lib/digits-input";
 
 export default function CreateCoursePage() {
   return (
@@ -34,9 +35,9 @@ function CreateCourseForm() {
   const [code, setCode] = useState("");
   const [description, setDescription] = useState("");
   const [prerequisiteIds, setPrerequisiteIds] = useState<number[]>([]);
-  const [credits, setCredits] = useState(3);
-  const [lectureHours, setLectureHours] = useState(2);
-  const [labHours, setLabHours] = useState(0);
+  const [creditsStr, setCreditsStr] = useState("3");
+  const [lectureHoursStr, setLectureHoursStr] = useState("2");
+  const [labHoursStr, setLabHoursStr] = useState("0");
   const [status, setStatus] = useState<"ACTIVE" | "INACTIVE" | "ARCHIVED">("ACTIVE");
   const [programId, setProgramId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -97,9 +98,15 @@ function CreateCourseForm() {
     const errors: Record<string, string> = {};
     if (!trimmedName) errors.name = "Name is required";
     if (!trimmedCode) errors.code = "Code is required";
-    if (credits < 0) errors.credits = "Credits must be 0 or more";
-    if (lectureHours < 0) errors.lecture_hours = "Lecture hours must be 0 or more";
-    if (labHours < 0) errors.lab_hours = "Lab hours must be 0 or more";
+    const credits = creditsStr.trim() === "" ? NaN : parseInt(creditsStr, 10);
+    const lectureHours = lectureHoursStr.trim() === "" ? NaN : parseInt(lectureHoursStr, 10);
+    const labHours = labHoursStr.trim() === "" ? NaN : parseInt(labHoursStr, 10);
+    if (Number.isNaN(credits)) errors.credits = "Enter credits (0 or more)";
+    else if (credits < 0) errors.credits = "Credits must be 0 or more";
+    if (Number.isNaN(lectureHours)) errors.lecture_hours = "Enter lecture hours (0 or more)";
+    else if (lectureHours < 0) errors.lecture_hours = "Lecture hours must be 0 or more";
+    if (Number.isNaN(labHours)) errors.lab_hours = "Enter lab hours (0 or more)";
+    else if (labHours < 0) errors.lab_hours = "Lab hours must be 0 or more";
     if (!programId) errors.program_id = "Please select a program";
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
@@ -218,10 +225,14 @@ function CreateCourseForm() {
                 <FieldLabel htmlFor="credits">Credits</FieldLabel>
                 <Input
                   id="credits"
-                  type="number"
+                  inputMode="numeric"
                   min={0}
-                  value={credits}
-                  onChange={(e) => { setCredits(parseInt(e.target.value, 10) || 0); setFieldErrors((p) => ({ ...p, credits: "" })); }}
+                  value={creditsStr}
+                  onChange={(e) => {
+                    setCreditsStr(filterDigitsOnly(e.target.value));
+                    setFieldErrors((p) => ({ ...p, credits: "" }));
+                  }}
+                  onBlur={() => setCreditsStr((s) => normalizeUnsignedIntString(s))}
                   required
                   aria-invalid={!!fieldErrors.credits}
                 />
@@ -231,10 +242,14 @@ function CreateCourseForm() {
                 <FieldLabel htmlFor="lectureHours">Lecture Hours</FieldLabel>
                 <Input
                   id="lectureHours"
-                  type="number"
+                  inputMode="numeric"
                   min={0}
-                  value={lectureHours}
-                  onChange={(e) => { setLectureHours(parseInt(e.target.value, 10) || 0); setFieldErrors((p) => ({ ...p, lecture_hours: "" })); }}
+                  value={lectureHoursStr}
+                  onChange={(e) => {
+                    setLectureHoursStr(filterDigitsOnly(e.target.value));
+                    setFieldErrors((p) => ({ ...p, lecture_hours: "" }));
+                  }}
+                  onBlur={() => setLectureHoursStr((s) => normalizeUnsignedIntString(s))}
                   required
                   aria-invalid={!!fieldErrors.lecture_hours}
                 />
@@ -244,10 +259,14 @@ function CreateCourseForm() {
                 <FieldLabel htmlFor="labHours">Lab Hours</FieldLabel>
                 <Input
                   id="labHours"
-                  type="number"
+                  inputMode="numeric"
                   min={0}
-                  value={labHours}
-                  onChange={(e) => { setLabHours(parseInt(e.target.value, 10) || 0); setFieldErrors((p) => ({ ...p, lab_hours: "" })); }}
+                  value={labHoursStr}
+                  onChange={(e) => {
+                    setLabHoursStr(filterDigitsOnly(e.target.value));
+                    setFieldErrors((p) => ({ ...p, lab_hours: "" }));
+                  }}
+                  onBlur={() => setLabHoursStr((s) => normalizeUnsignedIntString(s))}
                   required
                   aria-invalid={!!fieldErrors.lab_hours}
                 />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import type {
   CurriculumElectiveGroupResponse,
   ProgramResponse,
@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { filterDigitsOnly, normalizeUnsignedIntString } from "@/lib/digits-input";
 
 export type ProgramSemesterCourseFormProps = {
   program: ProgramResponse;
@@ -50,9 +51,9 @@ export function ProgramSemesterCourseForm({
   const [code, setCode] = useState("");
   const [description, setDescription] = useState("");
   const [prerequisiteIds, setPrerequisiteIds] = useState<number[]>([]);
-  const [credits, setCredits] = useState(3);
-  const [lectureHours, setLectureHours] = useState(2);
-  const [labHours, setLabHours] = useState(0);
+  const [creditsStr, setCreditsStr] = useState("3");
+  const [lectureHoursStr, setLectureHoursStr] = useState("2");
+  const [labHoursStr, setLabHoursStr] = useState("0");
   const [status, setStatus] = useState<"ACTIVE" | "INACTIVE" | "ARCHIVED">("ACTIVE");
 
   const [courseKind, setCourseKind] = useState<"COMPULSORY" | "ELECTIVE">("COMPULSORY");
@@ -64,6 +65,15 @@ export function ProgramSemesterCourseForm({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [savingCourse, setSavingCourse] = useState(false);
   const [creatingPool, setCreatingPool] = useState(false);
+  /** Pools just created in this form; merged with props so validation works before parent re-renders. */
+  const [sessionPools, setSessionPools] = useState<CurriculumElectiveGroupResponse[]>([]);
+
+  const mergedElectiveGroups = useMemo(() => {
+    const byId = new Map<number, CurriculumElectiveGroupResponse>();
+    for (const g of electiveGroups) byId.set(g.id, g);
+    for (const g of sessionPools) byId.set(g.id, g);
+    return [...byId.values()].sort((a, b) => a.id - b.id);
+  }, [electiveGroups, sessionPools]);
 
   const refreshCatalog = useCallback(async () => {
     try {
@@ -105,14 +115,18 @@ export function ProgramSemesterCourseForm({
     void refreshCatalog();
   }, [refreshCatalog]);
 
+  useEffect(() => {
+    setSessionPools([]);
+  }, [semesterId]);
+
   const resetForm = () => {
     setName("");
     setCode("");
     setDescription("");
     setPrerequisiteIds([]);
-    setCredits(3);
-    setLectureHours(2);
-    setLabHours(0);
+    setCreditsStr("3");
+    setLectureHoursStr("2");
+    setLabHoursStr("0");
     setStatus("ACTIVE");
     setCourseKind("COMPULSORY");
     setElectiveGroupId("");
@@ -142,6 +156,13 @@ export function ProgramSemesterCourseForm({
         setFormError(data?.error ?? "Could not create elective pool");
         return;
       }
+      const poolRow: CurriculumElectiveGroupResponse = {
+        id: data.id,
+        choose_count: data.choose_count,
+        label: data.label ?? null,
+        course_count: 0,
+      };
+      setSessionPools((prev) => [...prev.filter((x) => x.id !== poolRow.id), poolRow]);
       setElectiveGroupId(String(data.id));
       setNewPoolLabel("");
       await onReloadCurriculum();
@@ -162,9 +183,18 @@ export function ProgramSemesterCourseForm({
     const errors: Record<string, string> = {};
     if (!trimmedName) errors.name = "Name is required";
     if (!trimmedCode) errors.code = "Code is required";
-    if (credits < 0) errors.credits = "Credits must be 0 or more";
-    if (lectureHours < 0) errors.lecture_hours = "Lecture hours must be 0 or more";
-    if (labHours < 0) errors.lab_hours = "Lab hours must be 0 or more";
+
+    const credits =
+      creditsStr.trim() === "" ? NaN : parseInt(creditsStr, 10);
+    const lectureHours =
+      lectureHoursStr.trim() === "" ? NaN : parseInt(lectureHoursStr, 10);
+    const labHours = labHoursStr.trim() === "" ? NaN : parseInt(labHoursStr, 10);
+    if (Number.isNaN(credits)) errors.credits = "Enter credits (0 or more)";
+    else if (credits < 0) errors.credits = "Credits must be 0 or more";
+    if (Number.isNaN(lectureHours)) errors.lecture_hours = "Enter lecture hours (0 or more)";
+    else if (lectureHours < 0) errors.lecture_hours = "Lecture hours must be 0 or more";
+    if (Number.isNaN(labHours)) errors.lab_hours = "Enter lab hours (0 or more)";
+    else if (labHours < 0) errors.lab_hours = "Lab hours must be 0 or more";
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
@@ -174,9 +204,9 @@ export function ProgramSemesterCourseForm({
 
     if (courseKind === "ELECTIVE" && electiveGroupId) {
       const gid = Number(electiveGroupId);
-      const g = electiveGroups.find((x) => x.id === gid);
+      const g = mergedElectiveGroups.find((x) => x.id === gid);
       if (!g) {
-        setFormError("Select a valid elective pool");
+        setFormError("Select a valid elective pool, or create one below first.");
         return;
       }
     }
@@ -205,6 +235,7 @@ export function ProgramSemesterCourseForm({
       }
       const res = await fetch("/api/courses", {
         method: "POST",
+        credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
@@ -290,13 +321,14 @@ export function ProgramSemesterCourseForm({
           <FieldLabel htmlFor={`${p}-credits`}>Credits</FieldLabel>
           <Input
             id={`${p}-credits`}
-            type="number"
+            inputMode="numeric"
             min={0}
-            value={credits}
+            value={creditsStr}
             onChange={(e) => {
-              setCredits(parseInt(e.target.value, 10) || 0);
+              setCreditsStr(filterDigitsOnly(e.target.value));
               setFieldErrors((prev) => ({ ...prev, credits: "" }));
             }}
+            onBlur={() => setCreditsStr((s) => normalizeUnsignedIntString(s))}
             required
             aria-invalid={!!fieldErrors.credits}
           />
@@ -306,13 +338,14 @@ export function ProgramSemesterCourseForm({
           <FieldLabel htmlFor={`${p}-lectureHours`}>Lecture Hours</FieldLabel>
           <Input
             id={`${p}-lectureHours`}
-            type="number"
+            inputMode="numeric"
             min={0}
-            value={lectureHours}
+            value={lectureHoursStr}
             onChange={(e) => {
-              setLectureHours(parseInt(e.target.value, 10) || 0);
+              setLectureHoursStr(filterDigitsOnly(e.target.value));
               setFieldErrors((prev) => ({ ...prev, lecture_hours: "" }));
             }}
+            onBlur={() => setLectureHoursStr((s) => normalizeUnsignedIntString(s))}
             required
             aria-invalid={!!fieldErrors.lecture_hours}
           />
@@ -322,13 +355,14 @@ export function ProgramSemesterCourseForm({
           <FieldLabel htmlFor={`${p}-labHours`}>Lab Hours</FieldLabel>
           <Input
             id={`${p}-labHours`}
-            type="number"
+            inputMode="numeric"
             min={0}
-            value={labHours}
+            value={labHoursStr}
             onChange={(e) => {
-              setLabHours(parseInt(e.target.value, 10) || 0);
+              setLabHoursStr(filterDigitsOnly(e.target.value));
               setFieldErrors((prev) => ({ ...prev, lab_hours: "" }));
             }}
+            onBlur={() => setLabHoursStr((s) => normalizeUnsignedIntString(s))}
             required
             aria-invalid={!!fieldErrors.lab_hours}
           />
@@ -392,9 +426,11 @@ export function ProgramSemesterCourseForm({
           <div className="bg-muted/40 space-y-3 rounded-lg border p-4">
             <p className="text-sm font-medium">Elective pool (optional)</p>
             <p className="text-muted-foreground text-xs">
-              Group electives so students choose a fixed number from a list. Create a pool first, then assign courses.
+              A pool means students must pick N courses from the list linked to that pool. Use “No pool” for a single
+              elective. To build a group: enter N, click Create elective pool, then Save course—the new pool stays
+              selected.
             </p>
-            {electiveGroups.length > 0 ? (
+            {mergedElectiveGroups.length > 0 ? (
               <Field>
                 <FieldLabel>Assign to existing pool</FieldLabel>
                 <Select
@@ -406,9 +442,10 @@ export function ProgramSemesterCourseForm({
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__none__">No pool</SelectItem>
-                    {electiveGroups.map((g) => (
+                    {mergedElectiveGroups.map((g) => (
                       <SelectItem key={g.id} value={String(g.id)}>
-                        {g.label ?? `Pool ${g.id}`} — choose {g.choose_count} of {g.course_count} so far
+                        {g.label ?? `Pool ${g.id}`} — choose {g.choose_count}
+                        {g.course_count > 0 ? ` (${g.course_count} in pool)` : ""}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -423,7 +460,8 @@ export function ProgramSemesterCourseForm({
                   inputMode="numeric"
                   min={1}
                   value={poolChooseInput}
-                  onChange={(e) => setPoolChooseInput(e.target.value.replace(/[^\d]/g, ""))}
+                  onChange={(e) => setPoolChooseInput(filterDigitsOnly(e.target.value))}
+                  onBlur={() => setPoolChooseInput((s) => normalizeUnsignedIntString(s))}
                 />
               </Field>
               <Field>
