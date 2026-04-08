@@ -126,7 +126,6 @@ function CreateTermForm() {
         </Button>
         <div>
           <h1 className="text-2xl font-bold">Create Term Assignment</h1>
-          <p className="text-muted-foreground">Assign a course to a semester</p>
         </div>
       </div>
 

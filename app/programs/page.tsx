@@ -190,9 +190,6 @@ function ProgramsPageInner() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Programs</h1>
-          <p className="text-muted-foreground">
-            View and manage academic programs. Click a row to open the semester-by-semester curriculum.
-          </p>
         </div>
         <GuardedCreateButton href="/programs/create" className="shrink-0 w-fit flex items-center gap-2">
           <Plus className="size-4" />

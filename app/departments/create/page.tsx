@@ -84,9 +84,6 @@ function CreateDepartmentForm() {
         </Button>
         <div>
           <h1 className="text-2xl font-bold">Create Department</h1>
-          <p className="text-muted-foreground">
-            Add a new department to the system
-          </p>
         </div>
       </div>
 

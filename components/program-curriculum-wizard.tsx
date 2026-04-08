@@ -77,10 +77,6 @@ export function ProgramCurriculumWizard({
       <DialogContent className="max-w-3xl" showCloseButton>
         <DialogHeader>
           <DialogTitle>Set up curriculum</DialogTitle>
-          <DialogDescription>
-            For each semester, link an existing course from the catalog or create a new one—same options as on the
-            program page—including type and elective pools.
-          </DialogDescription>
         </DialogHeader>
         <DialogBody>
           {program ? (
@@ -124,9 +120,6 @@ export function ProgramCurriculumWizard({
                           <Badge variant={c.course_kind === "ELECTIVE" ? "outline" : "default"}>
                             {c.course_kind === "ELECTIVE" ? "Elective" : "Compulsory"}
                           </Badge>
-                          {c.elective_group_id != null ? (
-                            <span className="text-muted-foreground text-xs">Pool #{c.elective_group_id}</span>
-                          ) : null}
                         </span>
                       </li>
                     ))}

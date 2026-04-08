@@ -23,7 +23,6 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Plus, Trash2, Pencil, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import type { CourseResponse } from "@/lib/api-types";
 import { GuardedCreateButton } from "@/components/guarded-create-button";
@@ -158,35 +157,6 @@ export default function CoursesPage() {
     );
   };
 
-  function poolSummary(c: CourseResponse): string {
-    if (c.elective_group_id == null) return "—";
-    const label = c.elective_group_label?.trim() || `Pool #${c.elective_group_id}`;
-    const k = c.elective_choose_count;
-    return k != null ? `${label} (choose ${k})` : label;
-  }
-
-  function PrerequisiteTooltipContent({ c }: { c: CourseResponse }) {
-    return (
-      <div className="space-y-1.5">
-        <div className="font-medium">{c.name}</div>
-        <div className="text-muted-foreground font-mono text-xs uppercase">{c.code}</div>
-        {c.description != null && c.description !== "" && (
-          <p className="text-muted-foreground text-xs">{c.description}</p>
-        )}
-        <div className="text-muted-foreground flex flex-wrap gap-x-3 gap-y-0.5 text-xs">
-          <span>Credits: {c.credits}</span>
-          <span>Lecture: {c.lecture_hours}h</span>
-          <span>Lab: {c.lab_hours}h</span>
-          <span>Status: {c.status}</span>
-          {c.program_name !== "" && <span>Program: {c.program_name}</span>}
-          {c.program_semester_sequence != null && <span>Semester: {c.program_semester_sequence}</span>}
-          <span>Type: {c.course_kind === "ELECTIVE" ? "Elective" : "Compulsory"}</span>
-          {c.elective_group_id != null && <span>Pool: {poolSummary(c)}</span>}
-        </div>
-      </div>
-    );
-  }
-
   const Th = ({ sortKeyName, children }: { sortKeyName: SortKey; children: React.ReactNode }) => (
     <TableHead className="h-12 px-4 text-base font-bold text-foreground">
       <button
@@ -205,7 +175,6 @@ export default function CoursesPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Courses</h1>
-          <p className="text-muted-foreground">View and manage all courses</p>
         </div>
         <GuardedCreateButton href="/courses/create" className="shrink-0 w-fit flex items-center gap-2">
           <Plus className="size-4" />
@@ -220,7 +189,7 @@ export default function CoursesPage() {
             <ListSearchField
               value={search}
               onChange={setSearch}
-              placeholder="Search code, name, program, status, semester, credits…"
+              placeholder="Search by code, name, program, type, status…"
               ariaLabel="Search courses"
             />
           </div>
@@ -230,20 +199,14 @@ export default function CoursesPage() {
           {error && <p className="p-6 text-destructive">{error}</p>}
           {!loading && !error && (
             <div className="overflow-x-auto">
-              <Table className="min-w-[1100px]">
+              <Table className="min-w-[760px]">
                 <TableHeader>
                   <TableRow className="border-b border-border border-b-[0.5px] bg-primary/8 hover:bg-primary/10">
                     <Th sortKeyName="code">Code</Th>
                     <Th sortKeyName="name">Name</Th>
-                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">Description</TableHead>
-                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">Prerequisites</TableHead>
                     <Th sortKeyName="program_name">Program</Th>
-                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">Sem</TableHead>
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">Type</TableHead>
-                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">Pool</TableHead>
                     <Th sortKeyName="credits">Credits</Th>
-                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">Lecture</TableHead>
-                    <TableHead className="h-12 px-4 text-base font-bold text-foreground">Lab</TableHead>
                     <Th sortKeyName="status">Status</Th>
                     <TableHead className="h-12 px-4 w-[120px] text-base font-bold text-foreground text-right">
                       Actions
@@ -253,7 +216,7 @@ export default function CoursesPage() {
                 <TableBody>
                   {filteredAndSorted.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={13} className="py-8 text-center text-muted-foreground">
+                      <TableCell colSpan={7} className="py-8 text-center text-muted-foreground">
                         {courses.length === 0 ? "No courses yet. Create one to get started." : "No courses match your filters."}
                       </TableCell>
                     </TableRow>
@@ -266,58 +229,22 @@ export default function CoursesPage() {
                         <TableCell className="py-3 px-4 align-middle font-mono text-sm font-medium uppercase tracking-wide">
                           {course.code}
                         </TableCell>
-                        <TableCell className="py-3 px-4 align-middle">{course.name}</TableCell>
-                        <TableCell className="py-3 px-4 align-middle max-w-[180px] truncate" title={course.description ?? undefined}>
-                          {course.description || "-"}
-                        </TableCell>
                         <TableCell className="py-3 px-4 align-middle">
-                          {course.prerequisites && course.prerequisites.length > 0 ? (
-                            <span className="flex flex-wrap gap-1">
-                              {course.prerequisites.map((code) => {
-                                const prereqCourse = courses.find((c) => c.code === code);
-                                if (prereqCourse) {
-                                  return (
-                                    <Tooltip key={code} delayMs={300}>
-                                      <TooltipTrigger>
-                                        <span className="text-muted-foreground cursor-default rounded bg-muted px-1.5 py-0.5 text-xs hover:bg-muted/80">
-                                          {code}
-                                        </span>
-                                      </TooltipTrigger>
-                                      <TooltipContent side="top" className="max-w-xs">
-                                        <PrerequisiteTooltipContent c={prereqCourse} />
-                                      </TooltipContent>
-                                    </Tooltip>
-                                  );
-                                }
-                                return (
-                                  <span key={code} className="text-muted-foreground rounded bg-muted px-1.5 py-0.5 text-xs">
-                                    {code}
-                                  </span>
-                                );
-                              })}
-                            </span>
-                          ) : (
-                            "-"
-                          )}
+                          <Link
+                            href={`/courses/${course.id}`}
+                            className="text-primary hover:underline underline-offset-4 font-medium"
+                            aria-label={`Open ${course.name} details`}
+                          >
+                            {course.name}
+                          </Link>
                         </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.program_name}</TableCell>
-                        <TableCell className="py-3 px-4 align-middle text-center text-sm">
-                          {course.program_semester_sequence != null ? course.program_semester_sequence : "—"}
-                        </TableCell>
                         <TableCell className="py-3 px-4 align-middle">
                           <span className="text-xs font-medium">
-                            {course.course_kind === "ELECTIVE" ? "Elective" : "Comp."}
+                            {course.course_kind === "ELECTIVE" ? "Elective" : "Compulsory"}
                           </span>
                         </TableCell>
-                        <TableCell
-                          className="text-muted-foreground py-3 px-4 align-middle max-w-[140px] truncate text-xs"
-                          title={course.elective_group_id != null ? poolSummary(course) : undefined}
-                        >
-                          {course.elective_group_id != null ? poolSummary(course) : "—"}
-                        </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{course.credits}</TableCell>
-                        <TableCell className="py-3 px-4 align-middle">{course.lecture_hours}</TableCell>
-                        <TableCell className="py-3 px-4 align-middle">{course.lab_hours}</TableCell>
                         <TableCell className="py-3 px-4 align-middle">
                           <span
                             className={`inline-block min-w-[5.5rem] rounded-md px-2.5 py-1 text-center text-sm font-medium text-white ${

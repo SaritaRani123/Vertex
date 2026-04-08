@@ -10,8 +10,7 @@ const sidebarItems = [
   { href: "/departments", label: "Departments", Icon: Building2 },
   { href: "/programs", label: "Programs", Icon: GraduationCap },
   { href: "/courses", label: "Courses", Icon: BookOpen },
-  { href: "/semesters", label: "Semesters", Icon: CalendarDays },
-  { href: "/terms", label: "Terms", Icon: Layers },
+  { href: "/terms", label: "Terms & Semesters", Icon: Layers },
 ] as const;
 
 export function Sidebar() {
@@ -31,7 +30,10 @@ export function Sidebar() {
         <nav className="flex flex-col gap-1">
           {sidebarItems.map((item) => {
             const isActive =
-              pathname === item.href || pathname.startsWith(item.href + "/");
+              pathname === item.href ||
+              pathname.startsWith(item.href + "/") ||
+              (item.href === "/terms" &&
+                (pathname === "/semesters" || pathname.startsWith("/semesters/")));
             return (
               <Link
                 key={item.href}

@@ -137,7 +137,6 @@ function CreateProgramForm() {
         </Button>
         <div>
           <h1 className="text-2xl font-bold">Create Program</h1>
-          <p className="text-muted-foreground">Add a new academic program</p>
         </div>
       </div>
 

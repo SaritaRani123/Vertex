@@ -87,7 +87,6 @@ function CreateSemesterForm() {
         </Button>
         <div>
           <h1 className="text-2xl font-bold">Create Semester</h1>
-          <p className="text-muted-foreground">Add a new semester (year + type)</p>
         </div>
       </div>
 

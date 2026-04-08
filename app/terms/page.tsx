@@ -23,7 +23,7 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { Plus, Trash2, Pencil, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Plus, Trash2, Pencil, ArrowUpDown, ArrowUp, ArrowDown, CalendarDays } from "lucide-react";
 import type { SemesterType } from "@/lib/api-types";
 import { GuardedCreateButton } from "@/components/guarded-create-button";
 import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
@@ -140,13 +140,18 @@ export default function TermsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Terms</h1>
-          <p className="text-muted-foreground">Assign courses to semesters</p>
+          <h1 className="text-2xl font-bold text-foreground">Terms & Semesters</h1>
         </div>
-        <GuardedCreateButton href="/terms/create" className="shrink-0 w-fit flex items-center gap-2">
-          <Plus className="size-4" />
-          Add Term
-        </GuardedCreateButton>
+        <div className="flex flex-wrap items-center gap-2">
+          <GuardedCreateButton href="/semesters/create" variant="outline" className="shrink-0 w-fit flex items-center gap-2">
+            <CalendarDays className="size-4" />
+            Add Semester
+          </GuardedCreateButton>
+          <GuardedCreateButton href="/terms/create" className="shrink-0 w-fit flex items-center gap-2">
+            <Plus className="size-4" />
+            Add Term
+          </GuardedCreateButton>
+        </div>
       </div>
 
       <Card className="overflow-hidden border-[0.5px] border-border shadow-md shadow-black/5">

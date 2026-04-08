@@ -170,6 +170,63 @@ body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Inter, sans
   cursor: not-allowed;
 }
 
+.auth-divider {
+  position: relative;
+  text-align: center;
+  color: var(--auth-muted-foreground);
+  font-size: 0.82rem;
+  margin-top: 0.15rem;
+}
+.auth-divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1px solid var(--auth-border);
+}
+.auth-divider span {
+  position: relative;
+  background: var(--auth-card);
+  padding: 0 0.5rem;
+}
+
+.oauth-btn {
+  height: 42px;
+  border: 1px solid var(--auth-border);
+  border-radius: 12px;
+  background: white;
+  color: var(--auth-foreground);
+  font-weight: 650;
+  font-size: 0.92rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  transition: background-color 140ms ease-in-out, border-color 140ms ease-in-out;
+}
+.oauth-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.oauth-btn:hover {
+  background: var(--auth-muted);
+  border-color: color-mix(in oklab, var(--auth-primary) 35%, var(--auth-border));
+}
+.oauth-google:hover {
+  border-color: #c6dafc;
+  background: #f8fbff;
+}
+.oauth-github {
+  color: #111827;
+}
+.oauth-github:hover {
+  border-color: #cfd4dc;
+  background: #f8fafc;
+}
+
 .form-message {
   margin: 0;
   padding: 0.65rem 0.8rem;

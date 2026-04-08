@@ -233,15 +233,10 @@ export default function EditCoursePage() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Curriculum placement</CardTitle>
-          <p className="text-muted-foreground text-sm font-normal">
-            Same fields returned by <code className="text-xs">GET /api/courses/:id</code>. To move this course between
-            semesters without changing other details, use the program detail page (semester dropdown) or update{" "}
-            <code className="text-xs">program_semester_id</code> via the API.
-          </p>
         </CardHeader>
         <CardContent className="space-y-3 text-sm">
           <div>
-            <span className="text-muted-foreground">Course code (stored uppercase): </span>
+            <span className="text-muted-foreground">Course code: </span>
             <span className="font-mono font-medium uppercase">{course.code}</span>
           </div>
           <div>
@@ -257,19 +252,6 @@ export default function EditCoursePage() {
             <Badge variant={course.course_kind === "ELECTIVE" ? "outline" : "default"}>
               {course.course_kind === "ELECTIVE" ? "Elective" : "Compulsory"}
             </Badge>
-          </div>
-          <div>
-            <span className="text-muted-foreground">Elective pool: </span>
-            {course.elective_group_id != null ? (
-              <>
-                {course.elective_group_label?.trim() || `Pool #${course.elective_group_id}`}
-                {course.elective_choose_count != null && (
-                  <span className="text-muted-foreground"> (choose {course.elective_choose_count})</span>
-                )}
-              </>
-            ) : (
-              <span>—</span>
-            )}
           </div>
           <Button variant="link" className="h-auto p-0 text-sm" asChild>
             <Link href={`/programs/${course.program_id}`}>View program curriculum</Link>

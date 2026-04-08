@@ -33,9 +33,6 @@ export function AddProgramCourseDialog({
       <DialogContent className="max-w-3xl" showCloseButton>
         <DialogHeader>
           <DialogTitle>Add course · Semester {semester.sequence}</DialogTitle>
-          <DialogDescription>
-            Search the catalog to link an existing course, or create a new one with the same form as elsewhere.
-          </DialogDescription>
         </DialogHeader>
         <DialogBody>
           <ProgramSemesterAddCoursePanel

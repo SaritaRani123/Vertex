@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback, useMemo } from "react";
 import type {
-  CurriculumElectiveGroupResponse,
   ProgramResponse,
 } from "@/lib/api-types";
 import type { CourseOption } from "@/components/course-multi-select";
@@ -22,8 +21,7 @@ import { filterDigitsOnly, normalizeUnsignedIntString } from "@/lib/digits-input
 export type ProgramSemesterCourseFormProps = {
   program: ProgramResponse;
   semesterId: number;
-  electiveGroups: CurriculumElectiveGroupResponse[];
-  /** Called after creating an elective pool or after a successful save (to refresh curriculum). */
+  /** Called after a successful save (to refresh curriculum). */
   onReloadCurriculum: () => Promise<void>;
   /** Optional extra callback after a new course is saved. */
   onSaved?: () => void;
@@ -38,7 +36,6 @@ export type ProgramSemesterCourseFormProps = {
 export function ProgramSemesterCourseForm({
   program,
   semesterId,
-  electiveGroups,
   onReloadCurriculum,
   onSaved,
   fieldIdPrefix = "psc",
@@ -57,23 +54,10 @@ export function ProgramSemesterCourseForm({
   const [status, setStatus] = useState<"ACTIVE" | "INACTIVE" | "ARCHIVED">("ACTIVE");
 
   const [courseKind, setCourseKind] = useState<"COMPULSORY" | "ELECTIVE">("COMPULSORY");
-  const [electiveGroupId, setElectiveGroupId] = useState<string>("");
-  const [poolChooseInput, setPoolChooseInput] = useState("2");
-  const [newPoolLabel, setNewPoolLabel] = useState("");
 
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [savingCourse, setSavingCourse] = useState(false);
-  const [creatingPool, setCreatingPool] = useState(false);
-  /** Pools just created in this form; merged with props so validation works before parent re-renders. */
-  const [sessionPools, setSessionPools] = useState<CurriculumElectiveGroupResponse[]>([]);
-
-  const mergedElectiveGroups = useMemo(() => {
-    const byId = new Map<number, CurriculumElectiveGroupResponse>();
-    for (const g of electiveGroups) byId.set(g.id, g);
-    for (const g of sessionPools) byId.set(g.id, g);
-    return [...byId.values()].sort((a, b) => a.id - b.id);
-  }, [electiveGroups, sessionPools]);
 
   const refreshCatalog = useCallback(async () => {
     try {
@@ -115,10 +99,6 @@ export function ProgramSemesterCourseForm({
     void refreshCatalog();
   }, [refreshCatalog]);
 
-  useEffect(() => {
-    setSessionPools([]);
-  }, [semesterId]);
-
   const resetForm = () => {
     setName("");
     setCode("");
@@ -129,48 +109,8 @@ export function ProgramSemesterCourseForm({
     setLabHoursStr("0");
     setStatus("ACTIVE");
     setCourseKind("COMPULSORY");
-    setElectiveGroupId("");
     setFormError(null);
     setFieldErrors({});
-  };
-
-  const handleCreatePool = async () => {
-    const chooseParsed = parseInt(poolChooseInput.trim(), 10);
-    if (poolChooseInput.trim() === "" || Number.isNaN(chooseParsed) || chooseParsed < 1) {
-      setFormError("Enter how many courses students must pick from this pool (at least 1).");
-      return;
-    }
-    setCreatingPool(true);
-    setFormError(null);
-    try {
-      const res = await fetch(`/api/program-semesters/${semesterId}/elective-groups`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          choose_count: chooseParsed,
-          label: newPoolLabel.trim() || undefined,
-        }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setFormError(data?.error ?? "Could not create elective pool");
-        return;
-      }
-      const poolRow: CurriculumElectiveGroupResponse = {
-        id: data.id,
-        choose_count: data.choose_count,
-        label: data.label ?? null,
-        course_count: 0,
-      };
-      setSessionPools((prev) => [...prev.filter((x) => x.id !== poolRow.id), poolRow]);
-      setElectiveGroupId(String(data.id));
-      setNewPoolLabel("");
-      await onReloadCurriculum();
-    } catch {
-      setFormError("Something went wrong");
-    } finally {
-      setCreatingPool(false);
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -202,15 +142,6 @@ export function ProgramSemesterCourseForm({
       return;
     }
 
-    if (courseKind === "ELECTIVE" && electiveGroupId) {
-      const gid = Number(electiveGroupId);
-      const g = mergedElectiveGroups.find((x) => x.id === gid);
-      if (!g) {
-        setFormError("Select a valid elective pool, or create one below first.");
-        return;
-      }
-    }
-
     const prerequisiteCodes = prerequisiteIds
       .map((id) => coursesCatalog.find((c) => c.id === id)?.code)
       .filter((c): c is string => Boolean(c));
@@ -230,9 +161,6 @@ export function ProgramSemesterCourseForm({
         program_semester_id: semesterId,
         course_kind: courseKind,
       };
-      if (courseKind === "ELECTIVE" && electiveGroupId) {
-        body.elective_group_id = Number(electiveGroupId);
-      }
       const res = await fetch("/api/courses", {
         method: "POST",
         credentials: "same-origin",
@@ -268,9 +196,6 @@ export function ProgramSemesterCourseForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <h3 className="font-medium">Course details</h3>
-        <p className="text-muted-foreground mt-0.5 text-xs">
-          Same fields as <strong>Create course</strong>. Program and semester are set automatically.
-        </p>
       </div>
       {formError ? <p className="text-destructive text-sm">{formError}</p> : null}
       <FieldGroup>
@@ -407,7 +332,6 @@ export function ProgramSemesterCourseForm({
               onValueChange={(v) => {
                 if (v === "COMPULSORY" || v === "ELECTIVE") {
                   setCourseKind(v);
-                  if (v === "COMPULSORY") setElectiveGroupId("");
                 }
               }}
             >
@@ -421,64 +345,6 @@ export function ProgramSemesterCourseForm({
             </Select>
           </Field>
         </FieldGroup>
-
-        {courseKind === "ELECTIVE" ? (
-          <div className="bg-muted/40 space-y-3 rounded-lg border p-4">
-            <p className="text-sm font-medium">Elective pool (optional)</p>
-            <p className="text-muted-foreground text-xs">
-              A pool means students must pick N courses from the list linked to that pool. Use “No pool” for a single
-              elective. To build a group: enter N, click Create elective pool, then Save course—the new pool stays
-              selected.
-            </p>
-            {mergedElectiveGroups.length > 0 ? (
-              <Field>
-                <FieldLabel>Assign to existing pool</FieldLabel>
-                <Select
-                  value={electiveGroupId || "__none__"}
-                  onValueChange={(v) => setElectiveGroupId(v === "__none__" || v == null ? "" : v)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="No pool (standalone elective)" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="__none__">No pool</SelectItem>
-                    {mergedElectiveGroups.map((g) => (
-                      <SelectItem key={g.id} value={String(g.id)}>
-                        {g.label ?? `Pool ${g.id}`} — choose {g.choose_count}
-                        {g.course_count > 0 ? ` (${g.course_count} in pool)` : ""}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </Field>
-            ) : null}
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Field>
-                <FieldLabel htmlFor={`${p}-pool-choose`}>New pool: choose N</FieldLabel>
-                <Input
-                  id={`${p}-pool-choose`}
-                  inputMode="numeric"
-                  min={1}
-                  value={poolChooseInput}
-                  onChange={(e) => setPoolChooseInput(filterDigitsOnly(e.target.value))}
-                  onBlur={() => setPoolChooseInput((s) => normalizeUnsignedIntString(s))}
-                />
-              </Field>
-              <Field>
-                <FieldLabel htmlFor={`${p}-pool-label`}>Pool label (optional)</FieldLabel>
-                <Input
-                  id={`${p}-pool-label`}
-                  value={newPoolLabel}
-                  onChange={(e) => setNewPoolLabel(e.target.value)}
-                  placeholder="e.g. Technical electives"
-                />
-              </Field>
-            </div>
-            <Button type="button" variant="secondary" disabled={creatingPool} onClick={() => void handleCreatePool()}>
-              {creatingPool ? "Creating…" : "Create elective pool"}
-            </Button>
-          </div>
-        ) : null}
       </div>
 
       <Button type="submit" disabled={savingCourse}>

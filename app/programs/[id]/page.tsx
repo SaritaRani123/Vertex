@@ -41,13 +41,6 @@ import type {
 import { useStaffActionGuard } from "@/hooks/use-staff-action-guard";
 import { AddProgramCourseDialog } from "@/components/add-program-course-dialog";
 
-function poolSummary(c: CourseResponse): string {
-  if (c.elective_group_id == null) return "—";
-  const label = c.elective_group_label?.trim() || `Pool #${c.elective_group_id}`;
-  const k = c.elective_choose_count;
-  return k != null ? `${label} · choose ${k}` : label;
-}
-
 function flattenProgramCourses(semesters: CurriculumSemesterResponse[]): CourseResponse[] {
   return semesters.flatMap((s) => s.courses);
 }
@@ -282,11 +275,6 @@ export default function ProgramDetailPage() {
                 {program.duration_years * 2} semesters)
               </span>
             </div>
-            <p className="text-muted-foreground mt-2 max-w-2xl text-sm">
-              Manage courses below: edit full details, move to another semester, or remove from the program
-              curriculum. Moving clears an elective pool assignment so you can reassign it on the edit screen if
-              needed.
-            </p>
           </div>
         </div>
         <Button variant="outline" className="shrink-0 gap-2" asChild>
@@ -302,10 +290,6 @@ export default function ProgramDetailPage() {
       <Card>
         <CardHeader className="border-b">
           <CardTitle className="text-lg">Curriculum by semester</CardTitle>
-          <p className="text-muted-foreground text-sm font-normal">
-            Expand a semester to manage its courses. Uses{" "}
-            <code className="text-xs">GET/PUT/DELETE /api/courses/…</code> like the rest of the app.
-          </p>
           {semesters.length > 0 ? (
             <div className="pt-2">
               <p className="text-foreground text-sm font-medium">
@@ -362,16 +346,6 @@ export default function ProgramDetailPage() {
                           Add course
                         </Button>
                       </div>
-                      {sem.elective_groups.length > 0 ? (
-                        <ul className="text-muted-foreground text-xs">
-                          {sem.elective_groups.map((g) => (
-                            <li key={g.id}>
-                              Elective pool: {g.label ?? `Pool #${g.id}`} — students choose {g.choose_count} from{" "}
-                              {g.course_count} listed course{g.course_count === 1 ? "" : "s"}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : null}
                       {sem.courses.length === 0 ? (
                         <p className="text-muted-foreground text-sm">No courses in this semester yet.</p>
                       ) : (
@@ -385,7 +359,6 @@ export default function ProgramDetailPage() {
                                 <TableHead className="font-semibold">Lecture</TableHead>
                                 <TableHead className="font-semibold">Lab</TableHead>
                                 <TableHead className="font-semibold">Type</TableHead>
-                                <TableHead className="font-semibold">Elective pool</TableHead>
                                 <TableHead className="font-semibold">Status</TableHead>
                                 <TableHead className="min-w-[160px] font-semibold">Semester</TableHead>
                                 <TableHead className="text-right font-semibold">Actions</TableHead>
@@ -403,9 +376,6 @@ export default function ProgramDetailPage() {
                                     <Badge variant={c.course_kind === "ELECTIVE" ? "outline" : "default"}>
                                       {c.course_kind === "ELECTIVE" ? "Elective" : "Compulsory"}
                                     </Badge>
-                                  </TableCell>
-                                  <TableCell className="text-muted-foreground max-w-[200px] text-sm">
-                                    {poolSummary(c)}
                                   </TableCell>
                                   <TableCell>
                                     <span className="text-xs font-medium">{c.status}</span>

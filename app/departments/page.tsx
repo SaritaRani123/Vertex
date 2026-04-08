@@ -129,9 +129,6 @@ export default function DepartmentsPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Departments</h1>
-          <p className="text-muted-foreground">
-            View and manage all departments. Click a department name to see programs in that department.
-          </p>
         </div>
         <GuardedCreateButton href="/departments/create" className="shrink-0 w-fit flex items-center gap-2">
           <Plus className="size-4" />

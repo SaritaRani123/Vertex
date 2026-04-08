@@ -168,7 +168,6 @@ function CreateCourseForm() {
         </Button>
         <div>
           <h1 className="text-2xl font-bold">Create Course</h1>
-          <p className="text-muted-foreground">Add a new course to a program</p>
         </div>
       </div>
 

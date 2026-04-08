@@ -1,0 +1,177 @@
+{
+    "departments": [
+      { "id": 1, "name": "Faculty of Applied Sciences & Technology", "code": "FAST" },
+      { "id": 2, "name": "Longo Faculty of Business", "code": "LFB" },
+      { "id": 3, "name": "Faculty of Media, Creative Arts & Design", "code": "FMCAD" },
+      { "id": 4, "name": "Faculty of Health & Life Sciences", "code": "FHLS" },
+      { "id": 5, "name": "Faculty of Liberal Arts & Sciences", "code": "FLAS" },
+      { "id": 6, "name": "Faculty of Social & Community Services", "code": "FSCS" },
+      { "id": 7, "name": "Faculty of Continuous Professional Learning", "code": "CPL" }
+    ],
+    "programs": [
+      {
+        "id": 1,
+        "name": "Information Technology Solutions",
+        "code": "IT521",
+        "duration_years": 2,
+        "status": "ACTIVE",
+        "department_id": 1
+      },
+      {
+        "id": 2,
+        "name": "Web Development",
+        "code": "11491",
+        "duration_years": 1,
+        "status": "ACTIVE",
+        "department_id": 1
+      },
+      {
+        "id": 3,
+        "name": "Business Administration",
+        "code": "02511",
+        "duration_years": 3,
+        "status": "ACTIVE",
+        "department_id": 2
+      },
+      {
+        "id": 4,
+        "name": "Animation - 3D",
+        "code": "AN311",
+        "duration_years": 3,
+        "status": "ACTIVE",
+        "department_id": 3
+      },
+      {
+        "id": 5,
+        "name": "Practical Nursing",
+        "code": "19121",
+        "duration_years": 2,
+        "status": "ACTIVE",
+        "department_id": 4
+      },
+      {
+        "id": 6,
+        "name": "General Arts and Science - University Transfer",
+        "code": "09111",
+        "duration_years": 2,
+        "status": "ACTIVE",
+        "department_id": 5
+      },
+      {
+        "id": 7,
+        "name": "Addictions and Mental Health",
+        "code": "MH511",
+        "duration_years": 1,
+        "status": "ACTIVE",
+        "department_id": 6
+      },
+      {
+        "id": 8,
+        "name": "Social Service Worker",
+        "code": "01221",
+        "duration_years": 2,
+        "status": "ACTIVE",
+        "department_id": 6
+      },
+      {
+        "id": 9,
+        "name": "Real Estate Salesperson Program",
+        "code": "RE101",
+        "duration_years": 1,
+        "status": "ACTIVE",
+        "department_id": 7
+      }
+    ],
+    "courses": [
+      {
+        "id": 1,
+        "name": "Java Programming",
+        "code": "ITSN511",
+        "description": "Core Java concepts including OOP and collections.",
+        "prerequisites": [],
+        "credits": 3,
+        "lecture_hours": 3,
+        "lab_hours": 2,
+        "status": "ACTIVE",
+        "program_id": 1
+      },
+      {
+        "id": 2,
+        "name": "Frontend Frameworks",
+        "code": "WDEV201",
+        "description": "Deep dive into React and Next.js.",
+        "prerequisites": ["WDEV150"],
+        "credits": 3,
+        "lecture_hours": 2,
+        "lab_hours": 3,
+        "status": "ACTIVE",
+        "program_id": 2
+      },
+      {
+        "id": 3,
+        "name": "Anatomy & Physiology",
+        "code": "GSCI110",
+        "description": "Study of the human body systems.",
+        "prerequisites": [],
+        "credits": 4,
+        "lecture_hours": 4,
+        "lab_hours": 0,
+        "status": "ACTIVE",
+        "program_id": 5
+      },
+      {
+        "id": 4,
+        "name": "Critical Thinking",
+        "code": "GCRT100",
+        "description": "Foundations of logic and academic inquiry.",
+        "prerequisites": [],
+        "credits": 3,
+        "lecture_hours": 3,
+        "lab_hours": 0,
+        "status": "ACTIVE",
+        "program_id": 6
+      },
+      {
+        "id": 5,
+        "name": "Mental Health Fundamentals",
+        "code": "MHNF101",
+        "description": "Introduction to mental health disorders and recovery.",
+        "prerequisites": [],
+        "credits": 3,
+        "lecture_hours": 3,
+        "lab_hours": 0,
+        "status": "ACTIVE",
+        "program_id": 7
+      }
+    ],
+    "semesters": [
+      { "id": 1, "year": 2025, "type": "FALL" },
+      { "id": 2, "year": 2026, "type": "WINTER" },
+      { "id": 3, "year": 2026, "type": "SUMMER" }
+    ],
+    "terms": [
+      { "id": 1, "semester_id": 1, "course_id": 1 },
+      { "id": 2, "semester_id": 1, "course_id": 3 },
+      { "id": 3, "semester_id": 2, "course_id": 2 },
+      { "id": 4, "semester_id": 2, "course_id": 4 },
+      { "id": 5, "semester_id": 2, "course_id": 5 }
+    ],
+    "programs_users": [
+      {
+        "id": 1,
+        "name": "Admin User",
+        "email": "admin@example.com",
+        "password_hash": "$2b$10$EixZA5VK1VpUkGZJ9G7Qeu5W.x497.F5L7E6tU4V9A6.G7L8u4.u6",
+        "role": "ADMIN",
+        "is_active": true
+      },
+      {
+        "id": 2,
+        "name": "Staff User",
+        "email": "user@example.com",
+        "password_hash": "$2b$10$S9G7Qeu5W.x497.F5L7E6tU4V9A6.G7L8u4.u6EixZA5VK1VpUkGZJ",
+        "role": "STAFF",
+        "is_active": true
+      }
+    ]
+  }
