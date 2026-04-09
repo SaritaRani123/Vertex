@@ -41,6 +41,8 @@ export default function DepartmentsPage() {
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   const { guardAction, blockedDialog, sessionLoading } = useStaffActionGuard();
 
@@ -83,6 +85,23 @@ export default function DepartmentsPage() {
     return list;
   }, [departments, search, sortKey, sortDir]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, sortKey, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredAndSorted.length / pageSize));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const paginatedDepartments = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredAndSorted.slice(start, start + pageSize);
+  }, [filteredAndSorted, currentPage]);
+
   const handleSort = (key: "name" | "code") => {
     if (sortKey === key) {
       setSortDir(sortDir === "asc" ? "desc" : "asc");
@@ -118,9 +137,9 @@ export default function DepartmentsPage() {
   const SortIcon = ({ column }: { column: "name" | "code" }) => {
     if (sortKey !== column) return <ArrowUpDown className="size-3.5 opacity-50" aria-hidden />;
     return sortDir === "asc" ? (
-      <ArrowUp className="size-3.5 text-primary" aria-hidden />
+      <ArrowUp className="size-3.5 text-foreground" aria-hidden />
     ) : (
-      <ArrowDown className="size-3.5 text-primary" aria-hidden />
+      <ArrowDown className="size-3.5 text-foreground" aria-hidden />
     );
   };
 
@@ -128,7 +147,7 @@ export default function DepartmentsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Departments</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Departments</h1>
         </div>
         <GuardedCreateButton href="/departments/create" className="shrink-0 w-fit flex items-center gap-2">
           <Plus className="size-4" />
@@ -139,7 +158,7 @@ export default function DepartmentsPage() {
       <Card className="overflow-hidden border-[0.5px] border-border shadow-md shadow-black/5">
         <CardHeader className="border-b border-border border-b-[0.5px] bg-muted/20 pb-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-lg font-bold text-foreground sm:text-xl">All Departments</h2>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground sm:text-xl">All Departments</h2>
             <ListSearchField
               value={search}
               onChange={setSearch}
@@ -156,10 +175,11 @@ export default function DepartmentsPage() {
             <p className="p-6 text-destructive">{error}</p>
           )}
           {!loading && !error && (
-            <div className="overflow-x-auto">
-              <Table className="min-w-[400px]">
+            <>
+              <div className="overflow-x-auto">
+                <Table className="min-w-[400px] text-[0.95rem]">
                 <TableHeader>
-                  <TableRow className="border-b border-border border-b-[0.5px] bg-primary/8 hover:bg-primary/10">
+                  <TableRow className="border-b border-border border-b-[0.5px] bg-muted/50 hover:bg-muted/60">
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">
                       <button
                         type="button"
@@ -195,10 +215,10 @@ export default function DepartmentsPage() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredAndSorted.map((dept, index) => (
+                    paginatedDepartments.map((dept, index) => (
                       <TableRow
                         key={dept.id}
-                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-primary/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
+                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-muted/40 ${index % 2 === 1 ? "bg-muted/20" : ""}`}
                       >
                         <TableCell className="py-3 px-4 font-medium align-middle">
                           {dept.code}
@@ -206,7 +226,7 @@ export default function DepartmentsPage() {
                         <TableCell className="py-3 px-4 align-middle">
                           <Button
                             variant="link"
-                            className="text-primary h-auto min-h-0 max-w-full justify-start p-0 text-left font-medium"
+                            className="h-auto min-h-0 max-w-full justify-start p-0 text-left font-medium text-foreground hover:text-primary"
                             asChild
                           >
                             <Link
@@ -242,8 +262,40 @@ export default function DepartmentsPage() {
                     ))
                   )}
                 </TableBody>
-              </Table>
-            </div>
+                </Table>
+              </div>
+              {filteredAndSorted.length > 0 ? (
+                <div className="flex items-center justify-between border-t border-border px-4 py-3">
+                <p className="text-sm text-muted-foreground">
+                  Showing {(currentPage - 1) * pageSize + 1}-
+                  {Math.min(currentPage * pageSize, filteredAndSorted.length)} of {filteredAndSorted.length}
+                </p>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </Button>
+                  <span className="text-sm text-muted-foreground">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </Button>
+                </div>
+                </div>
+              ) : null}
+            </>
           )}
         </CardContent>
       </Card>

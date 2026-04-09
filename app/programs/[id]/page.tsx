@@ -76,6 +76,8 @@ export default function ProgramDetailPage() {
   } | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [addCourseSemester, setAddCourseSemester] = useState<CurriculumSemesterResponse | null>(null);
+  const [semesterPages, setSemesterPages] = useState<Record<number, number>>({});
+  const semesterPageSize = 8;
 
   const { guardAction, blockedDialog, sessionLoading } = useStaffActionGuard();
 
@@ -157,6 +159,27 @@ export default function ProgramDetailPage() {
 
   const totalCourses = semesters.reduce((n, s) => n + s.courses.length, 0);
   const allProgramCourses = useMemo(() => flattenProgramCourses(semesters), [semesters]);
+
+  useEffect(() => {
+    setSemesterPages((prev) => {
+      const next: Record<number, number> = {};
+      let changed = false;
+
+      for (const sem of semesters) {
+        const totalPages = Math.max(1, Math.ceil(sem.courses.length / semesterPageSize));
+        const previous = prev[sem.id] ?? 1;
+        const clamped = Math.min(Math.max(previous, 1), totalPages);
+        next[sem.id] = clamped;
+        if (clamped !== previous) changed = true;
+      }
+
+      if (Object.keys(prev).length !== Object.keys(next).length) {
+        changed = true;
+      }
+
+      return changed ? next : prev;
+    });
+  }, [semesters]);
 
   useEffect(() => {
     if (!curriculum?.semesters?.length) return;
@@ -263,7 +286,7 @@ export default function ProgramDetailPage() {
           <div>
             <h1 className="text-2xl font-bold">{program.name}</h1>
             <div className="text-muted-foreground mt-1 flex flex-wrap items-center gap-x-1 text-sm">
-              <Button variant="link" className="text-primary h-auto p-0 font-medium underline-offset-4" asChild>
+              <Button variant="link" className="h-auto p-0 font-medium text-foreground underline-offset-4 hover:text-primary" asChild>
                 <Link href={`/programs?department_id=${program.department_id}`}>
                   {program.department_name?.trim() || "View department programs"}
                 </Link>
@@ -294,7 +317,7 @@ export default function ProgramDetailPage() {
             <div className="pt-2">
               <p className="text-foreground text-sm font-medium">
                 Total courses in this program:{" "}
-                <span className="text-primary text-base font-bold tabular-nums">{totalCourses}</span>
+                <span className="text-foreground text-base font-bold tabular-nums">{totalCourses}</span>
               </p>
             </div>
           ) : null}
@@ -308,6 +331,10 @@ export default function ProgramDetailPage() {
           ) : (
             semesters.map((sem) => {
               const isOpen = !!expandedSemesterIds[sem.id];
+              const currentPage = semesterPages[sem.id] ?? 1;
+              const totalPages = Math.max(1, Math.ceil(sem.courses.length / semesterPageSize));
+              const start = (currentPage - 1) * semesterPageSize;
+              const paginatedCourses = sem.courses.slice(start, start + semesterPageSize);
               return (
                 <section key={sem.id} className="rounded-xl border border-border bg-card">
                   <button
@@ -317,7 +344,7 @@ export default function ProgramDetailPage() {
                     aria-expanded={isOpen}
                   >
                     <span
-                      className="bg-primary/10 text-primary flex size-8 shrink-0 items-center justify-center rounded-md"
+                      className="bg-accent/70 text-accent-foreground flex size-8 shrink-0 items-center justify-center rounded-md"
                       aria-hidden
                     >
                       {isOpen ? <Minus className="size-4" /> : <Plus className="size-4" />}
@@ -349,8 +376,9 @@ export default function ProgramDetailPage() {
                       {sem.courses.length === 0 ? (
                         <p className="text-muted-foreground text-sm">No courses in this semester yet.</p>
                       ) : (
-                        <div className="overflow-x-auto rounded-lg border">
-                          <Table>
+                        <>
+                          <div className="overflow-x-auto rounded-lg border">
+                            <Table className="text-[0.95rem]">
                             <TableHeader>
                               <TableRow className="bg-muted/40">
                                 <TableHead className="font-semibold">Code</TableHead>
@@ -365,10 +393,17 @@ export default function ProgramDetailPage() {
                               </TableRow>
                             </TableHeader>
                             <TableBody>
-                              {sem.courses.map((c) => (
+                              {paginatedCourses.map((c) => (
                                 <TableRow key={c.id}>
-                                  <TableCell className="font-mono text-xs font-medium uppercase">{c.code}</TableCell>
-                                  <TableCell>{c.name}</TableCell>
+                                  <TableCell className="font-mono text-sm font-medium uppercase">{c.code}</TableCell>
+                                  <TableCell>
+                                    <Link
+                                      href={`/courses/${c.id}`}
+                                      className="font-medium text-foreground hover:text-primary hover:underline underline-offset-4"
+                                    >
+                                      {c.name}
+                                    </Link>
+                                  </TableCell>
                                   <TableCell>{c.credits}</TableCell>
                                   <TableCell>{c.lecture_hours}h</TableCell>
                                   <TableCell>{c.lab_hours}h</TableCell>
@@ -378,7 +413,7 @@ export default function ProgramDetailPage() {
                                     </Badge>
                                   </TableCell>
                                   <TableCell>
-                                    <span className="text-xs font-medium">{c.status}</span>
+                                    <span className="text-sm font-medium">{c.status}</span>
                                   </TableCell>
                                   <TableCell onClick={(e) => e.stopPropagation()}>
                                     <Select
@@ -440,8 +475,48 @@ export default function ProgramDetailPage() {
                                 </TableRow>
                               ))}
                             </TableBody>
-                          </Table>
-                        </div>
+                            </Table>
+                          </div>
+                          <div className="flex items-center justify-between">
+                          <p className="text-sm text-muted-foreground">
+                            Showing {(currentPage - 1) * semesterPageSize + 1}-
+                            {Math.min(currentPage * semesterPageSize, sem.courses.length)} of {sem.courses.length}
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                setSemesterPages((prev) => ({
+                                  ...prev,
+                                  [sem.id]: Math.max(1, (prev[sem.id] ?? 1) - 1),
+                                }))
+                              }
+                              disabled={currentPage === 1}
+                            >
+                              Previous
+                            </Button>
+                            <span className="text-sm text-muted-foreground">
+                              Page {currentPage} of {totalPages}
+                            </span>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() =>
+                                setSemesterPages((prev) => ({
+                                  ...prev,
+                                  [sem.id]: Math.min(totalPages, (prev[sem.id] ?? 1) + 1),
+                                }))
+                              }
+                              disabled={currentPage === totalPages}
+                            >
+                              Next
+                            </Button>
+                          </div>
+                          </div>
+                        </>
                       )}
                     </div>
                   ) : null}

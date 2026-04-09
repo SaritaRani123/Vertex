@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableHeader,
@@ -54,6 +53,8 @@ function ProgramsPageInner() {
   const [departmentFilterLabel, setDepartmentFilterLabel] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   const { guardAction, blockedDialog, sessionLoading } = useStaffActionGuard();
 
@@ -133,6 +134,23 @@ function ProgramsPageInner() {
     return list;
   }, [programs, search, sortKey, sortDir]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, sortKey, sortDir, filterByDepartmentId]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredAndSorted.length / pageSize));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const paginatedPrograms = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredAndSorted.slice(start, start + pageSize);
+  }, [filteredAndSorted, currentPage]);
+
   const handleSort = (key: SortKey) => {
     if (!key) return;
     if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
@@ -166,9 +184,9 @@ function ProgramsPageInner() {
   const SortIcon = ({ column }: { column: SortKey }) => {
     if (sortKey !== column) return <ArrowUpDown className="size-3.5 opacity-50" aria-hidden />;
     return sortDir === "asc" ? (
-      <ArrowUp className="size-3.5 text-primary" aria-hidden />
+      <ArrowUp className="size-3.5 text-foreground" aria-hidden />
     ) : (
-      <ArrowDown className="size-3.5 text-primary" aria-hidden />
+      <ArrowDown className="size-3.5 text-foreground" aria-hidden />
     );
   };
 
@@ -189,7 +207,7 @@ function ProgramsPageInner() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Programs</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Programs</h1>
         </div>
         <GuardedCreateButton href="/programs/create" className="shrink-0 w-fit flex items-center gap-2">
           <Plus className="size-4" />
@@ -217,7 +235,7 @@ function ProgramsPageInner() {
       <Card className="overflow-hidden border-[0.5px] border-border shadow-md shadow-black/5">
         <CardHeader className="border-b border-border border-b-[0.5px] bg-muted/20 pb-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-lg font-bold text-foreground sm:text-xl">All Programs</h2>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground sm:text-xl">All Programs</h2>
             <ListSearchField
               value={search}
               onChange={setSearch}
@@ -235,10 +253,11 @@ function ProgramsPageInner() {
           {loading && <p className="p-6 text-muted-foreground">Loading programs...</p>}
           {error && <p className="p-6 text-destructive">{error}</p>}
           {!loading && !error && (
-            <div className="overflow-x-auto">
-              <Table className="min-w-[600px]">
+            <>
+              <div className="overflow-x-auto">
+                <Table className="min-w-[600px] text-[0.95rem]">
                 <TableHeader>
-                  <TableRow className="border-b border-border border-b-[0.5px] bg-primary/8 hover:bg-primary/10">
+                  <TableRow className="border-b border-border border-b-[0.5px] bg-muted/50 hover:bg-muted/60">
                     <Th sortKeyName="code">Code</Th>
                     <Th sortKeyName="name">Name</Th>
                     <Th sortKeyName="department_name">Department</Th>
@@ -257,12 +276,12 @@ function ProgramsPageInner() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredAndSorted.map((prog, index) => (
+                    paginatedPrograms.map((prog, index) => (
                       <TableRow
                         key={prog.id}
                         role="link"
                         tabIndex={0}
-                        className={`border-b border-border border-b-[0.5px] cursor-pointer transition-colors hover:bg-primary/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
+                        className={`group border-b border-border border-b-[0.5px] cursor-pointer transition-colors hover:bg-muted/40 ${index % 2 === 1 ? "bg-muted/20" : ""}`}
                         onClick={() => router.push(`/programs/${prog.id}`)}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" || e.key === " ") {
@@ -274,9 +293,13 @@ function ProgramsPageInner() {
                         <TableCell className="py-3 px-4 font-mono text-sm font-medium uppercase tracking-wide align-middle">
                           {prog.code}
                         </TableCell>
-                        <TableCell className="py-3 px-4 align-middle">{prog.name}</TableCell>
+                        <TableCell className="py-3 px-4 align-middle">
+                          <span className="font-medium text-foreground transition-colors group-hover:text-primary group-hover:underline underline-offset-4">
+                            {prog.name}
+                          </span>
+                        </TableCell>
                         <TableCell className="py-3 px-4 align-middle" onClick={(e) => e.stopPropagation()}>
-                          <Button variant="link" className="text-primary h-auto min-h-0 p-0 font-medium" asChild>
+                          <Button variant="link" className="h-auto min-h-0 p-0 font-medium text-foreground hover:text-primary" asChild>
                             <Link href={`/programs?department_id=${prog.department_id}`}>
                               {prog.department_name || `Department #${prog.department_id}`}
                             </Link>
@@ -284,7 +307,17 @@ function ProgramsPageInner() {
                         </TableCell>
                         <TableCell className="py-3 px-4 align-middle">{prog.duration_years} years</TableCell>
                         <TableCell className="py-3 px-4 align-middle">
-                          <Badge variant={prog.status === "ACTIVE" ? "default" : "secondary"}>{prog.status}</Badge>
+                          <span
+                            className={`inline-block min-w-[5.5rem] rounded-md px-2.5 py-1 text-center text-sm font-medium text-white ${
+                              prog.status === "ACTIVE"
+                                ? "bg-emerald-600"
+                                : prog.status === "INACTIVE"
+                                  ? "bg-amber-600"
+                                  : "bg-slate-500"
+                            }`}
+                          >
+                            {prog.status}
+                          </span>
                         </TableCell>
                         <TableCell className="py-3 px-4 align-middle text-right">
                           <div className="flex items-center justify-end gap-1">
@@ -316,8 +349,40 @@ function ProgramsPageInner() {
                     ))
                   )}
                 </TableBody>
-              </Table>
-            </div>
+                </Table>
+              </div>
+              {filteredAndSorted.length > 0 ? (
+                <div className="flex items-center justify-between border-t border-border px-4 py-3">
+                <p className="text-sm text-muted-foreground">
+                  Showing {(currentPage - 1) * pageSize + 1}-
+                  {Math.min(currentPage * pageSize, filteredAndSorted.length)} of {filteredAndSorted.length}
+                </p>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </Button>
+                  <span className="text-sm text-muted-foreground">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </Button>
+                </div>
+                </div>
+              ) : null}
+            </>
           )}
         </CardContent>
       </Card>

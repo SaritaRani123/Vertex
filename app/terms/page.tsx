@@ -52,6 +52,8 @@ export default function TermsPage() {
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortDir, setSortDir] = useState<SortDir>("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   const { guardAction, blockedDialog, sessionLoading } = useStaffActionGuard();
 
@@ -97,6 +99,23 @@ export default function TermsPage() {
     return list;
   }, [terms, search, sortKey, sortDir]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, sortKey, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredAndSorted.length / pageSize));
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const paginatedTerms = useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return filteredAndSorted.slice(start, start + pageSize);
+  }, [filteredAndSorted, currentPage]);
+
   const handleSort = (key: SortKey) => {
     if (!key) return;
     if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
@@ -130,9 +149,9 @@ export default function TermsPage() {
   const SortIcon = ({ column }: { column: SortKey }) => {
     if (sortKey !== column) return <ArrowUpDown className="size-3.5 opacity-50" aria-hidden />;
     return sortDir === "asc" ? (
-      <ArrowUp className="size-3.5 text-primary" aria-hidden />
+      <ArrowUp className="size-3.5 text-foreground" aria-hidden />
     ) : (
-      <ArrowDown className="size-3.5 text-primary" aria-hidden />
+      <ArrowDown className="size-3.5 text-foreground" aria-hidden />
     );
   };
 
@@ -140,10 +159,10 @@ export default function TermsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Terms & Semesters</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Terms & Semesters</h1>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <GuardedCreateButton href="/semesters/create" variant="outline" className="shrink-0 w-fit flex items-center gap-2">
+          <GuardedCreateButton href="/semesters/create" className="shrink-0 w-fit flex items-center gap-2">
             <CalendarDays className="size-4" />
             Add Semester
           </GuardedCreateButton>
@@ -157,7 +176,7 @@ export default function TermsPage() {
       <Card className="overflow-hidden border-[0.5px] border-border shadow-md shadow-black/5">
         <CardHeader className="border-b border-border border-b-[0.5px] bg-muted/20 pb-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-lg font-bold text-foreground sm:text-xl">All Course-Term Assignments</h2>
+            <h2 className="text-lg font-semibold tracking-tight text-foreground sm:text-xl">All Course-Term Assignments</h2>
             <ListSearchField
               value={search}
               onChange={setSearch}
@@ -170,10 +189,11 @@ export default function TermsPage() {
           {loading && <p className="p-6 text-muted-foreground">Loading terms...</p>}
           {error && <p className="p-6 text-destructive">{error}</p>}
           {!loading && !error && (
-            <div className="overflow-x-auto">
-              <Table className="min-w-[480px]">
+            <>
+              <div className="overflow-x-auto">
+                <Table className="min-w-[480px] text-[0.95rem]">
                 <TableHeader>
-                  <TableRow className="border-b border-border border-b-[0.5px] bg-primary/8 hover:bg-primary/10">
+                  <TableRow className="border-b border-border border-b-[0.5px] bg-muted/50 hover:bg-muted/60">
                     <TableHead className="h-12 px-4 text-base font-bold text-foreground">
                       <button
                         type="button"
@@ -217,10 +237,10 @@ export default function TermsPage() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredAndSorted.map((term, index) => (
+                    paginatedTerms.map((term, index) => (
                       <TableRow
                         key={term.id}
-                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-primary/10 ${index % 2 === 1 ? "bg-muted/30" : ""}`}
+                        className={`border-b border-border border-b-[0.5px] transition-colors hover:bg-muted/40 ${index % 2 === 1 ? "bg-muted/20" : ""}`}
                       >
                         <TableCell className="py-3 px-4 font-medium align-middle">
                           {term.course_name || term.course_code || `Course #${term.course_id}`}
@@ -250,8 +270,40 @@ export default function TermsPage() {
                     ))
                   )}
                 </TableBody>
-              </Table>
-            </div>
+                </Table>
+              </div>
+              {filteredAndSorted.length > 0 ? (
+                <div className="flex items-center justify-between border-t border-border px-4 py-3">
+                <p className="text-sm text-muted-foreground">
+                  Showing {(currentPage - 1) * pageSize + 1}-
+                  {Math.min(currentPage * pageSize, filteredAndSorted.length)} of {filteredAndSorted.length}
+                </p>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </Button>
+                  <span className="text-sm text-muted-foreground">
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </Button>
+                </div>
+                </div>
+              ) : null}
+            </>
           )}
         </CardContent>
       </Card>

@@ -1,132 +1,125 @@
-# API endpoints — quick reference
+# Programs API — quick reference
 
-Single-page index of all REST routes in Vertex. **Base URL (local):** `http://localhost:3000`
+**Base URL:** use your deployed server (example: `https://your-host.example.com`). All paths below are relative to that base.
 
-For request/response bodies, validation rules, delete constraints, and error shapes, see **[docs/API_SPECIFICATION.md](docs/API_SPECIFICATION.md)**.
+**Auth:** Sign in with `POST /api/auth/login` or `POST /api/auth/register`. The server sets an HTTP-only cookie named **`programs_session`**. Send that cookie on later requests (typical browser behavior). There is no API-key header in this app.
 
----
+**Format:** Use `Content-Type: application/json` for bodies. Responses are JSON unless noted.
 
-## Conventions
+**Roles:** Users are **`ADMIN`** or **`STAFF`**.
 
-| Item | Detail |
-|------|--------|
-| **Session** | HTTP-only cookie **`programs_session`**, set by **login** or **register**, cleared by **logout**. |
-| **JSON** | Use `Content-Type: application/json` for bodies unless noted. |
-| **Scheduling modules** | `/api/departments`, `/api/programs`, `/api/courses`, `/api/semesters`, `/api/terms` — see [Scheduling APIs access](#scheduling-apis-access). |
+- **Read** most data (`GET`), and **update** departments/programs/semesters/terms (`PUT`): any signed-in user.
+- **Create** or **delete** departments, programs, calendar semesters, or term links: **`ADMIN` only**.
+- **Courses:** **`GET` / `POST` / `PUT`**: any signed-in user. **`DELETE` course**: **`ADMIN` only**.
+- **Permission requests:** **`STAFF`** can submit; **`ADMIN`** reviews.
 
-### Scheduling APIs access
+If you are not logged in → **401**. If your role is not allowed → **403**.
 
-| Methods | Who |
-|---------|-----|
-| `GET`, `PUT` | Any signed-in user (`ADMIN` or `STAFF`) |
-| `POST`, `DELETE` | **`ADMIN` only** (staff get **403**) |
-
-Unauthenticated calls → **401**.
+More detail on bodies and errors: **[docs/API_SPECIFICATION.md](docs/API_SPECIFICATION.md)** (if included with the project).
 
 ---
 
-## 1. Authentication
+## Authentication
 
-| Method | Path | Auth | Description |
-|--------|------|------|-------------|
-| `POST` | `/api/auth/register` | No | Register user; first user in DB is `ADMIN`; sets session cookie. |
-| `POST` | `/api/auth/login` | No | Email + password; sets session cookie. |
-| `POST` | `/api/auth/logout` | Optional | Ends session; clears cookie. |
-| `GET` | `/api/auth/me` | **Required** | Current user (`id`, `email`, `name`, `role`). |
+| Method | Path | Notes |
+|--------|------|--------|
+| POST | `/api/auth/register` | Sign up. First user in the database becomes admin. Sets session cookie. |
+| POST | `/api/auth/login` | Email + password. Sets session cookie. |
+| POST | `/api/auth/logout` | Clears session. |
+| GET | `/api/auth/me` | Current user (needs cookie). |
 
----
-
-## 2. Departments
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/departments` | List all (`{ "data": [...] }`). |
-| `POST` | `/api/departments` | Create (**ADMIN**). |
-| `GET` | `/api/departments/:id` | Get one. |
-| `PUT` | `/api/departments/:id` | Update. |
-| `DELETE` | `/api/departments/:id` | Delete (**ADMIN**); blocked if department has programs. |
+**Google / GitHub (browser only):** redirect users to `GET /api/auth/oauth/google` or `GET /api/auth/oauth/github`. Optional query: `?returnTo=/some-path`. Callback URLs are `/api/auth/oauth/google/callback` and `/api/auth/oauth/github/callback` — these must match what is configured in Google/GitHub.
 
 ---
 
-## 3. Programs
+## Departments
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/programs` | List (`{ "data": [...] }`). Query: **`?department_id=<int>`** optional filter. |
-| `POST` | `/api/programs` | Create (**ADMIN**). |
-| `GET` | `/api/programs/:id` | Get one. |
-| `PUT` | `/api/programs/:id` | Partial update. |
-| `DELETE` | `/api/programs/:id` | Delete (**ADMIN**); blocked if program has courses. |
-
----
-
-## 4. Courses
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/courses` | List all. |
-| `POST` | `/api/courses` | Create (**ADMIN**). |
-| `GET` | `/api/courses/:id` | Get one. |
-| `PUT` | `/api/courses/:id` | Partial update. |
-| `DELETE` | `/api/courses/:id` | Delete (**ADMIN**); **200** + message; strips prerequisite refs; blocked if assigned to terms. |
+| Method | Path |
+|--------|------|
+| GET | `/api/departments` — list |
+| POST | `/api/departments` — create (admin) |
+| GET | `/api/departments/:id` |
+| PUT | `/api/departments/:id` |
+| DELETE | `/api/departments/:id` — admin; blocked if programs still use it |
 
 ---
 
-## 5. Semesters
+## Programs
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/semesters` | List all. |
-| `POST` | `/api/semesters` | Create (**ADMIN**). |
-| `GET` | `/api/semesters/:id` | Get one. |
-| `PUT` | `/api/semesters/:id` | Partial update. |
-| `DELETE` | `/api/semesters/:id` | Delete (**ADMIN**); blocked if semester has term rows. |
-
----
-
-## 6. Terms (course–semester links)
-
-| Method | Path | Description |
-|--------|------|-------------|
-| `GET` | `/api/terms` | List assignments (includes semester year/type, course name/code on list items). |
-| `POST` | `/api/terms` | Create (**ADMIN**). |
-| `GET` | `/api/terms/:id` | Get one. |
-| `PUT` | `/api/terms/:id` | Partial update. |
-| `DELETE` | `/api/terms/:id` | Delete assignment (**ADMIN**). |
+| Method | Path |
+|--------|------|
+| GET | `/api/programs` — list; optional `?department_id=` |
+| POST | `/api/programs` — create (admin) |
+| GET | `/api/programs/:id` |
+| PUT | `/api/programs/:id` |
+| DELETE | `/api/programs/:id` — admin; blocked if program still has courses |
+| GET | `/api/programs/:id/curriculum` — full curriculum (semesters, courses, elective groups) |
 
 ---
 
-## 7. Permission requests (staff ↔ admin)
+## Courses
 
-| Method | Path | Who | Description |
-|--------|------|-----|-------------|
-| `GET` | `/api/permission-requests` | Signed in | **ADMIN:** all requests. **STAFF:** own only. |
-| `POST` | `/api/permission-requests` | **STAFF** | Submit create/delete request for a module. |
-| `PUT` | `/api/permission-requests/:id/review` | **ADMIN** | Approve or reject pending request. |
-
----
-
-## Status codes (short)
-
-| Code | Typical use |
-|------|-------------|
-| **200** | OK (GET, PUT); course DELETE returns JSON body. |
-| **201** | Created (POST scheduling resources, register, permission request create). |
-| **204** | No content (**DELETE** except course — course uses **200**). |
-| **400** | Validation / business rule (`VALIDATION_ERROR` + optional `details`). |
-| **401** | Not signed in (`UNAUTHORIZED`). |
-| **403** | Signed in but not allowed (`FORBIDDEN`). |
-| **404** | Not found (`NOT_FOUND`). |
-| **500** | Server error (`INTERNAL_ERROR`). |
+| Method | Path |
+|--------|------|
+| GET | `/api/courses` — list |
+| POST | `/api/courses` — create |
+| GET | `/api/courses/:id` |
+| PUT | `/api/courses/:id` — update |
+| DELETE | `/api/courses/:id` — **admin only**; may fail if course is still linked to a term offering |
 
 ---
 
-## Related files
+## Elective groups (per program semester)
 
-| Area | Location |
-|------|----------|
-| Route handlers | `app/api/**/route.ts` |
-| Session & roles | `lib/auth.ts` |
-| JSON helpers / errors | `lib/api-utils.ts` |
-| Shared types | `lib/api-types.ts` |
-| Zod schemas | `lib/validations/` |
+| Method | Path |
+|--------|------|
+| POST | `/api/program-semesters/:id/elective-groups` — create a group on that curriculum semester |
+
+---
+
+## Semesters (calendar: year + fall/winter/summer)
+
+| Method | Path |
+|--------|------|
+| GET | `/api/semesters` |
+| POST | `/api/semesters` — admin |
+| GET | `/api/semesters/:id` |
+| PUT | `/api/semesters/:id` |
+| DELETE | `/api/semesters/:id` — admin; blocked if used by term links |
+
+---
+
+## Terms (link a course to a calendar semester)
+
+| Method | Path |
+|--------|------|
+| GET | `/api/terms` |
+| POST | `/api/terms` — admin |
+| GET | `/api/terms/:id` |
+| PUT | `/api/terms/:id` |
+| DELETE | `/api/terms/:id` — admin |
+
+---
+
+## Permission requests (staff asks admin to create/delete)
+
+| Method | Path |
+|--------|------|
+| GET | `/api/permission-requests` — staff see their own; admin sees all |
+| POST | `/api/permission-requests` — staff only; `module` + `action` (create/delete) |
+| PUT | `/api/permission-requests/:id/review` — admin only; approve or reject |
+
+---
+
+## Common HTTP status codes
+
+| Code | Meaning (short) |
+|------|------------------|
+| 200 | OK |
+| 201 | Created |
+| 204 | Success, no body (some deletes) |
+| 400 | Bad request / validation |
+| 401 | Not signed in |
+| 403 | Not allowed for your role |
+| 404 | Not found |
+| 500 | Server error |

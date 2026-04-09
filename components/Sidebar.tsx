@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Building2, GraduationCap, BookOpen, CalendarDays, Layers } from "lucide-react";
+import { LayoutDashboard, Building2, GraduationCap, BookOpen, CalendarDays, Layers, Compass } from "lucide-react";
 
 const sidebarItems = [
   { href: "/dashboard", label: "Dashboard", Icon: LayoutDashboard },
@@ -18,14 +18,16 @@ export function Sidebar() {
 
   return (
     <aside
-      className="fixed left-0 top-0 z-30 flex h-screen w-56 flex-col border-r border-border shadow-sm bg-background"
+      className="flex h-full w-56 flex-col border-r border-border bg-background shadow-sm lg:sticky lg:top-0 lg:h-screen"
       aria-label="Main navigation"
     >
       <div className="flex flex-1 flex-col gap-6 px-3 py-5">
-        <div className="px-3">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Navigation
-          </h2>
+        <div className="rounded-lg border border-slate-300 bg-slate-200/80 px-3 py-2.5">
+          <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-900">
+            <Compass className="size-4 text-primary" aria-hidden />
+            Quick Access
+          </p>
+          <p className="mt-0.5 text-xs text-slate-600">Academic management</p>
         </div>
         <nav className="flex flex-col gap-1">
           {sidebarItems.map((item) => {
@@ -39,13 +41,13 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "rounded-lg px-3 py-2.5 text-sm font-medium transition-colors inline-flex items-center gap-2",
+                  "rounded-lg px-3 py-2.5 text-base font-medium transition-colors inline-flex items-center gap-2.5",
                   isActive
-                    ? "bg-muted text-foreground shadow-sm hover:bg-muted"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    ? "bg-primary/15 text-primary shadow-sm hover:bg-primary/20"
+                    : "text-muted-foreground hover:bg-primary/10 hover:text-primary"
                 )}
               >
-                <item.Icon className="size-4 shrink-0" aria-hidden />
+                <item.Icon className="size-[1.05rem] shrink-0" aria-hidden />
                 {item.label}
               </Link>
             );
