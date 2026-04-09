@@ -76,9 +76,7 @@ Open [http://localhost:3000](http://localhost:3000). Sign up the first user to b
 
 | Document | Contents |
 |----------|----------|
-| [API-endpoints.md](API-endpoints.md) | **Quick index** — all API routes by category (auth, each module, permission requests) |
-| [docs/API_SPECIFICATION.md](docs/API_SPECIFICATION.md) | Full REST contract: bodies, errors, delete rules, examples |
-| [docs/UI-ARCHITECTURE.md](docs/UI-ARCHITECTURE.md) | App routes, layout, major components, data flow |
+| [API-endpoints.md](API-endpoints.md) | **Quick index + JSON examples** — all API routes by category with sample request/response payloads |
 
 Shared TypeScript types for API payloads and errors live in **`lib/api-types.ts`**. Zod schemas for request bodies are in **`lib/validations/`**.
 
